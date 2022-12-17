@@ -24,10 +24,10 @@ public class MainController {
 
     public MainController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel, int scale) {
         this.modelController = new ModelController(size_, starting_food_level, minFoodLevel, maxFoodLevel);
+        this.scale = scale;
         this.view = new MainView(size_*scale);
         this.initView();
         this.initController();
-        this.scale = scale;
     }
 
 
