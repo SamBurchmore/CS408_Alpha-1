@@ -62,15 +62,17 @@ public class ModelController {
     public void cycle() {
         int agent0Count = 0;
         int agent1Count = 0;
+        ArrayList<UUID> agentRunLog = new ArrayList<>();
         for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
             EnvironmentTile current_wt = wt_iterator.next();
-            if (current_wt.isOccupied()) {
+            if (current_wt.isOccupied() && !agentRunLog.contains(current_wt.getOccupant().getID())) {
                 if (current_wt.getOccupant().getAttributes().getType().equals(AgentType.PREDATOR)) {
                     agent0Count++;
                 }
                 else {
                     agent1Count++;
                 }
+                agentRunLog.add(current_wt.getOccupant().getID());
                 this.environment = current_wt.getOccupant().run(this.environment);
             }
             else {

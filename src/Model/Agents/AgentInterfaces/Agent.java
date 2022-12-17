@@ -4,6 +4,7 @@ import Model.Environment.Location;
 import Model.Environment.Environment;
 
 import java.awt.*;
+import java.util.UUID;
 
 public interface Agent {
 
@@ -25,5 +26,6 @@ public interface Agent {
     Scores getScores();
     void setScores(Scores scores_);
     Agent combine(Agent parent_b, Location childLocation);
+    UUID getID();
 
 }
