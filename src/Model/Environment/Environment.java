@@ -223,7 +223,7 @@ public class Environment {
         return new AgentVision(this.getTile(location).getFoodLevel(), false, location);
     }
 
-    public BufferedImage toBufferedImage() {
+    public BufferedImage normalImage() {
         BufferedImage worldImage = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x < this.size; x++) {
             for (int y = 0; y < this.size; y++) {
@@ -231,6 +231,37 @@ public class Environment {
             }
         }
         return worldImage;
+    }
+
+    public BufferedImage scaledImage(int scale) {
+        BufferedImage worldImage = new BufferedImage(this.size * scale, this.size * scale, BufferedImage.TYPE_INT_RGB);
+        int tx = 0;
+        int ty = 0;
+        for (int x = 0; x <= scale * this.size; x += scale) {
+            for (int y = 0; y <= scale * this.size; y += scale) {
+                int t = 0;
+                for (int i = 0; i < scale; i++) {
+                    for (int j = 0; j < scale; j++) {
+                        if (((x + i < scale * this.getSize()) && (y + j < scale * this.getSize())) && ((x + i >= 0) && (y + j >= 0))) {
+                            worldImage.setRGB(x + i, y + j, this.getTileColor(x / scale, y / scale).getRGB());
+                        }
+                    }
+                }
+                ty++;
+            }
+            tx++;
+        }
+        return worldImage;
+    }
+
+    public BufferedImage toBufferedImage(int scale) {
+         if (scale <= 0) {
+             return this.normalImage();
+         }
+         else {
+             return this.scaledImage(scale);
+         }
+
     }
 
 }
