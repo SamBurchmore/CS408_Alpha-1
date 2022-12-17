@@ -9,7 +9,7 @@ import Model.Environment.Environment;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-
+import java.util.UUID;
 public abstract class BaseAgent implements Agent {
 
     private Location location;
@@ -18,6 +18,7 @@ public abstract class BaseAgent implements Agent {
     private Vision vision = null;
     private Attributes attributes;
     private Scores scores = null;
+    private UUID agentID;
 
     public BaseAgent(Location location_, Color agentColor_, Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
         this.location = location_;
@@ -26,6 +27,7 @@ public abstract class BaseAgent implements Agent {
         this.vision = vision_;
         this.attributes = attributes_;
         this.scores = scores_;
+        this.agentID = UUID.randomUUID();
     }
 
     public BaseAgent(Location location_, Agent parent_a, Agent parent_b) {
@@ -43,6 +45,7 @@ public abstract class BaseAgent implements Agent {
         this.attributes = new BasicAttributes(parent_a.getAttributes(), parent_b.getAttributes());
         this.scores = new BasicScores(parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), 0, parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), parent_a.getScores().getMAX_AGE(), parent_a.getScores().getCreationDelay());
         //System.out.println(this.getAttributes().getVision());
+        this.agentID = UUID.randomUUID();
     }
 
     @Override
@@ -150,6 +153,11 @@ public abstract class BaseAgent implements Agent {
     @Override
     public void setScores(Scores scores_) {
         this.scores = scores_;
+    }
+
+    @Override
+    public UUID getID() {
+        return this.agentID;
     }
 
 }
