@@ -11,6 +11,7 @@ public class MainController {
     private ModelController modelController;
 
     private int counter = 0;
+    private int scale = 0;
 
     private boolean cycleToggle = false;
 
@@ -21,15 +22,24 @@ public class MainController {
         this.initController();
     }
 
+    public MainController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel, int scale) {
+        this.modelController = new ModelController(size_, starting_food_level, minFoodLevel, maxFoodLevel);
+        this.view = new MainView(size_*scale);
+        this.initView();
+        this.initController();
+        this.scale = scale;
+    }
+
+
     public void updateWorldImage() {
-        this.view.updateWorldPanel(this.modelController.getEnvironmentImage(), this.counter);
+        this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), this.counter);
     }
 
     public void populateWorld() {
         int[] agentDensityRatio = this.getAgentDensityRatio();
         this.modelController.populate(agentDensityRatio[0], agentDensityRatio[2]);
         this.updateDiagnostics();
-        this.view.updateWorldPanel(this.modelController.getEnvironmentImage(), this.counter);
+        this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), this.counter);
     }
 
     public void runStep() {
@@ -49,7 +59,7 @@ public class MainController {
 
     public void clear() {
         this.modelController.clear();
-        this.view.updateWorldPanel(this.modelController.getEnvironmentImage(), 0);
+        this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), 0);
     }
 
     private void updateDiagnostics() {

@@ -104,8 +104,8 @@ public class ModelController {
         return this.diagnostics;
     }
 
-    public BufferedImage getEnvironmentImage() {
-        return this.environment.toBufferedImage();
+    public BufferedImage getEnvironmentImage(int scale) {
+        return this.environment.toBufferedImage(scale);
     }
 
     public int getRandomDecision(int things) {
