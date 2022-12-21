@@ -10,6 +10,7 @@ public class PreyMotivations extends BaseMotivations {
         //System.out.println(agentScores.getCreationCounter());
         //System.out.println(agentScores.getCreationCounter() <= 0 && agentScores.getHunger() > agentScores.getMAX_HUNGER() / 2);
         return (agentScores.getCreationCounter() <= 0 );
+        //return false;
     }
 
     @Override

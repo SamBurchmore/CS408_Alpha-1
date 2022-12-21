@@ -2,6 +2,7 @@ package Model.Agents.AgentBaseComponents;
 
 import Model.Agents.AgentConcreteComponents.*;
 import Model.Agents.AgentInterfaces.*;
+import Model.Agents.AgentStructs.AgentModelUpdate;
 import Model.Agents.AgentStructs.AgentType;
 import Model.Environment.Location;
 import Model.Environment.Environment;
@@ -9,7 +10,7 @@ import Model.Environment.Environment;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.UUID;
+
 public abstract class BaseAgent implements Agent {
 
     private Location location;
@@ -18,7 +19,6 @@ public abstract class BaseAgent implements Agent {
     private Vision vision = null;
     private Attributes attributes;
     private Scores scores = null;
-    private UUID agentID;
 
     public BaseAgent(Location location_, Color agentColor_, Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
         this.location = location_;
@@ -27,7 +27,6 @@ public abstract class BaseAgent implements Agent {
         this.vision = vision_;
         this.attributes = attributes_;
         this.scores = scores_;
-        this.agentID = UUID.randomUUID();
     }
 
     public BaseAgent(Location location_, Agent parent_a, Agent parent_b) {
@@ -45,36 +44,32 @@ public abstract class BaseAgent implements Agent {
         this.attributes = new BasicAttributes(parent_a.getAttributes(), parent_b.getAttributes());
         this.scores = new BasicScores(parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), 0, parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), parent_a.getScores().getMAX_AGE(), parent_a.getScores().getCreationDelay());
         //System.out.println(this.getAttributes().getVision());
-        this.agentID = UUID.randomUUID();
     }
 
     @Override
-    public Environment run(Environment environment_) {
-        return environment_;
+    public AgentModelUpdate run(Environment environment_) {
+        return new AgentModelUpdate(this, null);
     }
 
     @Override
-    public Environment move(Location newLocation, Environment environment_) {
-        Location oldLocation = this.location;
+    public void move(Location newLocation) {
         this.setLocation(newLocation);
-        environment_.setTileAgent(newLocation, this);
-        environment_.setTileAgent(oldLocation, null);
-        return environment_;
     }
 
     @Override
-    public Environment create(Location parentBLocation, Environment environment_) {
+    public ArrayList<Agent> create(Location parentBLocation, Environment environment_) {
         ArrayList<Location> childLocations = environment_.emptyAdjacent(this.location);
+        ArrayList<Agent> childAgents = new ArrayList<>();
         if (childLocations.size() > 0) {
             Collections.shuffle(childLocations);
             Location childLocation = childLocations.get(0);
             Agent child = this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation);
-            environment_.setTileAgent(childLocation, child);
+            childAgents.add(child);
 //            if (child.getAttributes().getType().equals(AgentType.PREDATOR)) {
 //                System.out.println(child.getType() + " | Speed: " + child.getAttributes().getSpeed() + ", Size: " + child.getAttributes().getSize() + ", Vision: " + child.getAttributes().getVision());
 //            }
         }
-        return environment_;
+        return childAgents;
     }
 
     @Override
@@ -155,9 +150,5 @@ public abstract class BaseAgent implements Agent {
         this.scores = scores_;
     }
 
-    @Override
-    public UUID getID() {
-        return this.agentID;
-    }
 
 }

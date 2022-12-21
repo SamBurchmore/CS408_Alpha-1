@@ -2,10 +2,10 @@ package Model;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
-import java.util.zip.DeflaterInputStream;
 
 import Model.Agents.AgentFactory;
 import Model.Agents.AgentInterfaces.Agent;
+import Model.Agents.AgentStructs.AgentModelUpdate;
 import Model.Agents.AgentStructs.AgentType;
 import Model.Environment.Environment;
 import Model.Environment.EnvironmentTile;
@@ -19,6 +19,8 @@ public class ModelController {
     private Environment environment;
     // We store the grid size here as its used in a lot of logical operations within this class.
     final int worldSize;
+
+    private ArrayList<Agent> agentList;
     // This is where all diagnostic data on the simulation is stored.
     private Diagnostics diagnostics;
 
@@ -28,6 +30,7 @@ public class ModelController {
         this.environment = new Environment(size_, starting_food_level, minFoodLevel, maxFoodLevel);
         this.worldSize = size_;
         this.randomGen = new Random();
+        this.agentList = new ArrayList<>();
         this.diagnostics = new Diagnostics(this.worldSize);
     }
 
@@ -46,11 +49,15 @@ public class ModelController {
             if (this.randomGen.nextInt(100) < density) {
                 if (this.randomGen.nextInt(100) < predator_percent) {
                     EnvironmentTile wt = wt_iterator.next();
-                    wt.setOccupant(agentFactory.createAgent(AgentType.PREDATOR, wt.getLocation()));
+                    Agent newAgent = agentFactory.createAgent(AgentType.PREDATOR, wt.getLocation());
+                    wt.setOccupant(newAgent);
+                    agentList.add(newAgent);
                 }
                 else  {
                     EnvironmentTile wt = wt_iterator.next();
-                    wt.setOccupant(agentFactory.createAgent(AgentType.PREY, wt.getLocation()));
+                    Agent newAgent = agentFactory.createAgent(AgentType.PREY, wt.getLocation());
+                    wt.setOccupant(newAgent);
+                    agentList.add(newAgent);
                 }
             }
             else {
@@ -62,23 +69,28 @@ public class ModelController {
     public void cycle() {
         int agent0Count = 0;
         int agent1Count = 0;
-        ArrayList<UUID> agentRunLog = new ArrayList<>();
-        for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
-            EnvironmentTile current_wt = wt_iterator.next();
-            if (current_wt.isOccupied() && !agentRunLog.contains(current_wt.getOccupant().getID())) {
-                if (current_wt.getOccupant().getAttributes().getType().equals(AgentType.PREDATOR)) {
-                    agent0Count++;
+        ArrayList<Agent> aliveAgents = new ArrayList<>();
+        for (Agent currentAgent : agentList) {
+            environment.setTileAgent(currentAgent.getLocation(), null);
+            AgentModelUpdate agentModelUpdate = currentAgent.run(environment);
+            if (agentModelUpdate.getAgent() != null) {
+                environment.setTileAgent(agentModelUpdate.getAgent());
+                aliveAgents.add(agentModelUpdate.getAgent());
+            }
+            if (!agentModelUpdate.getChildAgents().isEmpty()) {
+                for (Agent newAgent : agentModelUpdate.getChildAgents()) {
+                    environment.setTileAgent(newAgent);
+                    aliveAgents.add(newAgent);
                 }
-                else {
-                    agent1Count++;
-                }
-                agentRunLog.add(current_wt.getOccupant().getID());
-                this.environment = current_wt.getOccupant().run(this.environment);
+            }
+            if (currentAgent.getAttributes().getType().equals(AgentType.PREDATOR)) {
+                agent0Count++;
             }
             else {
-                this.environment.modifyTileFoodLevel(current_wt.getLocation(), 1);
+                agent1Count++;
             }
         }
+        agentList = aliveAgents;
         this.diagnostics.setAgent0Count(agent0Count);
         this.diagnostics.setAgent1Count(agent1Count);
     }
@@ -86,10 +98,9 @@ public class ModelController {
     public void clear() {
         for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
             EnvironmentTile current_wt = wt_iterator.next();
-            if (current_wt.isOccupied()) {
-                current_wt.setOccupant(null);
-            }
+            current_wt.setOccupant(null);
         }
+        agentList = new ArrayList<Agent>();
     }
 
     public void setEnvironmentMaxFoodLevel(int newMax) {

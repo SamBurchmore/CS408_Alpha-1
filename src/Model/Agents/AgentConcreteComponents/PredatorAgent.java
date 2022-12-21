@@ -20,31 +20,31 @@ public class PredatorAgent extends BaseAgent {
     }
 
     @Override
-    public Environment run(Environment environment_) {
+    public AgentModelUpdate run(Environment environment_) {
 
         super.liveDay();
 
         if (super.isDead()) {
             environment_.setTileAgent(super.getLocation(), null);
             //System.out.println("die");
-            return environment_;
+            return new AgentModelUpdate(null, new ArrayList<Agent>());
         }
 
         ArrayList<AgentVision> agentSight = super.getVision().lookAround(environment_, super.getLocation(), super.getAttributes().getVision(), super.getAttributes().getSpeed());
         AgentDecision agentDecision = super.getReaction().react(agentSight, super.getAttributes(), super.getScores());
+        ArrayList<Agent> childAgents = new ArrayList<>();
 
         if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
-            environment_ = super.move(agentDecision.getLocation(), environment_);
+            super.move(agentDecision.getLocation());
         }
         if (agentDecision.getAgentAction().equals(AgentAction.CREATE)) {
-            environment_ = super.create(agentDecision.getLocation(), environment_);
+            childAgents = super.create(agentDecision.getLocation(), environment_);
         }
         if (agentDecision.getAgentAction().equals(AgentAction.ATTACK)) {
             this.predate(environment_.getTile(agentDecision.getLocation()).getOccupant().getAttributes().getSize());
-            environment_ = super.move(agentDecision.getLocation(), environment_);
+            super.move(agentDecision.getLocation());
         }
-
-        return environment_;
+        return new AgentModelUpdate(this, childAgents);
     }
 
     @Override

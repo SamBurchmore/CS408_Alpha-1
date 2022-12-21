@@ -4,6 +4,7 @@ import Model.Agents.AgentBaseComponents.BaseAgent;
 import Model.Agents.AgentInterfaces.*;
 import Model.Agents.AgentStructs.AgentAction;
 import Model.Agents.AgentStructs.AgentDecision;
+import Model.Agents.AgentStructs.AgentModelUpdate;
 import Model.Agents.AgentStructs.AgentVision;
 import Model.Environment.Location;
 import Model.Environment.Environment;
@@ -24,44 +25,38 @@ public class PreyAgent extends BaseAgent {
     }
 
     @Override
-    public Environment run(Environment environment_) {
+    public AgentModelUpdate run(Environment environment_) {
 
         super.liveDay();
         if (super.isDead()) {
             environment_.setTileAgent(super.getLocation(), null);
-            return environment_;
+            return new AgentModelUpdate(null, new ArrayList<Agent>());
         }
 
-        environment_.modifyTileFoodLevel(super.getLocation(), this.graze(environment_.getTile(super.getLocation())));
+        this.graze(environment_.getTile(super.getLocation()));
         ArrayList<AgentVision> agentSight = super.getVision().lookAround(environment_, super.getLocation(), super.getAttributes().getVision(), super.getAttributes().getSpeed());
         AgentDecision agentDecision = super.getReaction().react(agentSight, super.getAttributes(), super.getScores());
+        ArrayList<Agent> childAgents = new ArrayList<>();
 
         if (!agentDecision.isNull()) {
             if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
-                environment_ = super.move(agentDecision.getLocation(), environment_);
+                super.move(agentDecision.getLocation());
             }
             if (agentDecision.getAgentAction().equals(AgentAction.CREATE)) {
-                environment_ = this.create(agentDecision.getLocation(), environment_);
+                childAgents = this.create(agentDecision.getLocation(), environment_);
             }
         }
-        //System.out.println(worldGrid_.getTile(super.getLocation()).getFoodLevel());
-        environment_.modifyTileFoodLevel(super.getLocation(), -super.getAttributes().getEatAmount());
-
-        this.liveDay();
-        if (super.isDead()) {
-            environment_.setTileAgent(super.getLocation(), null);
-        }
-        return environment_;
+        return new AgentModelUpdate(this, childAgents);
     }
 
     @Override
-    public Environment create(Location parentBLocation, Environment environment_) {
+    public ArrayList<Agent> create(Location parentBLocation, Environment environment_) {
         ArrayList<Location> childLocations = environment_.emptyAdjacent(super.getLocation());
+        ArrayList<Agent> childAgents = new ArrayList<>();
         for (Location childLocation : childLocations) {
-            Agent child = this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation);
-            environment_.setTileAgent(childLocation, child);
-    }
-        return environment_;
+            childAgents.add(this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation));
+        }
+        return childAgents;
 }
 
     @Override

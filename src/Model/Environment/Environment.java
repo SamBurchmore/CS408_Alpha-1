@@ -64,8 +64,12 @@ public class Environment {
         return this.grid[y *  this.size + x];
     }
 
-    public void setTileAgent(Location location, Agent new_agent) {
-        this.grid[location.getY() * this.size + location.getX()].setOccupant(new_agent);
+    public void setTileAgent(Location location, Agent newAgent) {
+        this.grid[location.getY() * this.size + location.getX()].setOccupant(newAgent);
+    }
+
+    public void setTileAgent(Agent newAgent) {
+        this.grid[newAgent.getLocation().getY() * this.size + newAgent.getLocation().getX()].setOccupant(newAgent);
     }
 
     public Iterator<EnvironmentTile> iterator() {

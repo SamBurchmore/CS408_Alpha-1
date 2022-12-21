@@ -1,7 +1,6 @@
 package Model.Agents.AgentConcreteComponents;
 
 import Model.Agents.AgentBaseComponents.BaseReaction;
-import Model.Agents.AgentInterfaces.Agent;
 import Model.Agents.AgentInterfaces.Attributes;
 import Model.Agents.AgentInterfaces.Motivations;
 import Model.Agents.AgentInterfaces.Scores;
@@ -11,7 +10,6 @@ import Model.Agents.AgentStructs.AgentVision;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public class PreyReaction extends BaseReaction {
 

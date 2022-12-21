@@ -11,7 +11,6 @@ import Model.Agents.AgentStructs.AgentVision;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public class PredatorReaction extends BaseReaction {
 
