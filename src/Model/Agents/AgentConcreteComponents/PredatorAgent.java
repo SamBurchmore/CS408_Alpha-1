@@ -8,6 +8,7 @@ import Model.Environment.Environment;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PredatorAgent extends BaseAgent {
 
@@ -20,31 +21,25 @@ public class PredatorAgent extends BaseAgent {
     }
 
     @Override
-    public Environment run(Environment environment_) {
+    public AgentModelUpdate run(Environment environment) {
 
-        super.liveDay();
-
+        AgentDecision agentDecision = super.liveDay(environment);
         if (super.isDead()) {
-            environment_.setTileAgent(super.getLocation(), null);
-            //System.out.println("die");
-            return environment_;
+            return new AgentModelUpdate(null, new ArrayList<Agent>());
         }
-
-        ArrayList<AgentVision> agentSight = super.getVision().lookAround(environment_, super.getLocation(), super.getAttributes().getVision(), super.getAttributes().getSpeed());
-        AgentDecision agentDecision = super.getReaction().react(agentSight, super.getAttributes(), super.getScores());
+        ArrayList<Agent> childAgents = new ArrayList<>();
 
         if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
-            environment_ = super.move(agentDecision.getLocation(), environment_);
+            super.move(agentDecision.getLocation());
         }
         if (agentDecision.getAgentAction().equals(AgentAction.CREATE)) {
-            environment_ = super.create(agentDecision.getLocation(), environment_);
+            childAgents = this.create(agentDecision.getLocation(), environment);
         }
         if (agentDecision.getAgentAction().equals(AgentAction.ATTACK)) {
-            this.predate(environment_.getTile(agentDecision.getLocation()).getOccupant().getAttributes().getSize());
-            environment_ = super.move(agentDecision.getLocation(), environment_);
+            this.predate(environment.getTile(agentDecision.getLocation()).getOccupant().getAttributes().getSize());
+            super.move(agentDecision.getLocation());
         }
-
-        return environment_;
+        return new AgentModelUpdate(this, childAgents);
     }
 
     @Override
@@ -53,21 +48,21 @@ public class PredatorAgent extends BaseAgent {
         return new PredatorAgent(childLocation, this, parentB);
     }
 
-    public void predate(int preySize) {
-        super.getScores().setHunger(super.getScores().getHunger() + 500);
+    @Override
+    public ArrayList<Agent> create(Location parentBLocation, Environment environment_) {
+        ArrayList<Location> childLocations = environment_.emptyAdjacent(super.getLocation(), AgentType.PREY);
+        ArrayList<Agent> childAgents = new ArrayList<>();
+        Collections.shuffle(childLocations);
+        for (Location childLocation : childLocations.subList(0, childLocations.size() / 2)) {
+            Agent child = this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation);
+            child.getScores().setHunger(child.getScores().getMAX_HUNGER() / 2);
+            childAgents.add(child);
+        }
+        return childAgents;
     }
 
-    @Override
-    public void liveDay() {
-        super.getScores().setHunger((super.getScores().getHunger() - 200));
-        super.getScores().setAge(super.getScores().getAge()+1);
-        super.getScores().setCreationCounter((super.getScores().getCreationCounter()-1));
-        if (super.getScores().getHunger() >= 50) {
-            super.getScores().setHealth(super.getScores().getHealth() + 15);
-        }
-        if (super.getScores().getHunger() < 250) {
-            super.getScores().setHealth(super.getScores().getHealth() - 50);
-        }
+    public void predate(int preySize) {
+        super.getScores().setHunger(super.getScores().getHunger() + super.getAttributes().getEatAmount());
     }
 
 }

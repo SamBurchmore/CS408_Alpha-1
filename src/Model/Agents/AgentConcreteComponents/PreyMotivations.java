@@ -5,16 +5,17 @@ import Model.Agents.AgentInterfaces.Scores;
 
 public class PreyMotivations extends BaseMotivations {
 
-    public boolean toCreate(Scores agentScores) {
-        // If the agents hunger is more than half, then it wants to breed.
-        //System.out.println(agentScores.getCreationCounter());
-        //System.out.println(agentScores.getCreationCounter() <= 0 && agentScores.getHunger() > agentScores.getMAX_HUNGER() / 2);
-        return (agentScores.getCreationCounter() <= 0 );
+    @Override
+    public int toCreate(Scores agentScores) {
+        if (agentScores.getCreationCounter() <= 0 && agentScores.getHunger() >= agentScores.getMAX_HUNGER() / 4) {
+            return 1;
+        }
+        return 0;
     }
 
     @Override
-    public boolean toAttack(Scores agentScores_) {
-        return false;
+    public int toAttack(Scores agentScores_) {
+        return 0;
     }
 
 }

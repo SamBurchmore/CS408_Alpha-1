@@ -1,11 +1,13 @@
 package Model.Environment;
 
 import Model.Agents.AgentInterfaces.Agent;
+import Model.Agents.AgentStructs.AgentType;
 import Model.Agents.AgentStructs.AgentVision;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 
@@ -64,51 +66,37 @@ public class Environment {
         return this.grid[y *  this.size + x];
     }
 
-    public void setTileAgent(Location location, Agent new_agent) {
-        this.grid[location.getY() * this.size + location.getX()].setOccupant(new_agent);
+    public void setTileAgent(Location location, Agent newAgent) {
+        this.grid[location.getY() * this.size + location.getX()].setOccupant(newAgent);
+    }
+
+    public void setTileAgent(Agent newAgent) {
+        this.grid[newAgent.getLocation().getY() * this.size + newAgent.getLocation().getX()].setOccupant(newAgent);
     }
 
     public Iterator<EnvironmentTile> iterator() {
-        return new WorldGridIterator();
+        return new EnvironmentIterator();
     }
 
-    public class WorldGridIterator implements Iterator<EnvironmentTile> {
+    public class EnvironmentIterator implements Iterator<EnvironmentTile> {
 
-        private int x_index;
-        private int y_index;
-        private boolean has_next;
+        private ArrayList<EnvironmentTile> wgIterator;
 
-        public WorldGridIterator() {
-            this.x_index = 0;
-            this.y_index = 0;
-            this.has_next = true;
+        public EnvironmentIterator() {
+            wgIterator = new ArrayList<>(Arrays.asList(Environment.this.grid));
         }
 
         @Override
         public boolean hasNext() {
-            return this.has_next;
+            return !this.wgIterator.isEmpty();
         }
 
         // TODO seeing as this will run every time the simulation runs one turn, we should optimise this if we can.
         @Override
         public EnvironmentTile next() {
-            // If the iterator has no more elements, then there's no point in looking for more elements.
-            if (this.has_next) {
-                // Get the next element from the WorldGrid.
-                EnvironmentTile wt = Environment.this.getTile(this.x_index, this.y_index);
-                this.x_index++;
-                // Iterate the x coordinate by 1, if its now equal to the WorldGrid size, then iterate the y coordinate and rest x to 0.
-                if (this.x_index >= Environment.this.size) {
-                    this.x_index = 0;
-                    this.y_index++;
-                    // Iterate the y coordinate, if its now equal to the WorldGrid size then we've gone through every element, so set the has next flag to false.
-                    if (this.y_index >= Environment.this.size) {
-                        this.has_next = false;
-                    }
-                }
-                return wt;
-            }
-            return null;
+            EnvironmentTile nextTile = this.wgIterator.get(0);
+            this.wgIterator.remove(0);
+            return nextTile;
         }
     }
 
@@ -122,7 +110,27 @@ public class Environment {
                 if (((x_coord < this.getSize()) && (y_coord < this.getSize())) && ((x_coord >= 0) && (y_coord >= 0)) && !(i == 0 && j == 0)) {
                     if (!this.getTile(x_coord, y_coord).isOccupied()) {
                         empties.add(new Location(x_coord, y_coord));
-                        //System.out.println("X: " + i + " " + "Y:" + j);
+                    }
+                }
+            }
+        }
+        Collections.shuffle(empties);
+        return empties;
+    }
+
+    public ArrayList<Location> emptyAdjacent(Location location, AgentType ignore) {
+        ArrayList<Location> empties = new ArrayList<>();
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                int x_coord = location.getX() + i;
+                int y_coord = location.getY() + j;
+                // Checks the agent isn't looking outside the grid
+                if (((x_coord < this.getSize()) && (y_coord < this.getSize())) && ((x_coord >= 0) && (y_coord >= 0)) && !(i == 0 && j == 0)) {
+                    if (!this.getTile(x_coord, y_coord).isOccupied()) {
+                        empties.add(new Location(x_coord, y_coord));
+                    }
+                    else if (this.getTile(x_coord, y_coord).getOccupant().getAttributes().getType().equals(ignore)) {
+                        empties.add(new Location(x_coord, y_coord));
                     }
                 }
             }
@@ -190,7 +198,7 @@ public class Environment {
         if (this.getTile(location).isOccupied()) {
             return this.getTile(location).getOccupant().getColor();
         }
-        if (this.getTile(location).getFoodLevel() == this.maxFoodLevel) {
+        if (this.getTile(location).getFoodLevel() >= this.maxFoodLevel) {
             return this.max;
         }
         if (this.getTile(location).getFoodLevel() > this.maxFoodLevel - this.maxFoodLevel / 4 ) {
@@ -199,13 +207,10 @@ public class Environment {
         if (this.getTile(location).getFoodLevel() > this.maxFoodLevel / 2 ) {
             return this.medium;
         }
-        if (this.getTile(location).getFoodLevel() > this.maxFoodLevel - (this.maxFoodLevel / 4)*3 ) {
+        if (this.getTile(location).getFoodLevel() > this.minFoodLevel) {
             return this.low;
         }
-        if (this.getTile(location).getFoodLevel() == this.minFoodLevel ) {
-            return this.min;
-        }
-        return Color.white;
+        return this.min;
     }
 
     public AgentVision getTileView(Location location) {

@@ -111,7 +111,7 @@ public abstract class BaseScores implements Scores {
 
     public void setCreationCounter(int creationCounter) {
         this.creationCounter = creationCounter;
-        if (this.creationCounter <= 0) {
+        if (this.creationCounter < 0) {
             this.creationCounter = 0;
         }
     }

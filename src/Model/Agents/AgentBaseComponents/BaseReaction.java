@@ -3,12 +3,10 @@ package Model.Agents.AgentBaseComponents;
 import Model.Agents.AgentInterfaces.*;
 import Model.Agents.AgentStructs.AgentAction;
 import Model.Agents.AgentStructs.AgentDecision;
-import Model.Agents.AgentStructs.AgentType;
 import Model.Agents.AgentStructs.AgentVision;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public abstract class BaseReaction implements Reaction {
 
