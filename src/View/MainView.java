@@ -19,7 +19,7 @@ public class MainView extends JFrame {
     private JPanel agentCreationControlPanel;
 
     // Simulation control buttons
-    private JButton stopStartButton;
+    private JButton runNStepsButton;
     private JButton runOneStepButton;
     private JButton populateButton;
     private JButton clearBoardButton;
@@ -33,9 +33,9 @@ public class MainView extends JFrame {
     private JLabel agentDensityLabel;
 
     // Environment settings
-    private JSpinner maxFoodLevelSpinner;
+    private JSpinner runNStepsSpinner;
     private JSpinner minFoodLevelSpinner;
-    private JLabel maxFoodLevelLabel;
+    private JLabel runNStepsLabel;
     private JLabel minFoodLevelLabel;
 
     JLabel agent0DensityValue = new JLabel();
@@ -57,7 +57,7 @@ public class MainView extends JFrame {
         this.simulationPanel.add(this.worldPanel, constraintsWorldPanel);
         // Define the simulation control buttons and set their text, then add them to the simulation control button panel
         this.runOneStepButton = new JButton("Run 1 Step");
-        this.stopStartButton = new JButton("stop/start");
+        this.runNStepsButton = new JButton("Run N Steps");
         this.populateButton = new JButton("populate grid");
         this.clearBoardButton = new JButton("clear board");
         this.simulationControlButtonPanel = new JPanel(new GridLayout(2, 2));
@@ -65,8 +65,8 @@ public class MainView extends JFrame {
         GridBagConstraints constraintsSimulationButtonsPanel = new GridBagConstraints();
         constraintsSimulationButtonsPanel.gridy = 1;
         this.simulationControlButtonPanel.add(this.runOneStepButton);
-        this.simulationControlButtonPanel.add(this.stopStartButton);
         this.simulationControlButtonPanel.add(this.clearBoardButton);
+        this.simulationControlButtonPanel.add(this.runNStepsButton);
         this.simulationControlButtonPanel.add(this.populateButton);
         this.simulationPanel.add(this.simulationControlButtonPanel, constraintsSimulationButtonsPanel);
 
@@ -76,24 +76,22 @@ public class MainView extends JFrame {
         this.agentCreationControlPanel = new JPanel(new GridLayout(3, 4));
 
         // Define the environment control settings
-        this.maxFoodLevelSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 10000, 1));
-        this.minFoodLevelSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 10000, 1));
-        this.maxFoodLevelLabel = new JLabel("Max Food Level:   ", SwingConstants.RIGHT);
-        this.minFoodLevelLabel = new JLabel("Min Food Level:   ", SwingConstants.RIGHT);
+        this.runNStepsSpinner = new JSpinner(new SpinnerNumberModel(10, 0, 1000000, 1));
+        this.runNStepsLabel = new JLabel("N:   ", SwingConstants.RIGHT);
 
         // Define the agent creation controls and add them to the agent creation control panel
-        this.agent0RatioSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
+        this.agent0RatioSpinner = new JSpinner(new SpinnerNumberModel(35, 0, 100, 1));
         this.agent1RatioSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 100, 1));
-        this.agentDensitySpinner = new JSpinner(new SpinnerNumberModel(1, 0, 100, 1));
+        this.agentDensitySpinner = new JSpinner(new SpinnerNumberModel(10, 0, 100, 1));
         this.agent0RatioLabel = new JLabel("Predator Ratio:   ", SwingConstants.RIGHT);
         this.agent1RatioLabel = new JLabel("Prey Ratio:   ", SwingConstants.RIGHT);
         this.agentDensityLabel = new JLabel("Density Percent:   ", SwingConstants.RIGHT);
-        this.agentCreationControlPanel.add(this.maxFoodLevelLabel);
-        this.agentCreationControlPanel.add(this.maxFoodLevelSpinner);
+        this.agentCreationControlPanel.add(this.runNStepsLabel);
+        this.agentCreationControlPanel.add(this.runNStepsSpinner);
         this.agentCreationControlPanel.add(this.agent0RatioLabel);
         this.agentCreationControlPanel.add(this.agent0RatioSpinner);
-        this.agentCreationControlPanel.add(this.minFoodLevelLabel);
-        this.agentCreationControlPanel.add(this.minFoodLevelSpinner);
+        this.agentCreationControlPanel.add(new JLabel());
+        this.agentCreationControlPanel.add(new JLabel());
         this.agentCreationControlPanel.add(this.agent1RatioLabel);
         this.agentCreationControlPanel.add(this.agent1RatioSpinner);
 
@@ -142,7 +140,7 @@ public class MainView extends JFrame {
         return this.runOneStepButton;
     }
 
-    public JButton getStopStartButton() { return this.stopStartButton; }
+    public JButton getRunNStepsButton() { return this.runNStepsButton; }
 
     public JButton getPopulateButton() { return this.populateButton; }
 
@@ -166,4 +164,7 @@ public class MainView extends JFrame {
         this.agent0DensityValue.setText(((Integer) value).toString());
     }
 
+    public JSpinner getNSteps() {
+        return this.runNStepsSpinner;
+    }
 }

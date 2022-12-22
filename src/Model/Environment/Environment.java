@@ -1,6 +1,7 @@
 package Model.Environment;
 
 import Model.Agents.AgentInterfaces.Agent;
+import Model.Agents.AgentStructs.AgentType;
 import Model.Agents.AgentStructs.AgentVision;
 
 import java.awt.*;
@@ -109,7 +110,27 @@ public class Environment {
                 if (((x_coord < this.getSize()) && (y_coord < this.getSize())) && ((x_coord >= 0) && (y_coord >= 0)) && !(i == 0 && j == 0)) {
                     if (!this.getTile(x_coord, y_coord).isOccupied()) {
                         empties.add(new Location(x_coord, y_coord));
-                        //System.out.println("X: " + i + " " + "Y:" + j);
+                    }
+                }
+            }
+        }
+        Collections.shuffle(empties);
+        return empties;
+    }
+
+    public ArrayList<Location> emptyAdjacent(Location location, AgentType ignore) {
+        ArrayList<Location> empties = new ArrayList<>();
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                int x_coord = location.getX() + i;
+                int y_coord = location.getY() + j;
+                // Checks the agent isn't looking outside the grid
+                if (((x_coord < this.getSize()) && (y_coord < this.getSize())) && ((x_coord >= 0) && (y_coord >= 0)) && !(i == 0 && j == 0)) {
+                    if (!this.getTile(x_coord, y_coord).isOccupied()) {
+                        empties.add(new Location(x_coord, y_coord));
+                    }
+                    else if (this.getTile(x_coord, y_coord).getOccupant().getAttributes().getType().equals(ignore)) {
+                        empties.add(new Location(x_coord, y_coord));
                     }
                 }
             }

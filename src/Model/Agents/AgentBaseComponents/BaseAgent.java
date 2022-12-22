@@ -65,29 +65,13 @@ public abstract class BaseAgent implements Agent {
             Location childLocation = childLocations.get(0);
             Agent child = this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation);
             childAgents.add(child);
-//            if (child.getAttributes().getType().equals(AgentType.PREDATOR)) {
-//                System.out.println(child.getType() + " | Speed: " + child.getAttributes().getSpeed() + ", Size: " + child.getAttributes().getSize() + ", Vision: " + child.getAttributes().getVision());
-//            }
         }
         return childAgents;
     }
 
     @Override
-    public void liveDay() {
-        this.getScores().setHunger((this.getScores().getHunger() - this.getAttributes().getSize() / 3));
-        this.getScores().setAge(this.getScores().getAge()+1);
-        this.getScores().setCreationCounter((this.getScores().getCreationCounter()-1));
-        if (this.getScores().getHunger() >= this.getScores().getMAX_HUNGER() / 2) {
-            this.getScores().setHealth(this.getScores().getHealth() + this.getScores().getMAX_HEALTH() / 2);
-        }
-        if (this.getScores().getHunger() <= this.getScores().getMAX_HUNGER() / 2) {
-            this.getScores().setHealth(this.getScores().getHealth() - this.getScores().getMAX_HEALTH() / 5);
-        }
-    }
-
-    @Override
     public boolean isDead() {
-        return this.getScores().getHealth() <= 0 || this.getScores().getAge() >= this.getScores().getMAX_AGE();
+        return this.getScores().getHunger() <= 0 || this.getScores().getAge() >= this.getScores().getMAX_AGE();
     }
 
     @Override

@@ -2,7 +2,7 @@ package Model.Agents.AgentInterfaces;
 
 public interface Motivations {
 
-    boolean toCreate(Scores agentScores_);
-    boolean toAttack(Scores agentScores_);
+    int toCreate(Scores agentScores_);
+    int toAttack(Scores agentScores_);
 
 }

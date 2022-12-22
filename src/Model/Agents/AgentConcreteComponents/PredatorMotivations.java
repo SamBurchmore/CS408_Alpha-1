@@ -5,14 +5,22 @@ import Model.Agents.AgentInterfaces.Scores;
 
 public class PredatorMotivations extends BaseMotivations {
 
-    public boolean toCreate(Scores agentScores) {
+    public int toCreate(Scores agentScores) {
         // If the agents hunger is more than half, then it wants to breed.
-        return (agentScores.getCreationCounter() <= 0 ) && (agentScores.getHunger() > 250);
+        if (agentScores.getCreationCounter() > 0) {
+            return 0;
+        }
+        double modifier = agentScores.getMAX_HUNGER() * 2 + agentScores.getHunger() * 2;
+        return (int) modifier;
     }
 
-    public boolean toAttack(Scores agentScores) {
+    public int toAttack(Scores agentScores) {
         // If the agents hunger is less than its max, then it wants to eat.
-        return agentScores.getHunger() < 250;
+        if (agentScores.getHunger() >= agentScores.getMAX_HUNGER()) {
+            return 0;
+        }
+        double modifier = agentScores.getMAX_HUNGER() * 4 - agentScores.getHunger();
+        return (int) modifier;
     }
 
 }

@@ -30,6 +30,13 @@ public class MainController {
         this.initController();
     }
 
+    private void cycleController() {
+        while (true) {
+            if (cycleToggle) {
+                runStep();
+            }
+        }
+    }
 
     public void updateWorldImage() {
         this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), this.counter);
@@ -49,6 +56,13 @@ public class MainController {
         this.updateWorldImage();
     }
 
+    public void runNSteps() {
+        int n = (int) this.view.getNSteps().getValue();
+        for (int i = 0; i < n; i++) {
+            runStep();
+        }
+    }
+
     public int[] getAgentDensityRatio() {
         int[] agentRatios = new int[3];
         agentRatios[0] = (int) this.view.getAgent0Ratio().getValue();
@@ -60,6 +74,7 @@ public class MainController {
     public void clear() {
         this.modelController.clear();
         this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), 0);
+        this.counter = 0;
     }
 
     private void updateDiagnostics() {
@@ -83,5 +98,7 @@ public class MainController {
         this.view.getRunOneStepButton().addActionListener(e -> this.runStep());
         this.view.getPopulateButton().addActionListener(e -> this.populateWorld());
         this.view.getClearBoardButton().addActionListener(e -> this.clear());
+        this.view.getRunNStepsButton().addActionListener(e -> this.runNSteps());
     }
+
 }

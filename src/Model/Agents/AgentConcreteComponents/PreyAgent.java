@@ -33,6 +33,7 @@ public class PreyAgent extends BaseAgent {
         }
 
         int eatAmount = this.graze(environment_.getTile(super.getLocation()));
+
         ArrayList<AgentVision> agentSight = super.getVision().lookAround(environment_, super.getLocation(), super.getAttributes().getVision(), super.getAttributes().getSpeed());
         AgentDecision agentDecision = super.getReaction().react(agentSight, super.getAttributes(), super.getScores());
         ArrayList<Agent> childAgents = new ArrayList<>();
