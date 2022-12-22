@@ -6,6 +6,7 @@ import Model.Agents.AgentStructs.AgentVision;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 
@@ -73,46 +74,28 @@ public class Environment {
     }
 
     public Iterator<EnvironmentTile> iterator() {
-        return new WorldGridIterator();
+        return new EnvironmentIterator();
     }
 
-    public class WorldGridIterator implements Iterator<EnvironmentTile> {
+    public class EnvironmentIterator implements Iterator<EnvironmentTile> {
 
-        private int x_index;
-        private int y_index;
-        private boolean has_next;
+        private ArrayList<EnvironmentTile> wgIterator;
 
-        public WorldGridIterator() {
-            this.x_index = 0;
-            this.y_index = 0;
-            this.has_next = true;
+        public EnvironmentIterator() {
+            wgIterator = new ArrayList<>(Arrays.asList(Environment.this.grid));
         }
 
         @Override
         public boolean hasNext() {
-            return this.has_next;
+            return !this.wgIterator.isEmpty();
         }
 
         // TODO seeing as this will run every time the simulation runs one turn, we should optimise this if we can.
         @Override
         public EnvironmentTile next() {
-            // If the iterator has no more elements, then there's no point in looking for more elements.
-            if (this.has_next) {
-                // Get the next element from the WorldGrid.
-                EnvironmentTile wt = Environment.this.getTile(this.x_index, this.y_index);
-                this.x_index++;
-                // Iterate the x coordinate by 1, if its now equal to the WorldGrid size, then iterate the y coordinate and rest x to 0.
-                if (this.x_index >= Environment.this.size) {
-                    this.x_index = 0;
-                    this.y_index++;
-                    // Iterate the y coordinate, if its now equal to the WorldGrid size then we've gone through every element, so set the has next flag to false.
-                    if (this.y_index >= Environment.this.size) {
-                        this.has_next = false;
-                    }
-                }
-                return wt;
-            }
-            return null;
+            EnvironmentTile nextTile = this.wgIterator.get(0);
+            this.wgIterator.remove(0);
+            return nextTile;
         }
     }
 
@@ -194,7 +177,7 @@ public class Environment {
         if (this.getTile(location).isOccupied()) {
             return this.getTile(location).getOccupant().getColor();
         }
-        if (this.getTile(location).getFoodLevel() == this.maxFoodLevel) {
+        if (this.getTile(location).getFoodLevel() >= this.maxFoodLevel) {
             return this.max;
         }
         if (this.getTile(location).getFoodLevel() > this.maxFoodLevel - this.maxFoodLevel / 4 ) {
@@ -203,13 +186,10 @@ public class Environment {
         if (this.getTile(location).getFoodLevel() > this.maxFoodLevel / 2 ) {
             return this.medium;
         }
-        if (this.getTile(location).getFoodLevel() > this.maxFoodLevel - (this.maxFoodLevel / 4)*3 ) {
+        if (this.getTile(location).getFoodLevel() > this.minFoodLevel) {
             return this.low;
         }
-        if (this.getTile(location).getFoodLevel() == this.minFoodLevel ) {
-            return this.min;
-        }
-        return Color.white;
+        return this.min;
     }
 
     public AgentVision getTileView(Location location) {

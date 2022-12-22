@@ -9,6 +9,7 @@ import Model.Agents.AgentStructs.AgentModelUpdate;
 import Model.Agents.AgentStructs.AgentType;
 import Model.Environment.Environment;
 import Model.Environment.EnvironmentTile;
+import Model.Environment.Location;
 
 /**
  * This class will be the main controller for the simulation. It will handle running the agents, moving them, removing, and adding them to the grid when needed.
@@ -27,7 +28,7 @@ public class ModelController {
     Random randomGen;
 
     public ModelController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel){
-        this.environment = new Environment(size_, starting_food_level, minFoodLevel, maxFoodLevel);
+        this.environment = new Environment(size_, starting_food_level, maxFoodLevel, minFoodLevel);
         this.worldSize = size_;
         this.randomGen = new Random();
         this.agentList = new ArrayList<>();
@@ -71,16 +72,18 @@ public class ModelController {
         int agent1Count = 0;
         ArrayList<Agent> aliveAgents = new ArrayList<>();
         for (Agent currentAgent : agentList) {
-            environment.setTileAgent(currentAgent.getLocation(), null);
+            Location oldLocation = currentAgent.getLocation();
             AgentModelUpdate agentModelUpdate = currentAgent.run(environment);
+            environment.setTileAgent(oldLocation, null);
             if (agentModelUpdate.getAgent() != null) {
                 environment.setTileAgent(agentModelUpdate.getAgent());
+                environment.modifyTileFoodLevel(agentModelUpdate.getAgent().getLocation(), -agentModelUpdate.getEatAmount());
                 aliveAgents.add(agentModelUpdate.getAgent());
             }
             if (!agentModelUpdate.getChildAgents().isEmpty()) {
-                for (Agent newAgent : agentModelUpdate.getChildAgents()) {
-                    environment.setTileAgent(newAgent);
-                    aliveAgents.add(newAgent);
+                for (Agent childAgent : agentModelUpdate.getChildAgents()) {
+                    environment.setTileAgent(childAgent);
+                    aliveAgents.add(childAgent);
                 }
             }
             if (currentAgent.getAttributes().getType().equals(AgentType.PREDATOR)) {
@@ -88,6 +91,11 @@ public class ModelController {
             }
             else {
                 agent1Count++;
+            }
+        }
+        for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
+            if (randomGen.nextInt(10) > 7) {
+                environment.modifyTileFoodLevel(wt_iterator.next().getLocation(), 1);
             }
         }
         agentList = aliveAgents;

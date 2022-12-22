@@ -33,7 +33,7 @@ public abstract class BaseAgent implements Agent {
         this.location = location_;
         this.agentColor = parent_a.getColor();
         if (parent_a.getAttributes().getType().equals(AgentType.PREY)) {
-            this.reaction = new PreyReaction(new PredatorMotivations());
+            this.reaction = new PreyReaction(new PreyMotivations());
             //System.out.println("new predator");
         }
         else {
@@ -43,7 +43,7 @@ public abstract class BaseAgent implements Agent {
         this.vision = new BasicVision();
         this.attributes = new BasicAttributes(parent_a.getAttributes(), parent_b.getAttributes());
         this.scores = new BasicScores(parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), 0, parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), parent_a.getScores().getMAX_AGE(), parent_a.getScores().getCreationDelay());
-        //System.out.println(this.getAttributes().getVision());
+        this.scores.setCreationCounter(parent_a.getScores().getCreationDelay());
     }
 
     @Override
