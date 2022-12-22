@@ -21,29 +21,24 @@ public class PredatorAgent extends BaseAgent {
     }
 
     @Override
-    public AgentModelUpdate run(Environment environment_) {
+    public AgentModelUpdate run(Environment environment) {
 
-        this.liveDay();
-
+        AgentDecision agentDecision = super.liveDay(environment);
         if (super.isDead()) {
             return new AgentModelUpdate(null, new ArrayList<Agent>());
         }
-
-        ArrayList<AgentVision> agentSight = super.getVision().lookAround(environment_, super.getLocation(), super.getAttributes().getVision(), super.getAttributes().getSpeed());
-        AgentDecision agentDecision = super.getReaction().react(agentSight, super.getAttributes(), super.getScores());
         ArrayList<Agent> childAgents = new ArrayList<>();
 
         if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
             super.move(agentDecision.getLocation());
         }
         if (agentDecision.getAgentAction().equals(AgentAction.CREATE)) {
-            childAgents = this.create(agentDecision.getLocation(), environment_);
+            childAgents = this.create(agentDecision.getLocation(), environment);
         }
         if (agentDecision.getAgentAction().equals(AgentAction.ATTACK)) {
-            this.predate(environment_.getTile(agentDecision.getLocation()).getOccupant().getAttributes().getSize());
+            this.predate(environment.getTile(agentDecision.getLocation()).getOccupant().getAttributes().getSize());
             super.move(agentDecision.getLocation());
         }
-        //System.out.println("Hunger: " + super.getScores().getHunger() + ", Health: " + super.getScores().getHealth() + ", Age: " + super.getScores().getAge() + ", (" + super.getLocation().getX() + "," + super.getLocation().getY() + ")");
         return new AgentModelUpdate(this, childAgents);
     }
 
@@ -68,13 +63,6 @@ public class PredatorAgent extends BaseAgent {
 
     public void predate(int preySize) {
         super.getScores().setHunger(super.getScores().getHunger() + super.getAttributes().getEatAmount());
-    }
-
-    @Override
-    public void liveDay() {
-        super.getScores().setHunger((super.getScores().getHunger() - 1));
-        super.getScores().setAge(super.getScores().getAge() + 1);
-        super.getScores().setCreationCounter((super.getScores().getCreationCounter() - 1));
     }
 
 }

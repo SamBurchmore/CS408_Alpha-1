@@ -2,8 +2,10 @@ package Model.Agents.AgentBaseComponents;
 
 import Model.Agents.AgentConcreteComponents.*;
 import Model.Agents.AgentInterfaces.*;
+import Model.Agents.AgentStructs.AgentDecision;
 import Model.Agents.AgentStructs.AgentModelUpdate;
 import Model.Agents.AgentStructs.AgentType;
+import Model.Agents.AgentStructs.AgentVision;
 import Model.Environment.Location;
 import Model.Environment.Environment;
 
@@ -52,6 +54,21 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
+    public AgentDecision liveDay(Environment environment) {
+        this.getScores().setHunger((this.getScores().getHunger() - 1));
+        this.getScores().setAge(this.getScores().getAge()+1);
+        this.getScores().setCreationCounter((this.getScores().getCreationCounter() - 1));
+
+        ArrayList<AgentVision> agentSight = this.getVision().lookAround(environment, this.getLocation(), this.getAttributes().getVision(), this.getAttributes().getSpeed());
+        return this.getReaction().react(agentSight, this.getAttributes(), this.getScores());
+    }
+
+    @Override
+    public boolean isDead() {
+        return this.getScores().getHunger() <= 0 || this.getScores().getAge() >= this.getScores().getMAX_AGE();
+    }
+
+    @Override
     public void move(Location newLocation) {
         this.setLocation(newLocation);
     }
@@ -67,11 +84,6 @@ public abstract class BaseAgent implements Agent {
             childAgents.add(child);
         }
         return childAgents;
-    }
-
-    @Override
-    public boolean isDead() {
-        return this.getScores().getHunger() <= 0 || this.getScores().getAge() >= this.getScores().getMAX_AGE();
     }
 
     @Override
@@ -133,6 +145,5 @@ public abstract class BaseAgent implements Agent {
     public void setScores(Scores scores_) {
         this.scores = scores_;
     }
-
 
 }

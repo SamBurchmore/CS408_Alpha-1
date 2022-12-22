@@ -25,25 +25,21 @@ public class PreyAgent extends BaseAgent {
     }
 
     @Override
-    public AgentModelUpdate run(Environment environment_) {
+    public AgentModelUpdate run(Environment environment) {
 
-        this.liveDay();
-        if (this.isDead()) {
+        AgentDecision agentDecision = super.liveDay(environment);
+        if (super.isDead()) {
             return new AgentModelUpdate(null, new ArrayList<Agent>());
         }
-
-        int eatAmount = this.graze(environment_.getTile(super.getLocation()));
-
-        ArrayList<AgentVision> agentSight = super.getVision().lookAround(environment_, super.getLocation(), super.getAttributes().getVision(), super.getAttributes().getSpeed());
-        AgentDecision agentDecision = super.getReaction().react(agentSight, super.getAttributes(), super.getScores());
         ArrayList<Agent> childAgents = new ArrayList<>();
+        int eatAmount = this.graze(environment.getTile(super.getLocation()));
 
         if (!agentDecision.isNull()) {
             if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
                 super.move(agentDecision.getLocation());
             }
             if (agentDecision.getAgentAction().equals(AgentAction.CREATE)) {
-                childAgents = this.create(agentDecision.getLocation(), environment_);
+                childAgents = this.create(agentDecision.getLocation(), environment);
             }
         }
         return new AgentModelUpdate(this, childAgents, eatAmount);
@@ -80,19 +76,6 @@ public class PreyAgent extends BaseAgent {
         }
         //System.out.println(environmentTile.getFoodLevel());
         return environmentTile.getFoodLevel();
-    }
-
-    @Override
-    public void liveDay() {
-        super.getScores().setHunger((super.getScores().getHunger() - 1));
-        super.getScores().setAge(super.getScores().getAge()+1);
-        super.getScores().setCreationCounter((super.getScores().getCreationCounter() - 1));
-        //System.out.println("Hunger: " + super.getScores().getHunger() + ", Health: " + super.getScores().getHealth() + ", Age: " + super.getScores().getAge() + ", (" + super.getLocation().getX() + "," + super.getLocation().getY() + ")");
-    }
-
-    @Override
-    public boolean isDead() {
-        return this.getScores().getHunger() <= 0 || this.getScores().getAge() >= this.getScores().getMAX_AGE();
     }
 
 }

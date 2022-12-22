@@ -1,5 +1,6 @@
 package Model.Agents.AgentInterfaces;
 
+import Model.Agents.AgentStructs.AgentDecision;
 import Model.Agents.AgentStructs.AgentModelUpdate;
 import Model.Environment.Location;
 import Model.Environment.Environment;
@@ -11,9 +12,9 @@ import java.util.UUID;
 public interface Agent {
 
     AgentModelUpdate run(Environment environment_);
+    AgentDecision liveDay(Environment environment);
     void move(Location newLocation);
     ArrayList<Agent> create(Location parentBLocation, Environment environment_);
-    void liveDay();
     boolean isDead();
     Color getColor();
     void setColor(Color color_);

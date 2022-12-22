@@ -9,3 +9,6 @@ public class Main {
         }
     }
 }
+
+// Useful diagnostics print
+//System.out.println("Hunger: " + super.getScores().getHunger() + ", Health: " + super.getScores().getHealth() + ", Age: " + super.getScores().getAge() + ", (" + super.getLocation().getX() + "," + super.getLocation().getY() + ")");
