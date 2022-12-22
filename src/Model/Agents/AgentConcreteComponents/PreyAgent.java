@@ -50,8 +50,10 @@ public class PreyAgent extends BaseAgent {
         ArrayList<Location> childLocations = environment_.emptyAdjacent(super.getLocation());
         ArrayList<Agent> childAgents = new ArrayList<>();
         Collections.shuffle(childLocations);
-        for (Location childLocation : childLocations.subList(0, childLocations.size()/2)) {
-            childAgents.add(this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation));
+        for (Location childLocation : childLocations.subList(0, childLocations.size() / 2)) {
+            Agent child = this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation);
+            child.getScores().setHunger(child.getScores().getMAX_HUNGER() / 2);
+            childAgents.add(child);
         }
         return childAgents;
 }

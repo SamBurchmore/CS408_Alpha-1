@@ -84,6 +84,7 @@ public class Environment {
 
         public EnvironmentIterator() {
             wgIterator = new ArrayList<>(Arrays.asList(Environment.this.grid));
+            Collections.shuffle(wgIterator);
         }
 
         @Override
