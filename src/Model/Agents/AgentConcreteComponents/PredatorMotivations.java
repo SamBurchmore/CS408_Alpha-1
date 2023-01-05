@@ -10,7 +10,7 @@ public class PredatorMotivations extends BaseMotivations {
         if (agentScores.getCreationCounter() > 0) {
             return 0;
         }
-        double modifier = agentScores.getMAX_HUNGER() * 2 + agentScores.getHunger() * 2;
+        double modifier = agentScores.getMAX_HUNGER() + agentScores.getHunger();
         return (int) modifier;
     }
 
@@ -19,7 +19,7 @@ public class PredatorMotivations extends BaseMotivations {
         if (agentScores.getHunger() >= agentScores.getMAX_HUNGER()) {
             return 0;
         }
-        double modifier = agentScores.getMAX_HUNGER() * 4 - agentScores.getHunger();
+        double modifier = agentScores.getMAX_HUNGER() * 1.5 - agentScores.getHunger();
         return (int) modifier;
     }
 

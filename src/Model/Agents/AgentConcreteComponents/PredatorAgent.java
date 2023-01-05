@@ -18,6 +18,7 @@ public class PredatorAgent extends BaseAgent {
 
     public PredatorAgent(Location location_, Agent parentA, Agent parentB) {
         super(location_, parentA, parentB);
+        //super.setColor(super.getColor().darker());
     }
 
     @Override
@@ -25,6 +26,7 @@ public class PredatorAgent extends BaseAgent {
 
         AgentDecision agentDecision = super.liveDay(environment);
         if (super.isDead()) {
+            //System.out.println("DIE. Hunger: " + super.getScores().getHunger() + ", Health: " + super.getScores().getHealth() + ", Age: " + super.getScores().getAge() + ", (" + super.getLocation().getX() + "," + super.getLocation().getY() + ")");
             return new AgentModelUpdate(null, new ArrayList<Agent>());
         }
         ArrayList<Agent> childAgents = new ArrayList<>();
@@ -39,6 +41,7 @@ public class PredatorAgent extends BaseAgent {
             this.predate(environment.getTile(agentDecision.getLocation()).getOccupant().getAttributes().getSize());
             super.move(agentDecision.getLocation());
         }
+        //System.out.println("Hunger: " + super.getScores().getHunger() + ", Health: " + super.getScores().getHealth() + ", Age: " + super.getScores().getAge() + ", (" + super.getLocation().getX() + "," + super.getLocation().getY() + ")");
         return new AgentModelUpdate(this, childAgents);
     }
 
@@ -53,7 +56,7 @@ public class PredatorAgent extends BaseAgent {
         ArrayList<Location> childLocations = environment_.emptyAdjacent(super.getLocation(), AgentType.PREY);
         ArrayList<Agent> childAgents = new ArrayList<>();
         Collections.shuffle(childLocations);
-        for (Location childLocation : childLocations.subList(0, childLocations.size() / 3)) {
+        for (Location childLocation : childLocations.subList(0, childLocations.size() / 2)) {
             Agent child = this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation);
             child.getScores().setHunger(child.getScores().getMAX_HUNGER() / 2);
             childAgents.add(child);

@@ -11,10 +11,6 @@ public class BasicAttributes extends BaseAttributes {
 
     public BasicAttributes(Attributes attributes_a, Attributes attributes_b){
         super(attributes_a, attributes_b);
-        if (super.getSpeed() <= 0) {
-            super.setSpeed(1);
-            super.setVision(1);
-        }
     }
 
     public void mutate() {

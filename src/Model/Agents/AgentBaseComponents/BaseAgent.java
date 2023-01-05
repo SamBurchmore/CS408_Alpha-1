@@ -39,7 +39,7 @@ public abstract class BaseAgent implements Agent {
             //System.out.println("new predator");
         }
         else {
-            this.reaction = new PreyReaction(new PreyMotivations());
+            this.reaction = new PredatorReaction(new PredatorMotivations());
             //System.out.println("new prey");
         }
         this.vision = new BasicVision();
