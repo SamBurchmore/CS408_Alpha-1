@@ -2,12 +2,12 @@ import Controller.MainController;
 
 public class Main {
     public static void main(String[] args) {
-        MainController mainController = new MainController(20, 6, 0, 6, 36);
+        MainController mainController = new MainController(200, 6, 0, 6, 3);
         mainController.populateWorld();
-//        for (int i = 0; i < 100000; i++) {
-//            mainController.runStep();
-//        }
-        testMotivations();
+        for (int i = 0; i < 100000; i++) {
+            mainController.runStep();
+        }
+        //testMotivations();
     }
 
     public static void testMotivations(){

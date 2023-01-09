@@ -95,7 +95,7 @@ public class ModelController {
         }
         for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
             if (randomGen.nextInt(worldSize*worldSize) > worldSize*worldSize- (worldSize * 2)) {
-                environment.modifyTileFoodLevel(wt_iterator.next().getLocation(), 1);
+                environment.modifyTileFoodLevel(wt_iterator.next().getLocation(), 2);
             }
             else {
                 wt_iterator.next();

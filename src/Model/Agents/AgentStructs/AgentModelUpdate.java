@@ -9,8 +9,8 @@ public class AgentModelUpdate {
 
     private Agent agent;
     private ArrayList<Agent> childAgents;
-
     private int eatAmount;
+
     public AgentModelUpdate(Agent agent, ArrayList<Agent> childAgents) {
         this.agent = agent;
         this.childAgents = childAgents;

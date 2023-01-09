@@ -80,9 +80,9 @@ public class MainView extends JFrame {
         this.runNStepsLabel = new JLabel("N:   ", SwingConstants.RIGHT);
 
         // Define the agent creation controls and add them to the agent creation control panel
-        this.agent0RatioSpinner = new JSpinner(new SpinnerNumberModel(15, 0, 100, 1));
+        this.agent0RatioSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
         this.agent1RatioSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 100, 1));
-        this.agentDensitySpinner = new JSpinner(new SpinnerNumberModel(15, 0, 100, 1));
+        this.agentDensitySpinner = new JSpinner(new SpinnerNumberModel(50, 0, 100, 1));
         this.agent0RatioLabel = new JLabel("Predator Ratio:   ", SwingConstants.RIGHT);
         this.agent1RatioLabel = new JLabel("Prey Ratio:   ", SwingConstants.RIGHT);
         this.agentDensityLabel = new JLabel("Density Percent:   ", SwingConstants.RIGHT);
