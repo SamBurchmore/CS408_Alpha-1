@@ -3,9 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="b5c119b8-cf77-44b8-a83a-26bb30553e3a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MainController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PredatorAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PredatorAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PreyAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PreyAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PreyMotivations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PreyMotivations.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentStructs/AgentModelUpdate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentStructs/AgentModelUpdate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/ModelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/ModelController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/View/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MainView.java" afterDir="false" />
     </list>
@@ -73,6 +77,10 @@
       <recent name="Model.Agents.AgentConcreteComponents" />
       <recent name="Model.Agents.AgentBaseComponents" />
       <recent name="Model.Agents.AgentBaseQualities" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="Model.Agents" />
+      <recent name="Model.Agents.AgentConcreteComponents" />
     </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
@@ -206,6 +214,10 @@
       <workItem from="1671280807147" duration="3032000" />
       <workItem from="1671284162398" duration="2667000" />
       <workItem from="1673012807792" duration="5878000" />
+      <workItem from="1673270757290" duration="9883000" />
+      <workItem from="1673352704283" duration="12833000" />
+      <workItem from="1673440372571" duration="369000" />
+      <workItem from="1673456033795" duration="644000" />
     </task>
     <task id="LOCAL-00001" summary="added some methods">
       <created>1668354392375</created>
@@ -261,26 +273,26 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="471" y="358" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1668354391817" />
-    <state x="740" y="278" key="FileChooserDialogImpl" timestamp="1669219480113">
+    <state x="740" y="278" key="FileChooserDialogImpl" timestamp="1673270795804">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="278" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1669219480113" />
-    <state width="1877" height="141" key="GridCell.Tab.0.bottom" timestamp="1673026553782">
+    <state x="740" y="278" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1673270795804" />
+    <state width="1877" height="140" key="GridCell.Tab.0.bottom" timestamp="1673458780127">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="141" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1673026553782" />
-    <state width="1877" height="141" key="GridCell.Tab.0.center" timestamp="1673026553782">
+    <state width="1877" height="140" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1673458780127" />
+    <state width="1877" height="140" key="GridCell.Tab.0.center" timestamp="1673458780127">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="141" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1673026553782" />
-    <state width="1877" height="141" key="GridCell.Tab.0.left" timestamp="1673026553782">
+    <state width="1877" height="140" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1673458780127" />
+    <state width="1877" height="140" key="GridCell.Tab.0.left" timestamp="1673458780127">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="141" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1673026553782" />
-    <state width="1877" height="141" key="GridCell.Tab.0.right" timestamp="1673026553782">
+    <state width="1877" height="140" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1673458780127" />
+    <state width="1877" height="140" key="GridCell.Tab.0.right" timestamp="1673458780127">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="141" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1673026553782" />
+    <state width="1877" height="140" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1673458780127" />
     <state width="1877" height="243" key="GridCell.Tab.1.bottom" timestamp="1671285517829">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -323,16 +335,6 @@
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1669406159358" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <condition expression="agentID==null" language="JAVA" />
-          <url>file://$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java</url>
-          <line>159</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="wt_iterator" />

@@ -36,11 +36,9 @@ public abstract class BaseAgent implements Agent {
         this.agentColor = parent_a.getColor();
         if (parent_a.getAttributes().getType().equals(AgentType.PREY)) {
             this.reaction = new PreyReaction(new PreyMotivations());
-            //System.out.println("new predator");
         }
         else {
             this.reaction = new PredatorReaction(new PredatorMotivations());
-            //System.out.println("new prey");
         }
         this.vision = new BasicVision();
         this.attributes = new BasicAttributes(parent_a.getAttributes(), parent_b.getAttributes());

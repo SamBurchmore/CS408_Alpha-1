@@ -53,6 +53,7 @@ public class PreyAgent extends BaseAgent {
         for (Location childLocation : childLocations.subList(0, childLocations.size() / 2)) {
             Agent child = this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation);
             child.getScores().setHunger(child.getScores().getMAX_HUNGER() / 2);
+            child.getScores().setCreationCounter(5);
             childAgents.add(child);
         }
         return childAgents;
@@ -67,16 +68,13 @@ public class PreyAgent extends BaseAgent {
 
 
     public int graze(EnvironmentTile environmentTile) {
-        //System.out.println(environmentTile.getFoodLevel());
         if (environmentTile.getFoodLevel() <= 0) {
             return 0;
         }
         if (environmentTile.getFoodLevel() >= super.getAttributes().getEatAmount()) {
             super.getScores().setHunger(super.getScores().getHunger() + super.getAttributes().getEatAmount());
-            //System.out.println(super.getAttributes().getEatAmount());
             return super.getAttributes().getEatAmount();
         }
-        //System.out.println(environmentTile.getFoodLevel());
         return environmentTile.getFoodLevel();
     }
 

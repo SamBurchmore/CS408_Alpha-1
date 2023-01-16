@@ -19,13 +19,13 @@ public class ModelController {
     // The data structure which represents the world.
     private Environment environment;
     // We store the grid size here as its used in a lot of logical operations within this class.
-    final int worldSize;
+    private final int worldSize;
 
     private ArrayList<Agent> agentList;
     // This is where all diagnostic data on the simulation is stored.
     private Diagnostics diagnostics;
 
-    Random randomGen;
+    private Random randomGen;
 
     public ModelController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel){
         this.environment = new Environment(size_, starting_food_level, maxFoodLevel, minFoodLevel);
@@ -95,7 +95,7 @@ public class ModelController {
         }
         for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
             if (randomGen.nextInt(worldSize*worldSize) > worldSize*worldSize- (worldSize * 2)) {
-                environment.modifyTileFoodLevel(wt_iterator.next().getLocation(), 2);
+                environment.modifyTileFoodLevel(wt_iterator.next().getLocation(), 6);
             }
             else {
                 wt_iterator.next();

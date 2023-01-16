@@ -3,6 +3,8 @@ package Controller;
 import Model.ModelController;
 import View.MainView;
 
+import java.util.concurrent.TimeUnit;
+
 public class MainController {
 
     // The Graphical User Interface
@@ -46,7 +48,7 @@ public class MainController {
         int[] agentDensityRatio = this.getAgentDensityRatio();
         this.modelController.populate(agentDensityRatio[0], agentDensityRatio[2]);
         this.updateDiagnostics();
-        this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), this.counter);
+        this.updateWorldImage();
     }
 
     public void runStep() {
