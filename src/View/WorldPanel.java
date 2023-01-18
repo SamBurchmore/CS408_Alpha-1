@@ -8,9 +8,9 @@ public class WorldPanel extends JPanel {
 
     private BufferedImage worldImage;
 
-    public WorldPanel(int size_) {
-        this.setPreferredSize(new Dimension(size_, size_));
-        this.worldImage = new BufferedImage(size_, size_, BufferedImage.TYPE_INT_RGB);
+    public WorldPanel() {
+        this.setPreferredSize(new Dimension(600, 600));
+        this.worldImage = new BufferedImage(600, 600, BufferedImage.TYPE_INT_RGB);
     }
 
     @Override
