@@ -1,24 +1,18 @@
 import Controller.MainController;
-
-import java.util.Timer;
-import java.util.concurrent.TimeUnit;
+import View.MainView;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        MainController mainController = new MainController(300, 6, 0, 6, 2);
+
+        MainController mainController = new MainController(150, 6, 0, 6, 4);
         mainController.populateWorld();
-        TimeUnit.SECONDS.sleep(5);
-        for (int i = 0; i < 100000; i++) {
-            mainController.runStep();
-        }
+//        TimeUnit.SECONDS.sleep(5);
+//        for (int i = 0; i < 100000; i++) {
+//            mainController.runStep();
+//        }
         //testMotivations();
     }
 
-    public static void cycle(MainController mainController) {
-        for (int i = 0; i < 100; i++) {
-            mainController.runStep();
-        }
-    }
 
     public static void testMotivations(){
         int max = 8;

@@ -10,6 +10,7 @@ public class MainView extends JFrame {
     private SimulationControlPanel simulationControlPanel;
     private AgentEditorPanel agentEditorPanel;
     private WorldPanel worldPanel;
+    private ActiveAgentsPanel activeAgentsPanel;
 
     public MainView() {
 
@@ -24,29 +25,37 @@ public class MainView extends JFrame {
         // The GridBag constraints we'll be using to build the GUI
         GridBagConstraints c = new GridBagConstraints();
 
-        worldPanel = new WorldPanel();
+        activeAgentsPanel = new ActiveAgentsPanel();
         c.gridx = 1;
         c.gridy = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 2;this.add(worldPanel, c);
+        c.gridwidth = 2;
+        this.add(activeAgentsPanel, c);
+
+        worldPanel = new WorldPanel();
+        c.gridx = 1;
+        c.gridy = 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = 2;
+        this.add(worldPanel, c);
 
         agentEditorPanel = new AgentEditorPanel();
         c.gridx = 0;
-        c.gridy = 0;
+        c.gridy = 1;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 1;
         this.add(agentEditorPanel, c);
 
         simulationControlPanel = new SimulationControlPanel();
         c.gridx = 1;
-        c.gridy = 1;
+        c.gridy = 2;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 2;
         this.add(simulationControlPanel, c);
 
         environmentSettingsPanel = new EnvironmentSettingsPanel();
         c.gridx = 1;
-        c.gridy = 2;
+        c.gridy = 3;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 2;
         this.add(environmentSettingsPanel, c);
