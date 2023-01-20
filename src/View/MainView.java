@@ -19,17 +19,27 @@ public class MainView extends JFrame {
         //setLocationRelativeTo(null);
         setVisible(true);
         setResizable(false);
-        setSize(900, 900);
+        //setSize(900, 650);
+        //setPreferredSize(new Dimension(900, 1000));
         setTitle("MainView");
 
         // The GridBag constraints we'll be using to build the GUI
         GridBagConstraints c = new GridBagConstraints();
+
+        agentEditorPanel = new AgentEditorPanel();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = 1;
+        c.gridheight = 2;
+        this.add(agentEditorPanel, c);
 
         activeAgentsPanel = new ActiveAgentsPanel();
         c.gridx = 1;
         c.gridy = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 2;
+        c.gridheight = 1;
         this.add(activeAgentsPanel, c);
 
         worldPanel = new WorldPanel();
@@ -37,28 +47,24 @@ public class MainView extends JFrame {
         c.gridy = 1;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 2;
+        c.gridheight = 2;
         this.add(worldPanel, c);
 
-        agentEditorPanel = new AgentEditorPanel();
+        environmentSettingsPanel = new EnvironmentSettingsPanel();
         c.gridx = 0;
-        c.gridy = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 1;
-        this.add(agentEditorPanel, c);
-
-        simulationControlPanel = new SimulationControlPanel();
-        c.gridx = 1;
         c.gridy = 2;
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 2;
-        this.add(simulationControlPanel, c);
+        c.gridwidth = 1;
+        c.gridheight = 2;
+        this.add(environmentSettingsPanel, c);
 
-        environmentSettingsPanel = new EnvironmentSettingsPanel();
+        simulationControlPanel = new SimulationControlPanel();
         c.gridx = 1;
         c.gridy = 3;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 2;
-        this.add(environmentSettingsPanel, c);
+        c.gridheight = 1;
+        this.add(simulationControlPanel, c);
 
         pack();
     }

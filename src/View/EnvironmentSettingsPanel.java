@@ -25,7 +25,8 @@ public class EnvironmentSettingsPanel extends JPanel {
     public EnvironmentSettingsPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(600, 100));
+        setPreferredSize(new Dimension(300, 204));
+        setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         // First all elements are defined and their attributes set
         maxEnergyLabel = new JLabel("Max Tile Energy: ");
@@ -56,10 +57,10 @@ public class EnvironmentSettingsPanel extends JPanel {
         energyRegenAmountSpinner.setPreferredSize(new Dimension(150, 30));
 
         environmentSizeSpinner = new JSpinner(new SpinnerNumberModel(300, 1, 600, 1));
-        environmentSizeSpinner.setPreferredSize(new Dimension(450, 30));
+        environmentSizeSpinner.setPreferredSize(new Dimension(150, 30));
 
         refreshSettingsButton = new JButton("Refresh");
-        refreshSettingsButton.setPreferredSize(new Dimension(600, 30));
+        refreshSettingsButton.setPreferredSize(new Dimension(300, 50));
 
         // The GridBag constraints we'll be using to build this panel
         GridBagConstraints c = new GridBagConstraints();
@@ -70,6 +71,8 @@ public class EnvironmentSettingsPanel extends JPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         // This tells the component it should only horizontally span 1 cell
         c.gridwidth = 1;
+        c.weightx = 1;
+        c.weighty = 1;
 
         // First we add the top row components
         c.gridy = 0;
@@ -80,14 +83,17 @@ public class EnvironmentSettingsPanel extends JPanel {
         c.gridx = 1;
         this.add(maxEnergySpinner, c);
 
-        c.gridx = 2;
-        this.add(minEnergyLabel, c);
-
-        c.gridx = 3;
-        this.add(minEnergySpinner, c);
-
         // Now we add the second row components
         c.gridy = 1;
+
+        c.gridx = 0;
+        this.add(minEnergyLabel, c);
+
+        c.gridx = 1;
+        this.add(minEnergySpinner, c);
+
+        // Now we add the third row components
+        c.gridy = 2;
 
         c.gridx = 0;
         this.add(energyRegenChanceLabel, c);
@@ -95,14 +101,17 @@ public class EnvironmentSettingsPanel extends JPanel {
         c.gridx = 1;
         this.add(energyRegenChanceSpinner, c);
 
-        c.gridx = 2;
+        // Now we add the forth row of components
+        c.gridy = 3;
+
+        c.gridx = 0;
         this.add(energyRegenAmountLabel, c);
 
-        c.gridx = 3;
+        c.gridx = 1;
         this.add(energyRegenAmountSpinner, c);
 
-        // Now we add the third row components
-        c.gridy = 2;
+        // Now we add the fifth row of components
+        c.gridy = 4;
 
         c.gridx = 0;
         this.add(environmentSizeLabel, c);
@@ -111,8 +120,8 @@ public class EnvironmentSettingsPanel extends JPanel {
         c.gridwidth = 3;
         this.add(environmentSizeSpinner, c);
 
-        // Now we add the forth row of components
-        c.gridy = 3;
+        // Now we add the sixth row of components
+        c.gridy = 5;
 
         c.gridx = 0;
         c.gridwidth = 4;

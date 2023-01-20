@@ -11,6 +11,7 @@ public class WorldPanel extends JPanel {
     public WorldPanel() {
         this.setPreferredSize(new Dimension(600, 600));
         this.worldImage = new BufferedImage(600, 600, BufferedImage.TYPE_INT_RGB);
+        setBorder(BorderFactory.createLineBorder(Color.darkGray));
     }
 
     @Override

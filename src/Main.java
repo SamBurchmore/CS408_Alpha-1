@@ -6,7 +6,7 @@ public class Main {
 
         MainController mainController = new MainController(150, 6, 0, 6, 4);
         mainController.populateWorld();
-//        TimeUnit.SECONDS.sleep(5);
+        //TimeUnit.SECONDS.sleep(5);
 //        for (int i = 0; i < 100000; i++) {
 //            mainController.runStep();
 //        }

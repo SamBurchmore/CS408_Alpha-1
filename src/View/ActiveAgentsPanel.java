@@ -31,76 +31,76 @@ public class ActiveAgentsPanel extends JPanel {
     public ActiveAgentsPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(602, 102));
+        setPreferredSize(new Dimension(602, 60));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         // First all elements are defined and their attributes set
-        emptyName = "          ";
+        emptyName = "Blank Agent";
         emptyColour = new Color(0, 0, 255);
 
         agent0NameLabel = new JLabel(emptyName);
-        agent0NameLabel.setPreferredSize(new Dimension(71, 25));
+        agent0NameLabel.setPreferredSize(new Dimension(71, 10));
 
         agent1NameLabel = new JLabel(emptyName);
-        agent1NameLabel.setPreferredSize(new Dimension(71, 25));
+        agent1NameLabel.setPreferredSize(new Dimension(71, 10));
 
         agent2NameLabel = new JLabel(emptyName);
-        agent2NameLabel.setPreferredSize(new Dimension(71, 25));
+        agent2NameLabel.setPreferredSize(new Dimension(71, 10));
 
         agent3NameLabel = new JLabel(emptyName);
-        agent3NameLabel.setPreferredSize(new Dimension(71, 25));
+        agent3NameLabel.setPreferredSize(new Dimension(71, 10));
 
         agent4NameLabel = new JLabel(emptyName);
-        agent4NameLabel.setPreferredSize(new Dimension(71, 25));
+        agent4NameLabel.setPreferredSize(new Dimension(71, 10));
 
         agent5NameLabel = new JLabel(emptyName);
-        agent5NameLabel.setPreferredSize(new Dimension(71, 25));
+        agent5NameLabel.setPreferredSize(new Dimension(71, 10));
 
         agent6NameLabel = new JLabel(emptyName);
-        agent6NameLabel.setPreferredSize(new Dimension(71, 25));
+        agent6NameLabel.setPreferredSize(new Dimension(71, 10));
 
         agent7NameLabel = new JLabel(emptyName);
-        agent7NameLabel.setPreferredSize(new Dimension(71, 25));
+        agent7NameLabel.setPreferredSize(new Dimension(71, 10));
 
         agent0ColourLabel = new JLabel();
         agent0ColourLabel.setBackground(emptyColour);
         agent0ColourLabel.setOpaque(true);
-        agent0ColourLabel.setPreferredSize(new Dimension(71, 71));
+        agent0ColourLabel.setPreferredSize(new Dimension(41, 41));
 
         agent1ColourLabel = new JLabel();
         agent1ColourLabel.setBackground(emptyColour);
         agent1ColourLabel.setOpaque(true);
-        agent1ColourLabel.setPreferredSize(new Dimension(71, 71));
+        agent1ColourLabel.setPreferredSize(new Dimension(41, 41));
 
         agent2ColourLabel = new JLabel();
         agent2ColourLabel.setBackground(emptyColour);
         agent2ColourLabel.setOpaque(true);
-        agent2ColourLabel.setPreferredSize(new Dimension(71, 71));
+        agent2ColourLabel.setPreferredSize(new Dimension(41, 41));
 
         agent3ColourLabel = new JLabel();
         agent3ColourLabel.setBackground(emptyColour);
         agent3ColourLabel.setOpaque(true);
-        agent3ColourLabel.setPreferredSize(new Dimension(71, 71));
+        agent3ColourLabel.setPreferredSize(new Dimension(41, 41));
 
         agent4ColourLabel = new JLabel();
         agent4ColourLabel.setBackground(emptyColour);
         agent4ColourLabel.setOpaque(true);
-        agent4ColourLabel.setPreferredSize(new Dimension(71, 71));
+        agent4ColourLabel.setPreferredSize(new Dimension(41, 41));
 
         agent5ColourLabel = new JLabel();
         agent5ColourLabel.setBackground(emptyColour);
         agent5ColourLabel.setOpaque(true);
-        agent5ColourLabel.setPreferredSize(new Dimension(71, 71));
+        agent5ColourLabel.setPreferredSize(new Dimension(41, 41));
 
         agent6ColourLabel = new JLabel();
         agent6ColourLabel.setOpaque(true);
         agent6ColourLabel.setBackground(emptyColour);
-        agent6ColourLabel.setPreferredSize(new Dimension(71, 71));
+        agent6ColourLabel.setPreferredSize(new Dimension(41, 41));
 
         agent7ColourLabel = new JLabel();
         agent7ColourLabel.setBackground(emptyColour);
         agent7ColourLabel.setOpaque(true);
-        agent7ColourLabel.setPreferredSize(new Dimension(71, 71));
+        agent7ColourLabel.setPreferredSize(new Dimension(41, 41));
 
         // The GridBag constraints we'll be using to build this panel
         GridBagConstraints c = new GridBagConstraints();

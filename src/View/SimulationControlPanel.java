@@ -22,30 +22,31 @@ public class SimulationControlPanel extends JPanel {
     public SimulationControlPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(600, 100));
+        setPreferredSize(new Dimension(600, 124));
+        setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         // First all elements are defined and their attributes set
         runStepButton = new JButton("Run Step");
-        runStepButton.setPreferredSize(new Dimension(600, 30));
+        runStepButton.setPreferredSize(new Dimension(600, 40));
 
         stopStartButton = new JButton("Stop / Start");
-        stopStartButton.setPreferredSize(new Dimension(300, 30));
+        stopStartButton.setPreferredSize(new Dimension(300, 40));
 
         populateButton = new JButton("Populate");
-        populateButton.setPreferredSize(new Dimension(300, 30));
+        populateButton.setPreferredSize(new Dimension(300, 40));
 
         clearButton = new JButton("Clear");
-        clearButton.setPreferredSize(new Dimension(300, 30));
+        clearButton.setPreferredSize(new Dimension(300, 40));
 
         // Here we build the run n steps panel
         runNStepsButton = new JButton("Run N Steps: ");
-        runNStepsButton.setPreferredSize(new Dimension(150, 30));
+        runNStepsButton.setPreferredSize(new Dimension(150, 40));
 
         runNStepsSpinner = new JSpinner(new SpinnerNumberModel(10, 0, 1000000, 1));
-        runNStepsSpinner.setPreferredSize(new Dimension(150, 30));
+        runNStepsSpinner.setPreferredSize(new Dimension(150, 40));
 
         runNStepsPanel = new JPanel(new GridLayout(1, 2));
-        runNStepsPanel.setPreferredSize(new Dimension(300, 30));
+        runNStepsPanel.setPreferredSize(new Dimension(300, 40));
 
         runNStepsPanel.add(runNStepsButton);
         runNStepsPanel.add(runNStepsSpinner);
@@ -54,6 +55,8 @@ public class SimulationControlPanel extends JPanel {
         GridBagConstraints c = new GridBagConstraints();
         // This forces components to be fill their container horizontally, we want this for every component
         c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1;
+        c.weighty = 1;
 
         // Now all elements are added to the panel
         // First we add the top row components

@@ -34,6 +34,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         super();
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(310, 600));
+        setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         // First all elements are defined
         agentNameTextField = new JTextField("Agent Name");
@@ -87,6 +88,8 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         // This tells the component it should only horizontally span 1 cell
         c.gridwidth = 1;
         c.insets = new Insets(1, 1, 1, 1);
+        c.weightx = 1;
+        c.weighty = 1;
 
 
         // First we add the top row components
