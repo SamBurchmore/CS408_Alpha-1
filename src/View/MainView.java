@@ -72,7 +72,7 @@ public class MainView extends JFrame {
     public void updateWorldPanel(BufferedImage worldImage, int i) {
         this.worldPanel.updateWorldImage(worldImage);
         this.repaint();
-        this.setTitle("Step: " + ((Integer) i).toString());
+        this.setTitle("Step: " + ((Integer) i));
     }
 
     public JButton getRunStepButton() {
@@ -93,6 +93,38 @@ public class MainView extends JFrame {
 
     public JButton getClearButton() {
         return simulationControlPanel.getClearButton();
+    }
+
+    public JButton getAgent0Button() {
+        return activeAgentsPanel.getAgent0Button();
+    }
+
+    public JButton getAgent1Button() {
+        return activeAgentsPanel.getAgent1Button();
+    }
+
+    public JButton getAgent2Button() {
+        return activeAgentsPanel.getAgent2Button();
+    }
+
+    public JButton getAgent3Button() {
+        return activeAgentsPanel.getAgent3Button();
+    }
+
+    public JButton getAgent4Button() {
+        return activeAgentsPanel.getAgent4Button();
+    }
+
+    public JButton getAgent5Button() {
+        return activeAgentsPanel.getAgent5Button();
+    }
+
+    public JButton getAgent6Button() {
+        return activeAgentsPanel.getAgent6Button();
+    }
+
+    public JButton getAgent7Button() {
+        return activeAgentsPanel.getAgent7Button();
     }
 
 }

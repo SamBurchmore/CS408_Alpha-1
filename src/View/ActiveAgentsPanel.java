@@ -16,14 +16,14 @@ public class ActiveAgentsPanel extends JPanel {
     private JLabel agent7NameLabel;
 
     // The labels which display the agents colours
-    private JLabel agent0ColourLabel;
-    private JLabel agent1ColourLabel;
-    private JLabel agent2ColourLabel;
-    private JLabel agent3ColourLabel;
-    private JLabel agent4ColourLabel;
-    private JLabel agent5ColourLabel;
-    private JLabel agent6ColourLabel;
-    private JLabel agent7ColourLabel;
+    private JButton agent0Button;
+    private JButton agent1Button;
+    private JButton agent2Button;
+    private JButton agent3Button;
+    private JButton agent4Button;
+    private JButton agent5Button;
+    private JButton agent6Button;
+    private JButton agent7Button;
 
     private String emptyName;
     private Color emptyColour;
@@ -62,45 +62,45 @@ public class ActiveAgentsPanel extends JPanel {
         agent7NameLabel = new JLabel(emptyName);
         agent7NameLabel.setPreferredSize(new Dimension(71, 10));
 
-        agent0ColourLabel = new JLabel();
-        agent0ColourLabel.setBackground(emptyColour);
-        agent0ColourLabel.setOpaque(true);
-        agent0ColourLabel.setPreferredSize(new Dimension(41, 41));
+        agent0Button = new JButton();
+        agent0Button.setBackground(emptyColour);
+        agent0Button.setOpaque(true);
+        agent0Button.setPreferredSize(new Dimension(41, 41));
 
-        agent1ColourLabel = new JLabel();
-        agent1ColourLabel.setBackground(emptyColour);
-        agent1ColourLabel.setOpaque(true);
-        agent1ColourLabel.setPreferredSize(new Dimension(41, 41));
+        agent1Button = new JButton();
+        agent1Button.setBackground(emptyColour);
+        agent1Button.setOpaque(true);
+        agent1Button.setPreferredSize(new Dimension(41, 41));
 
-        agent2ColourLabel = new JLabel();
-        agent2ColourLabel.setBackground(emptyColour);
-        agent2ColourLabel.setOpaque(true);
-        agent2ColourLabel.setPreferredSize(new Dimension(41, 41));
+        agent2Button = new JButton();
+        agent2Button.setBackground(emptyColour);
+        agent2Button.setOpaque(true);
+        agent2Button.setPreferredSize(new Dimension(41, 41));
 
-        agent3ColourLabel = new JLabel();
-        agent3ColourLabel.setBackground(emptyColour);
-        agent3ColourLabel.setOpaque(true);
-        agent3ColourLabel.setPreferredSize(new Dimension(41, 41));
+        agent3Button = new JButton();
+        agent3Button.setBackground(emptyColour);
+        agent3Button.setOpaque(true);
+        agent3Button.setPreferredSize(new Dimension(41, 41));
 
-        agent4ColourLabel = new JLabel();
-        agent4ColourLabel.setBackground(emptyColour);
-        agent4ColourLabel.setOpaque(true);
-        agent4ColourLabel.setPreferredSize(new Dimension(41, 41));
+        agent4Button = new JButton();
+        agent4Button.setBackground(emptyColour);
+        agent4Button.setOpaque(true);
+        agent4Button.setPreferredSize(new Dimension(41, 41));
 
-        agent5ColourLabel = new JLabel();
-        agent5ColourLabel.setBackground(emptyColour);
-        agent5ColourLabel.setOpaque(true);
-        agent5ColourLabel.setPreferredSize(new Dimension(41, 41));
+        agent5Button = new JButton();
+        agent5Button.setBackground(emptyColour);
+        agent5Button.setOpaque(true);
+        agent5Button.setPreferredSize(new Dimension(41, 41));
 
-        agent6ColourLabel = new JLabel();
-        agent6ColourLabel.setOpaque(true);
-        agent6ColourLabel.setBackground(emptyColour);
-        agent6ColourLabel.setPreferredSize(new Dimension(41, 41));
+        agent6Button = new JButton();
+        agent6Button.setOpaque(true);
+        agent6Button.setBackground(emptyColour);
+        agent6Button.setPreferredSize(new Dimension(41, 41));
 
-        agent7ColourLabel = new JLabel();
-        agent7ColourLabel.setBackground(emptyColour);
-        agent7ColourLabel.setOpaque(true);
-        agent7ColourLabel.setPreferredSize(new Dimension(41, 41));
+        agent7Button = new JButton();
+        agent7Button.setBackground(emptyColour);
+        agent7Button.setOpaque(true);
+        agent7Button.setPreferredSize(new Dimension(41, 41));
 
         // The GridBag constraints we'll be using to build this panel
         GridBagConstraints c = new GridBagConstraints();
@@ -137,31 +137,92 @@ public class ActiveAgentsPanel extends JPanel {
         c.gridy = 1;
 
         c.gridx = 0;
-        add(agent0ColourLabel, c);
+        add(agent0Button, c);
 
         c.gridx = 1;
-        add(agent1ColourLabel, c);
+        add(agent1Button, c);
 
         c.gridx = 2;
-        add(agent2ColourLabel, c);
+        add(agent2Button, c);
 
         c.gridx = 3;
-        add(agent3ColourLabel, c);
+        add(agent3Button, c);
 
         c.gridx = 4;
-        add(agent4ColourLabel, c);
+        add(agent4Button, c);
 
         c.gridx = 5;
-        add(agent5ColourLabel, c);
+        add(agent5Button, c);
 
         c.gridx = 6;
-        add(agent6ColourLabel, c);
+        add(agent6Button, c);
 
         c.gridx = 7;
-        add(agent7ColourLabel, c);
+        add(agent7Button, c);
 
     }
 
+    public JButton getAgent0Button() {
+        return agent0Button;
+    }
 
+    public JButton getAgent1Button() {
+        return agent1Button;
+    }
 
+    public JButton getAgent2Button() {
+        return agent2Button;
+    }
+
+    public JButton getAgent3Button() {
+        return agent3Button;
+    }
+
+    public JButton getAgent4Button() {
+        return agent4Button;
+    }
+
+    public JButton getAgent5Button() {
+        return agent5Button;
+    }
+
+    public JButton getAgent6Button() {
+        return agent6Button;
+    }
+
+    public JButton getAgent7Button() {
+        return agent7Button;
+    }
+
+    public void setAgent0ButtonColour(Color color){
+        this.agent0Button.setBackground(color);
+    }
+
+    public void setAgent1ButtonColour(Color color){
+        this.agent1Button.setBackground(color);
+    }
+
+    public void setAgent2ButtonColour(Color color){
+        this.agent2Button.setBackground(color);
+    }
+
+    public void setAgent3ButtonColour(Color color){
+        this.agent3Button.setBackground(color);
+    }
+
+    public void setAgent4ButtonColour(Color color){
+        this.agent4Button.setBackground(color);
+    }
+
+    public void setAgent5ButtonColour(Color color){
+        this.agent5Button.setBackground(color);
+    }
+
+    public void setAgent6ButtonColour(Color color){
+        this.agent6Button.setBackground(color);
+    }
+
+    public void setAgent7ButtonColour(Color color){
+        this.agent7Button.setBackground(color);
+    }
 }

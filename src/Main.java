@@ -4,12 +4,12 @@ import View.MainView;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 
-        MainController mainController = new MainController(150, 6, 0, 6, 4);
+        MainController mainController = new MainController(600, 6, 0, 6);
         mainController.populateWorld();
         //TimeUnit.SECONDS.sleep(5);
-//        for (int i = 0; i < 100000; i++) {
-//            mainController.runStep();
-//        }
+        for (int i = 0; i < 1000000; i++) {
+            mainController.runStep();
+        }
         //testMotivations();
     }
 

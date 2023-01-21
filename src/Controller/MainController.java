@@ -1,5 +1,7 @@
 package Controller;
 
+import Model.AgentBuilder.ActiveAgents;
+import Model.Agents.AgentInterfaces.Agent;
 import Model.ModelController;
 import View.MainView;
 
@@ -11,6 +13,8 @@ public class MainController {
     private MainView view;
     // The world model
     private ModelController modelController;
+
+    private ActiveAgents activeAgents;
 
     private int counter = 0;
     private int scale = 0;
@@ -92,6 +96,14 @@ public class MainController {
 
     public void initView() {
         this.updateWorldImage();
+    }
+
+    public void setActiveAgent(int index, Agent agent) {
+        this.activeAgents.setAgent(agent, index);
+    }
+
+    public Agent getActiveAgent(int index) {
+        return this.activeAgents.getAgent(index);
     }
 
     public void initController() {

@@ -20,8 +20,8 @@ public class WorldPanel extends JPanel {
         g.drawImage(this.worldImage, 0, 0, this);
     }
 
-    public void updateWorldImage(BufferedImage newWorldImage) {
-        this.worldImage = newWorldImage;
+    public void updateWorldImage(BufferedImage worldImage) {
+        this.worldImage = worldImage;
     }
 
 }

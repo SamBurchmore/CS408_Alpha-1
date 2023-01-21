@@ -1,7 +1,12 @@
 package Model;
 
 import java.awt.image.BufferedImage;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import Model.Agents.AgentFactory;
 import Model.Agents.AgentInterfaces.Agent;
@@ -46,31 +51,28 @@ public class ModelController {
     // TODO - implement predator prey ratio so that both controls work
     public void populate(int predator_percent, int density) {
         AgentFactory agentFactory = new AgentFactory();
-        for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
-            if (this.randomGen.nextInt(100) < density) {
-                if (this.randomGen.nextInt(100) < predator_percent) {
-                    EnvironmentTile wt = wt_iterator.next();
-                    Agent newAgent = agentFactory.createAgent(AgentType.PREDATOR, wt.getLocation());
-                    wt.setOccupant(newAgent);
-                    agentList.add(newAgent);
+
+        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
+                if (this.randomGen.nextInt(100) < density) {
+                    if (this.randomGen.nextInt(100) < predator_percent) {
+                        EnvironmentTile wt = environment.getGrid()[i];
+                        Agent newAgent = agentFactory.createAgent(AgentType.PREDATOR, wt.getLocation());
+                        wt.setOccupant(newAgent);
+                        agentList.add(newAgent);
+                    }
+                    else  {
+                        EnvironmentTile wt = environment.getGrid()[i];
+                        Agent newAgent = agentFactory.createAgent(AgentType.PREY, wt.getLocation());
+                        wt.setOccupant(newAgent);
+                        agentList.add(newAgent);
+                    }
                 }
-                else  {
-                    EnvironmentTile wt = wt_iterator.next();
-                    Agent newAgent = agentFactory.createAgent(AgentType.PREY, wt.getLocation());
-                    wt.setOccupant(newAgent);
-                    agentList.add(newAgent);
-                }
-            }
-            else {
-                wt_iterator.next();
-            }
-        }
+        });
     }
 
     public void cycle() {
-        int agent0Count = 0;
-        int agent1Count = 0;
         ArrayList<Agent> aliveAgents = new ArrayList<>();
+        long time = System.currentTimeMillis();
         for (Agent currentAgent : agentList) {
             Location oldLocation = currentAgent.getLocation();
             AgentModelUpdate agentModelUpdate = currentAgent.run(environment);
@@ -86,25 +88,17 @@ public class ModelController {
                     aliveAgents.add(childAgent);
                 }
             }
-            if (currentAgent.getAttributes().getType().equals(AgentType.PREDATOR)) {
-                agent0Count++;
-            }
-            else {
-                agent1Count++;
-            }
         }
-        for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
-            if (randomGen.nextInt(worldSize*worldSize) > worldSize*worldSize- (worldSize * 2)) {
-                environment.modifyTileFoodLevel(wt_iterator.next().getLocation(), 6);
+        //System.out.println("Agent Cycle took: " + ( time - System.currentTimeMillis()) / -1000);
+        time = System.currentTimeMillis();
+        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
+            if (randomGen.nextInt(worldSize*worldSize) > worldSize*worldSize - (worldSize * 3)) {
+                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), 6);
             }
-            else {
-                wt_iterator.next();
-            }
+        });
 
-        }
+        //System.out.println("Environment Cycle took: " + ( time - System.currentTimeMillis()) / -1000);
         agentList = aliveAgents;
-        this.diagnostics.setAgent0Count(agent0Count);
-        this.diagnostics.setAgent1Count(agent1Count);
     }
 
     public void clear() {
