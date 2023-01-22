@@ -1,20 +1,18 @@
 package Model.Agents.AgentConcreteComponents;
 
-import Model.Agents.AgentBaseComponents.BaseMotivations;
+import Model.Agents.AgentInterfaces.Attributes;
+import Model.Agents.AgentInterfaces.Motivations;
 import Model.Agents.AgentInterfaces.Scores;
+import Model.Agents.AgentStructs.AgentVision;
+import Model.Environment.EnvironmentTile;
 
-public class PredatorMotivations extends BaseMotivations {
-
-    public int toCreate(Scores agentScores) {
-        if (agentScores.getCreationCounter() <= 0 && agentScores.getHunger() >= agentScores.getMAX_HUNGER() / 4) {
-            return 1;
-        }
-        return 0;
-    }
-
-    public int toAttack(Scores agentScores) {
-        if (agentScores.getHunger() < agentScores.getMAX_HUNGER()) {
-            return 1;
+public class PredatorMotivations implements Motivations {
+    @Override
+    public int run(AgentVision tile, Attributes attributes, Scores scores) {
+        if (tile.getAgentAttributes().getAgentCode() != attributes.getAgentCode()) {
+            if (tile.getAgentAttributes().getSize() <= attributes.getSize()) {
+                return tile.getAgentAttributes().getSize();
+            }
         }
         return 0;
     }

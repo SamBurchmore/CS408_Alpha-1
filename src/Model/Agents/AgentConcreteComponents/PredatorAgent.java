@@ -3,6 +3,7 @@ package Model.Agents.AgentConcreteComponents;
 import Model.Agents.AgentBaseComponents.BaseAgent;
 import Model.Agents.AgentInterfaces.*;
 import Model.Agents.AgentStructs.*;
+import Model.Agents.AgentStructs.AgentUpdate;
 import Model.Environment.Location;
 import Model.Environment.Environment;
 
@@ -12,7 +13,7 @@ import java.util.Collections;
 
 public class PredatorAgent extends BaseAgent {
 
-    public PredatorAgent(Location location_, Color agentColor_, Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
+    public PredatorAgent(Location location_, Color agentColor_, Model.Agents.AgentInterfaces.Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
         super(location_, agentColor_, reaction_, vision_, attributes_, scores_);
     }
 
@@ -23,22 +24,22 @@ public class PredatorAgent extends BaseAgent {
     @Override
     public AgentModelUpdate run(Environment environment) {
 
-        AgentDecision agentDecision = super.liveDay(environment);
+        AgentUpdate agentUpdate = super.liveDay(environment);
         if (super.isDead()) {
             return new AgentModelUpdate(null, new ArrayList<Agent>());
         }
         ArrayList<Agent> childAgents = new ArrayList<>();
 
-        if (agentDecision.isNull()) {
-            if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
-                super.move(agentDecision.getLocation());
+        if (agentUpdate.isNull()) {
+            if (agentUpdate.getAgentAction().equals(AgentAction.MOVE)) {
+                super.move(agentUpdate.getLocation());
             }
-            if (agentDecision.getAgentAction().equals(AgentAction.CREATE) && !environment.emptyAdjacent(this.getLocation()).isEmpty()) {
-                childAgents = this.create(agentDecision.getLocation(), environment);
+            if (agentUpdate.getAgentAction().equals(AgentAction.CREATE) && !environment.emptyAdjacent(this.getLocation()).isEmpty()) {
+                childAgents = this.create(agentUpdate.getLocation(), environment);
             }
-            if (agentDecision.getAgentAction().equals(AgentAction.ATTACK)) {
+            if (agentUpdate.getAgentAction().equals(AgentAction.ATTACK)) {
                 this.predate();
-                super.move(agentDecision.getLocation());
+                super.move(agentUpdate.getLocation());
             }
         }
         return new AgentModelUpdate(this, childAgents);

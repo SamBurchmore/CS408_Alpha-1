@@ -10,6 +10,6 @@ public interface Attributes {
     int getSize();
     int getVision();
     int getEatAmount();
-    AgentType getType();
+    int getAgentCode();
 
 }

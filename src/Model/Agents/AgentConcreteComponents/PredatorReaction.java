@@ -5,11 +5,9 @@ import Model.Agents.AgentInterfaces.Attributes;
 import Model.Agents.AgentInterfaces.Motivations;
 import Model.Agents.AgentInterfaces.Scores;
 import Model.Agents.AgentStructs.AgentAction;
-import Model.Agents.AgentStructs.AgentDecision;
-import Model.Agents.AgentStructs.AgentType;
+import Model.Agents.AgentStructs.AgentUpdate;
 import Model.Agents.AgentStructs.AgentVision;
 
-import java.awt.image.ColorConvertOp;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -20,32 +18,32 @@ public class PredatorReaction extends BaseReaction {
     }
 
     @Override
-    public AgentDecision react(ArrayList<AgentVision> agentVision, Attributes agentAttributes, Scores agentScores) {
-        AgentDecision agentDecision = new AgentDecision();
-        ArrayList<AgentDecision> emptyViewsInRange = new ArrayList<>();
-        ArrayList<AgentDecision> matesInRange = new ArrayList<>();
-        ArrayList<AgentDecision> preyInRange = new ArrayList<>();
+    public AgentUpdate react(ArrayList<AgentVision> agentVision, Attributes agentAttributes, Scores agentScores) {
+        AgentUpdate agentUpdate = new AgentUpdate();
+        ArrayList<AgentUpdate> emptyViewsInRange = new ArrayList<>();
+        ArrayList<AgentUpdate> matesInRange = new ArrayList<>();
+        ArrayList<AgentUpdate> preyInRange = new ArrayList<>();
         for (AgentVision currentAV : agentVision) {
             if (currentAV.isInRange()) {
                 if (currentAV.isOccupied()) {
-                    if (super.getMotivations().toCreate(agentScores) == 1) {
+                    if (super.getAgentMotivations().toCreate(agentScores) == 1) {
                         if (currentAV.getAgentAttributes().getType().equals(agentAttributes.getType())) {
-                            agentDecision.setLocation(currentAV.getLocation());
-                            agentDecision.setAgentAction(AgentAction.CREATE);
-                            matesInRange.add(agentDecision);
+                            agentUpdate.setLocation(currentAV.getLocation());
+                            agentUpdate.setAgentAction(AgentAction.CREATE);
+                            matesInRange.add(agentUpdate);
                         }
                     }
-                    else if (super.getMotivations().toAttack(agentScores) == 1) {
-                        agentDecision.setLocation(currentAV.getLocation());
-                        agentDecision.setAgentAction(AgentAction.ATTACK);
-                        preyInRange.add(agentDecision);
+                    else if (super.getAgentMotivations().toAttack(agentScores) == 1) {
+                        agentUpdate.setLocation(currentAV.getLocation());
+                        agentUpdate.setAgentAction(AgentAction.ATTACK);
+                        preyInRange.add(agentUpdate);
                     }
 
                 }
                 else {
-                    agentDecision.setLocation(currentAV.getLocation());
-                    agentDecision.setAgentAction(AgentAction.MOVE);
-                    emptyViewsInRange.add(agentDecision);
+                    agentUpdate.setLocation(currentAV.getLocation());
+                    agentUpdate.setAgentAction(AgentAction.MOVE);
+                    emptyViewsInRange.add(agentUpdate);
                 }
             }
         }
@@ -57,9 +55,9 @@ public class PredatorReaction extends BaseReaction {
             Collections.shuffle(emptyViewsInRange);
             return emptyViewsInRange.get(0);
         }
-        agentDecision.setAgentAction(AgentAction.NONE);
-        agentDecision.setLocation(null);
-        return agentDecision;
+        agentUpdate.setAgentAction(AgentAction.NONE);
+        agentUpdate.setLocation(null);
+        return agentUpdate;
     }
 }
 

@@ -2,7 +2,7 @@ package Model.Agents.AgentBaseComponents;
 
 import Model.Agents.AgentConcreteComponents.*;
 import Model.Agents.AgentInterfaces.*;
-import Model.Agents.AgentStructs.AgentDecision;
+import Model.Agents.AgentStructs.AgentUpdate;
 import Model.Agents.AgentStructs.AgentModelUpdate;
 import Model.Agents.AgentStructs.AgentType;
 import Model.Agents.AgentStructs.AgentVision;
@@ -17,12 +17,12 @@ public abstract class BaseAgent implements Agent {
 
     private Location location;
     private Color agentColor;
-    private Reaction reaction = null;
+    private Model.Agents.AgentInterfaces.Reaction reaction = null;
     private Vision vision = null;
     private Attributes attributes;
     private Scores scores = null;
 
-    public BaseAgent(Location location_, Color agentColor_, Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
+    public BaseAgent(Location location_, Color agentColor_, Model.Agents.AgentInterfaces.Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
         this.location = location_;
         this.agentColor = agentColor_;
         this.reaction = reaction_;
@@ -52,7 +52,7 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public AgentDecision liveDay(Environment environment) {
+    public AgentUpdate liveDay(Environment environment) {
         this.getScores().setHunger((this.getScores().getHunger() - 1));
         this.getScores().setAge(this.getScores().getAge()+1);
         this.getScores().setCreationCounter((this.getScores().getCreationCounter() - 1));
@@ -115,12 +115,12 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public Reaction getReaction() {
+    public Model.Agents.AgentInterfaces.Reaction getReaction() {
         return this.reaction;
     }
 
     @Override
-    public void setReaction(Reaction reaction_) {
+    public void setReaction(Model.Agents.AgentInterfaces.Reaction reaction_) {
         this.reaction = reaction_;
     }
 

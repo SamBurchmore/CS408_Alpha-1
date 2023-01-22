@@ -2,41 +2,41 @@ package Model.Agents.AgentBaseComponents;
 
 import Model.Agents.AgentInterfaces.*;
 import Model.Agents.AgentStructs.AgentAction;
-import Model.Agents.AgentStructs.AgentDecision;
+import Model.Agents.AgentStructs.AgentUpdate;
 import Model.Agents.AgentStructs.AgentVision;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public abstract class BaseReaction implements Reaction {
+public abstract class BaseReaction implements Model.Agents.AgentInterfaces.Reaction {
 
-    private Motivations motivations;
+    private ArrayList<Motivations> agentMotivations;
 
-    public BaseReaction(Motivations motivations_) {
-        this.motivations = motivations_;
+    public BaseReaction(ArrayList<Motivations> agentMotivations) {
+        this.agentMotivations = agentMotivations;
     }
 
     @Override
-    public AgentDecision react(ArrayList<AgentVision> agentVision, Attributes agentAttributes, Scores agentScores) {
+    public AgentUpdate react(ArrayList<AgentVision> agentVision, Attributes agentAttributes, Scores agentScores) {
         Collections.shuffle(agentVision);
-        ArrayList<AgentVision> emptyViewsInRange = new ArrayList<>();
-        AgentDecision agentDecision = new AgentDecision();
-        for (AgentVision currentAV : agentVision) {
-            if (currentAV.isInRange() && !currentAV.isOccupied()) {
-                emptyViewsInRange.add(currentAV);
+        int[] tileScores = new int[agentVision.size()];
+        int i = 0;
+        for (AgentVision tile : agentVision) {
+            for (Motivations motivations : agentMotivations) {
+                tileScores[i] += motivations.run(tile, agentAttributes, agentScores);
             }
+            i++;
         }
-        // Set default decision
-        if (emptyViewsInRange.size() > 0) {
-            Collections.shuffle(emptyViewsInRange);
-            agentDecision.setLocation(emptyViewsInRange.get(0).getLocation());
-            agentDecision.setAgentAction(AgentAction.MOVE);
+        int chosenTile = 0;
+        for (int i = 0; i < tileScores.length; i++) {
+            if ()
         }
-        return agentDecision;
+        AgentVision chosenTile = agentVision.get(Math. (tileScores))
+        return new AgentUpdate();
     }
 
-    protected static AgentDecision getRandomDecision(ArrayList<AgentVision> agentViews, AgentAction agentAction) {
-        AgentDecision ad = new AgentDecision();
+    protected static AgentUpdate getRandomDecision(ArrayList<AgentVision> agentViews, AgentAction agentAction) {
+        AgentUpdate ad = new AgentUpdate();
         if (agentViews.size() > 0) {
             Collections.shuffle(agentViews);
             ad.setLocation(agentViews.get(0).getLocation());
@@ -45,11 +45,11 @@ public abstract class BaseReaction implements Reaction {
         return ad;
     }
 
-    public Motivations getMotivations() {
-        return this.motivations;
+    public Motivations getAgentMotivations() {
+        return this.agentMotivations;
     }
 
-    public void setMotivations(Motivations motivations) {
-        this.motivations = motivations;
+    public void setAgentMotivations(Motivations agentMotivations) {
+        this.agentMotivations = agentMotivations;
     }
 }

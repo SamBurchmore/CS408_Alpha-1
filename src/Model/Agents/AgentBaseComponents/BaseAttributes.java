@@ -11,20 +11,20 @@ public abstract class BaseAttributes implements Attributes {
     private int size;
     private int vision;
     private int eatAmount;
-    private AgentType agentType;
+    private int agentCode;
     Random random = new Random();
 
-    public BaseAttributes(int speed_, int size_, int vision_, int eatAmount_, AgentType agentType_) {
+    public BaseAttributes(int speed_, int size_, int vision_, int eatAmount_, int agentCode) {
         this.speed = speed_;
         this.size = size_;
         this.vision = vision_;
         this.eatAmount = eatAmount_;
-        this.agentType = agentType_;
+        this.agentCode = agentCode;
     }
 
     public BaseAttributes(Attributes attributes_a, Attributes attributes_b){
         // set the new agents type.
-        this.agentType = attributes_a.getType();
+        this.agentCode = attributes_a.getAgentCode();
         this.speed = attributes_a.getSpeed();
         this.size = attributes_a.getSize();
         this.vision = attributes_a.getVision();
@@ -79,14 +79,17 @@ public abstract class BaseAttributes implements Attributes {
         }
     }
 
+    @Override
     public int getSpeed() {
         return this.speed;
     }
 
+    @Override
     public int getSize() {
         return this.size;
     }
 
+    @Override
     public int getVision() {
         return this.vision;
     }
@@ -96,8 +99,9 @@ public abstract class BaseAttributes implements Attributes {
         return this.eatAmount;
     }
 
-    public AgentType getType() {
-        return this.agentType;
+    @Override
+    public int getAgentCode() {
+        return this.agentCode;
     }
 
     public void setSpeed(int speed) {
@@ -112,8 +116,8 @@ public abstract class BaseAttributes implements Attributes {
         this.vision = vision;
     }
 
-    public void setAgentType(AgentType agentType) {
-        this.agentType = agentType;
+    public void setAgentCode(int agentCode) {
+        this.agentCode = agentCode;
     }
 
     public Random getRandom() {
@@ -126,9 +130,5 @@ public abstract class BaseAttributes implements Attributes {
 
     public void setEatAmount(int eatAmount) {
         this.eatAmount = eatAmount;
-    }
-
-    public AgentType getAgentType() {
-        return this.agentType;
     }
 }
