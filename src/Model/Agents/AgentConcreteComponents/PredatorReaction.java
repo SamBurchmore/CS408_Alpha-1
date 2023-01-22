@@ -9,6 +9,7 @@ import Model.Agents.AgentStructs.AgentDecision;
 import Model.Agents.AgentStructs.AgentType;
 import Model.Agents.AgentStructs.AgentVision;
 
+import java.awt.image.ColorConvertOp;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -27,16 +28,19 @@ public class PredatorReaction extends BaseReaction {
         for (AgentVision currentAV : agentVision) {
             if (currentAV.isInRange()) {
                 if (currentAV.isOccupied()) {
-                    if (currentAV.getAgentAttributes().getType().equals(agentAttributes.getType())) {
-                        agentDecision.setLocation(currentAV.getLocation());
-                        agentDecision.setAgentAction(AgentAction.CREATE);
-                        matesInRange.add(agentDecision);
+                    if (super.getMotivations().toCreate(agentScores) == 1) {
+                        if (currentAV.getAgentAttributes().getType().equals(agentAttributes.getType())) {
+                            agentDecision.setLocation(currentAV.getLocation());
+                            agentDecision.setAgentAction(AgentAction.CREATE);
+                            matesInRange.add(agentDecision);
+                        }
                     }
-                    if (currentAV.getAgentAttributes().getType().equals(AgentType.PREY)) {
+                    else if (super.getMotivations().toAttack(agentScores) == 1) {
                         agentDecision.setLocation(currentAV.getLocation());
                         agentDecision.setAgentAction(AgentAction.ATTACK);
                         preyInRange.add(agentDecision);
                     }
+
                 }
                 else {
                     agentDecision.setLocation(currentAV.getLocation());
@@ -45,26 +49,17 @@ public class PredatorReaction extends BaseReaction {
                 }
             }
         }
-        if (!preyInRange.isEmpty()) {
-            if (super.getMotivations().toAttack(agentScores) > super.getMotivations().toCreate(agentScores)) {
-                //System.out.println("ATTACK: " + super.getMotivations().toAttack(agentScores) + ". Breed: " + super.getMotivations().toCreate(agentScores));
-                Collections.shuffle(preyInRange);
-                return preyInRange.get(0);
-            }
-        }
         if (!matesInRange.isEmpty()) {
-            if (super.getMotivations().toCreate(agentScores) >= super.getMotivations().toAttack(agentScores)) {
-                //System.out.println("Attack: " + super.getMotivations().toAttack(agentScores) + ". BREED: " + super.getMotivations().toCreate(agentScores));
-                Collections.shuffle(matesInRange);
-                return matesInRange.get(0);
-            }
+            Collections.shuffle(matesInRange);
+            return matesInRange.get(0);
         }
         if (!emptyViewsInRange.isEmpty()) {
             Collections.shuffle(emptyViewsInRange);
             return emptyViewsInRange.get(0);
-            }
+        }
         agentDecision.setAgentAction(AgentAction.NONE);
         agentDecision.setLocation(null);
         return agentDecision;
     }
 }
+

@@ -5,8 +5,6 @@ public class Location {
     private int x = 0;
     private int y = 0;
 
-    public Location() {}
-
     public Location(int x_, int y_) {
         this.x = x_;
         this.y = y_;

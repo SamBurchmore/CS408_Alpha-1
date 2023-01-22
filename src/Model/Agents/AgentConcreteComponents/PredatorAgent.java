@@ -33,7 +33,7 @@ public class PredatorAgent extends BaseAgent {
             if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
                 super.move(agentDecision.getLocation());
             }
-            if (agentDecision.getAgentAction().equals(AgentAction.CREATE)) {
+            if (agentDecision.getAgentAction().equals(AgentAction.CREATE) && !environment.emptyAdjacent(this.getLocation()).isEmpty()) {
                 childAgents = this.create(agentDecision.getLocation(), environment);
             }
             if (agentDecision.getAgentAction().equals(AgentAction.ATTACK)) {

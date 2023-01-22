@@ -1,10 +1,12 @@
 package Controller;
 
 import Model.AgentBuilder.ActiveAgents;
+import Model.AgentBuilder.AgentBuilder;
 import Model.Agents.AgentInterfaces.Agent;
 import Model.ModelController;
 import View.MainView;
 
+import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
 public class MainController {
@@ -18,18 +20,20 @@ public class MainController {
 
     private int counter = 0;
     private int scale = 0;
+    private int size;
 
     private boolean cycleToggle = false;
 
-    public MainController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel) {
-        this.modelController = new ModelController(size_, starting_food_level, minFoodLevel, maxFoodLevel);
+    public MainController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount) {
+        this.modelController = new ModelController(size_, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
         this.view = new MainView();
         this.initView();
         this.initController();
+        this.size = size_;
     }
 
-    public MainController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel, int scale) {
-        this.modelController = new ModelController(size_, starting_food_level, minFoodLevel, maxFoodLevel);
+    public MainController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount, int scale) {
+        this.modelController = new ModelController(size_, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
         this.scale = scale;
         this.view = new MainView();
         this.initView();
@@ -67,6 +71,22 @@ public class MainController {
         }
     }
 
+    public void refreshEnvironmentSettings() {
+        if (size != (int) this.view.getEnvironmentSize().getValue()) {
+            size = (int) this.view.getEnvironmentSize().getValue();
+            this.modelController = new ModelController(size, (int) this.view.getMaxEnergyLevel().getValue(), (int) this.view.getMinEnergyLevel().getValue(), (int) this.view.getMaxEnergyLevel().getValue(), (double) this.view.getEnergyRegenChance().getValue(), (int) this.view.getEnergyRegenAmount().getValue());
+        }
+        else {
+            setMaxFoodLevel((int) this.view.getMaxEnergyLevel().getValue());
+            setMinFoodLevel((int) this.view.getMinEnergyLevel().getValue());
+            setFoodRegenAmount((int) this.view.getEnergyRegenAmount().getValue());
+            setFoodRegenChance((double) this.view.getEnergyRegenChance().getValue());
+        }
+        scale = 600 / size;
+        updateWorldImage();
+
+    }
+
 //    public int[] getAgentDensityRatio() {
 //        int[] agentRatios = new int[3];
 //        agentRatios[0] = (int) this.view.getAgent0Ratio().getValue();
@@ -94,16 +114,44 @@ public class MainController {
         this.modelController.setEnvironmentMaxFoodLevel(newMin);
     }
 
+    public void setFoodRegenChance(double chance) {
+        this.modelController.setFoodRegenChance(chance);
+    }
+
+    public void setFoodRegenAmount(int amount) {
+        this.modelController.setFoodRegenAmount(amount);
+    }
+
     public void initView() {
         this.updateWorldImage();
     }
 
-    public void setActiveAgent(int index, Agent agent) {
-        this.activeAgents.setAgent(agent, index);
-    }
-
-    public Agent getActiveAgent(int index) {
-        return this.activeAgents.getAgent(index);
+    public void setActiveAgents(int index) {
+        view.getAgentEditorPanel().setAgent(modelController.getAgentBuilder().getOpenAgentView(index));
+        if (index == 0) {
+            view.getActiveAgentsPanel().setAgent0ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
+        }
+        if (index == 1) {
+            view.getActiveAgentsPanel().setAgent1ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
+        }
+        if (index == 2) {
+            view.getActiveAgentsPanel().setAgent2ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
+        }
+        if (index == 3) {
+            view.getActiveAgentsPanel().setAgent3ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
+        }
+        if (index == 4) {
+            view.getActiveAgentsPanel().setAgent4ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
+        }
+        if (index == 5) {
+            view.getActiveAgentsPanel().setAgent5ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
+        }
+        if (index == 6) {
+            view.getActiveAgentsPanel().setAgent6ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
+        }
+        if (index == 7) {
+            view.getActiveAgentsPanel().setAgent7ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
+        }
     }
 
     public void initController() {
@@ -111,6 +159,15 @@ public class MainController {
         this.view.getPopulateButton().addActionListener(e -> this.populateWorld());
         this.view.getClearButton().addActionListener(e -> this.clear());
         this.view.getRunNStepsButton().addActionListener(e -> this.runNSteps());
+        this.view.getRefreshSettingsButton().addActionListener(e -> this.refreshEnvironmentSettings());
+        this.view.getAgent0Button().addActionListener(e -> this.setActiveAgents(0));
+        this.view.getAgent1Button().addActionListener(e -> this.setActiveAgents(1));
+        this.view.getAgent2Button().addActionListener(e -> this.setActiveAgents(2));
+        this.view.getAgent3Button().addActionListener(e -> this.setActiveAgents(3));
+        this.view.getAgent4Button().addActionListener(e -> this.setActiveAgents(4));
+        this.view.getAgent5Button().addActionListener(e -> this.setActiveAgents(5));
+        this.view.getAgent6Button().addActionListener(e -> this.setActiveAgents(6));
+        this.view.getAgent7Button().addActionListener(e -> this.setActiveAgents(7));
     }
 
 }

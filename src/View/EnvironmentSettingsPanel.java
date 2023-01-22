@@ -50,7 +50,7 @@ public class EnvironmentSettingsPanel extends JPanel {
         minEnergySpinner = new JSpinner(new SpinnerNumberModel(0, 0, 1000000, 1));
         minEnergySpinner.setPreferredSize(new Dimension(150, 30));
 
-        energyRegenChanceSpinner = new JSpinner(new SpinnerNumberModel(100.0, 0, 100, 0.01));
+        energyRegenChanceSpinner = new JSpinner(new SpinnerNumberModel(100.0, 0, 100.0, 0.01));
         energyRegenChanceSpinner.setPreferredSize(new Dimension(150, 30));
 
         energyRegenAmountSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 1000000, 1));
@@ -146,5 +146,9 @@ public class EnvironmentSettingsPanel extends JPanel {
 
     public JButton getRefreshSettingsButton() {
         return refreshSettingsButton;
+    }
+
+    public JSpinner getEnvironmentSizeSpinner() {
+        return environmentSizeSpinner;
     }
 }

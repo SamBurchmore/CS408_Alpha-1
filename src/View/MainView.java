@@ -127,4 +127,36 @@ public class MainView extends JFrame {
         return activeAgentsPanel.getAgent7Button();
     }
 
+    public JSpinner getMaxEnergyLevel() {
+        return environmentSettingsPanel.getMaxEnergySpinner();
+    }
+
+    public JSpinner getMinEnergyLevel() {
+        return environmentSettingsPanel.getMinEnergySpinner();
+    }
+
+    public JSpinner getEnergyRegenChance() {
+        return environmentSettingsPanel.getEnergyRegenChanceSpinner();
+    }
+
+    public JSpinner getEnergyRegenAmount() {
+        return environmentSettingsPanel.getEnergyRegenAmountSpinner();
+    }
+
+    public JButton getRefreshSettingsButton() {
+        return environmentSettingsPanel.getRefreshSettingsButton();
+    }
+
+    public JSpinner getEnvironmentSize() {
+        return environmentSettingsPanel.getEnvironmentSizeSpinner();
+    }
+
+    public AgentEditorPanel getAgentEditorPanel() {
+        return agentEditorPanel;
+    }
+
+    public ActiveAgentsPanel getActiveAgentsPanel() {
+        return activeAgentsPanel;
+    }
+
 }

@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
+import Model.AgentBuilder.AgentBuilder;
 import Model.Agents.AgentFactory;
 import Model.Agents.AgentInterfaces.Agent;
 import Model.Agents.AgentStructs.AgentModelUpdate;
@@ -23,21 +24,34 @@ public class ModelController {
 
     // The data structure which represents the world.
     private Environment environment;
-    // We store the grid size here as its used in a lot of logical operations within this class.
-    private final int worldSize;
+
+    private AgentBuilder agentBuilder;
 
     private ArrayList<Agent> agentList;
     // This is where all diagnostic data on the simulation is stored.
     private Diagnostics diagnostics;
 
+
+    private int foodRegenAmount;
+    double foodRegenChance;
+    private int maxFood;
+    private int minFood;
+    private final int worldSize;
+
+
     private Random randomGen;
 
-    public ModelController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel){
-        this.environment = new Environment(size_, starting_food_level, maxFoodLevel, minFoodLevel);
-        this.worldSize = size_;
+    public ModelController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double foodRegenChance, int foodRegenAmount){
+        this.environment = new Environment(size, starting_food_level, maxFoodLevel, minFoodLevel);
         this.randomGen = new Random();
         this.agentList = new ArrayList<>();
+        this.worldSize = size;
+        this.foodRegenChance = foodRegenChance;
+        this.minFood = minFoodLevel;
+        this.maxFood = maxFoodLevel;
+        this.foodRegenAmount = foodRegenAmount;
         this.diagnostics = new Diagnostics(this.worldSize);
+        this.agentBuilder = new AgentBuilder();
     }
 
     /**
@@ -72,7 +86,6 @@ public class ModelController {
 
     public void cycle() {
         ArrayList<Agent> aliveAgents = new ArrayList<>();
-        long time = System.currentTimeMillis();
         for (Agent currentAgent : agentList) {
             Location oldLocation = currentAgent.getLocation();
             AgentModelUpdate agentModelUpdate = currentAgent.run(environment);
@@ -90,10 +103,9 @@ public class ModelController {
             }
         }
         //System.out.println("Agent Cycle took: " + ( time - System.currentTimeMillis()) / -1000);
-        time = System.currentTimeMillis();
         IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
-            if (randomGen.nextInt(worldSize*worldSize) > worldSize*worldSize - (worldSize * 3)) {
-                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), 6);
+            if (randomGen.nextDouble(100) < foodRegenChance) {
+                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), foodRegenAmount);
             }
         });
 
@@ -115,6 +127,14 @@ public class ModelController {
 
     public void setEnvironmentMinFoodLevel(int newMin) {
         this.environment.setMinFoodLevel(newMin);
+    }
+
+    public void setFoodRegenAmount(int foodRegenAmount) {
+        this.foodRegenAmount = foodRegenAmount;
+    }
+
+    public void setFoodRegenChance(double foodRegenChance) {
+        this.foodRegenChance = foodRegenChance;
     }
 
     public Diagnostics getDiagnostics() {
@@ -139,4 +159,11 @@ public class ModelController {
         return count;
     }
 
+    public AgentBuilder getAgentBuilder() {
+        return agentBuilder;
+    }
+
+    public void setAgentBuilder(AgentBuilder agentBuilder) {
+        this.agentBuilder = agentBuilder;
+    }
 }

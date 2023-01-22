@@ -1,5 +1,7 @@
 package View;
 
+import Model.AgentBuilder.AgentView;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -201,5 +203,14 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
 
     public JToggleButton getIsPredatorToggle() {
         return isPredatorToggle;
+    }
+
+    public void setAgent(AgentView agentView) {
+        lifespanSpinner.setValue((int) agentView.getLifespan());
+        energyCapacitySpinner.setValue((int) agentView.getEnergyCapacity());
+        energyCapacitySpinner.setValue((double) agentView.getEnergyAmount());
+        visionRangeSpinner.setValue((int) agentView.getVisionRange());
+        movementRangeSpinner.setValue((int) agentView.getMovementRange());
+        colourChooserButton.setBackground(agentView.getColor());
     }
 }
