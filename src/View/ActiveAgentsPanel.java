@@ -28,6 +28,8 @@ public class ActiveAgentsPanel extends JPanel {
     private String emptyName;
     private Color emptyColour;
 
+    private int lastClicked;
+
     public ActiveAgentsPanel() {
         super();
         setLayout(new GridBagLayout());
@@ -40,7 +42,6 @@ public class ActiveAgentsPanel extends JPanel {
 
         agent0NameLabel = new JLabel(emptyName);
         agent0NameLabel.setPreferredSize(new Dimension(71, 10));
-
         agent1NameLabel = new JLabel(emptyName);
         agent1NameLabel.setPreferredSize(new Dimension(71, 10));
 
@@ -163,35 +164,72 @@ public class ActiveAgentsPanel extends JPanel {
     }
 
     public JButton getAgent0Button() {
+        lastClicked = 0;
         return agent0Button;
     }
 
     public JButton getAgent1Button() {
+        lastClicked = 1;
         return agent1Button;
     }
 
     public JButton getAgent2Button() {
+        lastClicked = 2;
         return agent2Button;
     }
 
     public JButton getAgent3Button() {
+        lastClicked = 3;
         return agent3Button;
     }
 
     public JButton getAgent4Button() {
+        lastClicked = 4;
         return agent4Button;
     }
 
     public JButton getAgent5Button() {
+        lastClicked = 5;
         return agent5Button;
     }
 
     public JButton getAgent6Button() {
+        lastClicked = 6;
         return agent6Button;
     }
 
     public JButton getAgent7Button() {
+        lastClicked = 7;
         return agent7Button;
+    }
+
+    public void setAgentButtonColour(Color color, int index) {
+        switch (index) {
+            case 0:
+                this.agent0Button.setBackground(color);
+                break;
+            case 1:
+                this.agent1Button.setBackground(color);
+                break;
+            case 2:
+                this.agent2Button.setBackground(color);
+                break;
+            case 3:
+                this.agent3Button.setBackground(color);
+                break;
+            case 4:
+                this.agent4Button.setBackground(color);
+                break;
+            case 5:
+                this.agent5Button.setBackground(color);
+                break;
+            case 6:
+                this.agent6Button.setBackground(color);
+                break;
+            case 7:
+                this.agent7Button.setBackground(color);
+                break;
+        }
     }
 
     public void setAgent0ButtonColour(Color color){

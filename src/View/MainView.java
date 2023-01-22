@@ -159,4 +159,8 @@ public class MainView extends JFrame {
         return activeAgentsPanel;
     }
 
+    public JButton getColourChooserButton() {
+        return agentEditorPanel.getColourChooserButton();
+    }
+
 }

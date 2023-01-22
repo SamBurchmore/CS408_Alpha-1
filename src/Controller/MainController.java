@@ -1,13 +1,14 @@
 package Controller;
 
 import Model.AgentBuilder.ActiveAgents;
-import Model.AgentBuilder.AgentBuilder;
-import Model.Agents.AgentInterfaces.Agent;
+import Model.AgentBuilder.AgentSettings;
+import Model.Agents.AgentConcreteComponents.*;
+import Model.Agents.AgentStructs.AgentType;
+import Model.Environment.Location;
 import Model.ModelController;
 import View.MainView;
 
-import javax.swing.*;
-import java.util.concurrent.TimeUnit;
+import java.awt.*;
 
 public class MainController {
 
@@ -21,6 +22,8 @@ public class MainController {
     private int counter = 0;
     private int scale = 0;
     private int size;
+
+    private int editingAgent = 0;
 
     private boolean cycleToggle = false;
 
@@ -126,32 +129,25 @@ public class MainController {
         this.updateWorldImage();
     }
 
-    public void setActiveAgents(int index) {
+    public void setEditingAgent(int index) {
+
+        // Store the old agent settings
+        AgentSettings agentSettings = view.getAgentEditorPanel().getAgentSettings();
+        modelController.getAgentBuilder().buildAgent(agentSettings, editingAgent);
+        // Update the active agents panel
+        view.getActiveAgentsPanel().setAgentButtonColour(agentSettings.getColor(), editingAgent);
+
+        // Set the new agent to be edited in the agent builder
+        modelController.getAgentBuilder().setOpenAgent(index);
+        // Update the agent editor panel with the agent now being edited
         view.getAgentEditorPanel().setAgent(modelController.getAgentBuilder().getOpenAgentView(index));
-        if (index == 0) {
-            view.getActiveAgentsPanel().setAgent0ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
-        }
-        if (index == 1) {
-            view.getActiveAgentsPanel().setAgent1ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
-        }
-        if (index == 2) {
-            view.getActiveAgentsPanel().setAgent2ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
-        }
-        if (index == 3) {
-            view.getActiveAgentsPanel().setAgent3ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
-        }
-        if (index == 4) {
-            view.getActiveAgentsPanel().setAgent4ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
-        }
-        if (index == 5) {
-            view.getActiveAgentsPanel().setAgent5ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
-        }
-        if (index == 6) {
-            view.getActiveAgentsPanel().setAgent6ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
-        }
-        if (index == 7) {
-            view.getActiveAgentsPanel().setAgent7ButtonColour(modelController.getAgentBuilder().getOpenAgentView(index).getColor());
-        }
+        // Update the active agents panel
+        view.getActiveAgentsPanel().setAgentButtonColour(modelController.getAgentBuilder().getOpenAgent().getColor(), index);
+        editingAgent = index;
+    }
+
+    public void setEditingButtonColor() {
+        view.getActiveAgentsPanel().setAgentButtonColour(view.getAgentEditorPanel().getCurrentColour(), editingAgent);
     }
 
     public void initController() {
@@ -160,14 +156,15 @@ public class MainController {
         this.view.getClearButton().addActionListener(e -> this.clear());
         this.view.getRunNStepsButton().addActionListener(e -> this.runNSteps());
         this.view.getRefreshSettingsButton().addActionListener(e -> this.refreshEnvironmentSettings());
-        this.view.getAgent0Button().addActionListener(e -> this.setActiveAgents(0));
-        this.view.getAgent1Button().addActionListener(e -> this.setActiveAgents(1));
-        this.view.getAgent2Button().addActionListener(e -> this.setActiveAgents(2));
-        this.view.getAgent3Button().addActionListener(e -> this.setActiveAgents(3));
-        this.view.getAgent4Button().addActionListener(e -> this.setActiveAgents(4));
-        this.view.getAgent5Button().addActionListener(e -> this.setActiveAgents(5));
-        this.view.getAgent6Button().addActionListener(e -> this.setActiveAgents(6));
-        this.view.getAgent7Button().addActionListener(e -> this.setActiveAgents(7));
+        this.view.getAgent0Button().addActionListener(e -> this.setEditingAgent(0));
+        this.view.getAgent1Button().addActionListener(e -> this.setEditingAgent(1));
+        this.view.getAgent2Button().addActionListener(e -> this.setEditingAgent(2));
+        this.view.getAgent3Button().addActionListener(e -> this.setEditingAgent(3));
+        this.view.getAgent4Button().addActionListener(e -> this.setEditingAgent(4));
+        this.view.getAgent5Button().addActionListener(e -> this.setEditingAgent(5));
+        this.view.getAgent6Button().addActionListener(e -> this.setEditingAgent(6));
+        this.view.getAgent7Button().addActionListener(e -> this.setEditingAgent(7));
+        this.view.getColourChooserButton().addActionListener(e -> this.setEditingButtonColor());
     }
 
 }

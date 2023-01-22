@@ -1,6 +1,6 @@
 package View;
 
-import Model.AgentBuilder.AgentView;
+import Model.AgentBuilder.AgentSettings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -166,7 +166,9 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
 
     private void setCurrentColour() {
         currentColour = JColorChooser.showDialog(null, "Select Agent Colour", Color.white);
-        colourChooserButton.setBackground(currentColour);
+        if (currentColour != null) {
+            colourChooserButton.setBackground(currentColour);
+        }
     }
 
     public Color getCurrentColour() {
@@ -205,12 +207,21 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         return isPredatorToggle;
     }
 
-    public void setAgent(AgentView agentView) {
-        lifespanSpinner.setValue((int) agentView.getLifespan());
-        energyCapacitySpinner.setValue((int) agentView.getEnergyCapacity());
-        energyCapacitySpinner.setValue((double) agentView.getEnergyAmount());
-        visionRangeSpinner.setValue((int) agentView.getVisionRange());
-        movementRangeSpinner.setValue((int) agentView.getMovementRange());
-        colourChooserButton.setBackground(agentView.getColor());
+    public JButton getColourChooserButton() {
+        return colourChooserButton;
+    }
+
+    public void setAgent(AgentSettings agentSettings) {
+        lifespanSpinner.setValue((int) agentSettings.getLifespan());
+        energyCapacitySpinner.setValue((int) agentSettings.getEnergyCapacity());
+        eatAmountSpinner.setValue((int) agentSettings.getEnergyAmount());
+        visionRangeSpinner.setValue((int) agentSettings.getVisionRange());
+        movementRangeSpinner.setValue((int) agentSettings.getMovementRange());
+        colourChooserButton.setBackground(agentSettings.getColor());
+    }
+
+    public AgentSettings getAgentSettings() {
+        //openAgent.getScores().getAge(), openAgent.getScores().getMAX_HUNGER(), openAgent.getAttributes().getEatAmount(), openAgent.getAttributes().getVision(), openAgent.getAttributes().getSpeed(), openAgent.getColor());
+        return new AgentSettings((int) lifespanSpinner.getValue(), (int) energyCapacitySpinner.getValue(), (int) eatAmountSpinner.getValue(), (int) visionRangeSpinner.getValue(), (int) movementRangeSpinner.getValue(), colourChooserButton.getBackground());
     }
 }
