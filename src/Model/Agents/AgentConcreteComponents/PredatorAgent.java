@@ -51,6 +51,11 @@ public class PredatorAgent extends BaseAgent {
     }
 
     @Override
+    public Object copy() {
+        return null;
+    }
+
+    @Override
     public ArrayList<Agent> create(Location parentBLocation, Environment environment_) {
         ArrayList<Location> childLocations = environment_.emptyAdjacent(super.getLocation(), AgentType.PREY);
         ArrayList<Agent> childAgents = new ArrayList<>();

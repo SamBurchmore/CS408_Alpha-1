@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 import Model.AgentBuilder.AgentBuilder;
+import Model.Agents.AgentConcreteComponents.BasicAgent;
 import Model.Agents.AgentFactory;
 import Model.Agents.AgentInterfaces.Agent;
 import Model.Agents.AgentStructs.AgentModelUpdate;
@@ -64,21 +65,19 @@ public class ModelController {
      */
     // TODO - implement predator prey ratio so that both controls work
     public void populate(int predator_percent, int density) {
-        AgentFactory agentFactory = new AgentFactory();
-
+        ArrayList<Agent> activeAgents = agentBuilder.getActiveAgents();
         IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
                 if (this.randomGen.nextInt(100) < density) {
-                    if (this.randomGen.nextInt(100) < predator_percent) {
-                        EnvironmentTile wt = environment.getGrid()[i];
-                        Agent newAgent = agentFactory.createAgent(AgentType.PREDATOR, wt.getLocation());
-                        wt.setOccupant(newAgent);
-                        agentList.add(newAgent);
-                    }
-                    else  {
-                        EnvironmentTile wt = environment.getGrid()[i];
-                        Agent newAgent = agentFactory.createAgent(AgentType.PREY, wt.getLocation());
-                        wt.setOccupant(newAgent);
-                        agentList.add(newAgent);
+                    int agentIndex = randomGen.nextInt(activeAgents.size());
+                    BasicAgent agent;
+                    for (int j = 0; j < activeAgents.size(); j++) {
+                        if (j == agentIndex) {
+                            agent = (BasicAgent) agentBuilder.getAgent(j).copy();
+                            EnvironmentTile wt = environment.getGrid()[i];
+                            agent.setLocation(wt.getLocation());
+                            wt.setOccupant(agent);
+                            agentList.add(agent);
+                        }
                     }
                 }
         });
@@ -114,10 +113,10 @@ public class ModelController {
     }
 
     public void clear() {
-        for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
-            EnvironmentTile current_wt = wt_iterator.next();
+        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
+            EnvironmentTile current_wt = environment.getGrid()[i];
             current_wt.setOccupant(null);
-        }
+        });
         agentList = new ArrayList<Agent>();
     }
 

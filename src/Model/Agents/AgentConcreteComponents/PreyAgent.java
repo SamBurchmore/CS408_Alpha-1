@@ -66,6 +66,11 @@ public class PreyAgent extends BaseAgent {
         return newAgent;
     }
 
+    @Override
+    public Object copy() {
+        return null;
+    }
+
 
     public int graze(EnvironmentTile environmentTile) {
         if (environmentTile.getFoodLevel() <= 0) {
