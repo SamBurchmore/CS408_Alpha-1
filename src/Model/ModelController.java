@@ -1,8 +1,15 @@
 package Model;
 
 import java.awt.image.BufferedImage;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
+import Model.AgentBuilder.AgentBuilder;
+import Model.Agents.AgentConcreteComponents.BasicAgent;
 import Model.Agents.AgentFactory;
 import Model.Agents.AgentInterfaces.Agent;
 import Model.Agents.AgentStructs.AgentModelUpdate;
@@ -18,21 +25,34 @@ public class ModelController {
 
     // The data structure which represents the world.
     private Environment environment;
-    // We store the grid size here as its used in a lot of logical operations within this class.
-    private final int worldSize;
+
+    private AgentBuilder agentBuilder;
 
     private ArrayList<Agent> agentList;
     // This is where all diagnostic data on the simulation is stored.
     private Diagnostics diagnostics;
 
+
+    private int foodRegenAmount;
+    double foodRegenChance;
+    private int maxFood;
+    private int minFood;
+    private final int worldSize;
+
+
     private Random randomGen;
 
-    public ModelController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel){
-        this.environment = new Environment(size_, starting_food_level, maxFoodLevel, minFoodLevel);
-        this.worldSize = size_;
+    public ModelController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double foodRegenChance, int foodRegenAmount){
+        this.environment = new Environment(size, starting_food_level, maxFoodLevel, minFoodLevel);
         this.randomGen = new Random();
         this.agentList = new ArrayList<>();
+        this.worldSize = size;
+        this.foodRegenChance = foodRegenChance;
+        this.minFood = minFoodLevel;
+        this.maxFood = maxFoodLevel;
+        this.foodRegenAmount = foodRegenAmount;
         this.diagnostics = new Diagnostics(this.worldSize);
+        this.agentBuilder = new AgentBuilder();
     }
 
     /**
@@ -45,31 +65,25 @@ public class ModelController {
      */
     // TODO - implement predator prey ratio so that both controls work
     public void populate(int predator_percent, int density) {
-        AgentFactory agentFactory = new AgentFactory();
-        for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
-            if (this.randomGen.nextInt(100) < density) {
-                if (this.randomGen.nextInt(100) < predator_percent) {
-                    EnvironmentTile wt = wt_iterator.next();
-                    Agent newAgent = agentFactory.createAgent(AgentType.PREDATOR, wt.getLocation());
-                    wt.setOccupant(newAgent);
-                    agentList.add(newAgent);
+        ArrayList<Agent> activeAgents = agentBuilder.getActiveAgents();
+        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
+                if (this.randomGen.nextInt(100) < density) {
+                    int agentIndex = randomGen.nextInt(activeAgents.size());
+                    BasicAgent agent;
+                    for (int j = 0; j < activeAgents.size(); j++) {
+                        if (j == agentIndex) {
+                            agent = (BasicAgent) agentBuilder.getAgent(j).copy();
+                            EnvironmentTile wt = environment.getGrid()[i];
+                            agent.setLocation(wt.getLocation());
+                            wt.setOccupant(agent);
+                            agentList.add(agent);
+                        }
+                    }
                 }
-                else  {
-                    EnvironmentTile wt = wt_iterator.next();
-                    Agent newAgent = agentFactory.createAgent(AgentType.PREY, wt.getLocation());
-                    wt.setOccupant(newAgent);
-                    agentList.add(newAgent);
-                }
-            }
-            else {
-                wt_iterator.next();
-            }
-        }
+        });
     }
 
     public void cycle() {
-        int agent0Count = 0;
-        int agent1Count = 0;
         ArrayList<Agent> aliveAgents = new ArrayList<>();
         for (Agent currentAgent : agentList) {
             Location oldLocation = currentAgent.getLocation();
@@ -86,32 +100,23 @@ public class ModelController {
                     aliveAgents.add(childAgent);
                 }
             }
-            if (currentAgent.getAttributes().getType().equals(AgentType.PREDATOR)) {
-                agent0Count++;
-            }
-            else {
-                agent1Count++;
-            }
         }
-        for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
-            if (randomGen.nextInt(worldSize*worldSize) > worldSize*worldSize- (worldSize * 2)) {
-                environment.modifyTileFoodLevel(wt_iterator.next().getLocation(), 6);
+        //System.out.println("Agent Cycle took: " + ( time - System.currentTimeMillis()) / -1000);
+        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
+            if (randomGen.nextDouble(100) < foodRegenChance) {
+                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), foodRegenAmount);
             }
-            else {
-                wt_iterator.next();
-            }
+        });
 
-        }
+        //System.out.println("Environment Cycle took: " + ( time - System.currentTimeMillis()) / -1000);
         agentList = aliveAgents;
-        this.diagnostics.setAgent0Count(agent0Count);
-        this.diagnostics.setAgent1Count(agent1Count);
     }
 
     public void clear() {
-        for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
-            EnvironmentTile current_wt = wt_iterator.next();
+        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
+            EnvironmentTile current_wt = environment.getGrid()[i];
             current_wt.setOccupant(null);
-        }
+        });
         agentList = new ArrayList<Agent>();
     }
 
@@ -121,6 +126,14 @@ public class ModelController {
 
     public void setEnvironmentMinFoodLevel(int newMin) {
         this.environment.setMinFoodLevel(newMin);
+    }
+
+    public void setFoodRegenAmount(int foodRegenAmount) {
+        this.foodRegenAmount = foodRegenAmount;
+    }
+
+    public void setFoodRegenChance(double foodRegenChance) {
+        this.foodRegenChance = foodRegenChance;
     }
 
     public Diagnostics getDiagnostics() {
@@ -145,4 +158,11 @@ public class ModelController {
         return count;
     }
 
+    public AgentBuilder getAgentBuilder() {
+        return agentBuilder;
+    }
+
+    public void setAgentBuilder(AgentBuilder agentBuilder) {
+        this.agentBuilder = agentBuilder;
+    }
 }

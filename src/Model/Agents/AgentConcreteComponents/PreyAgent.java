@@ -38,7 +38,7 @@ public class PreyAgent extends BaseAgent {
             if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
                 super.move(agentDecision.getLocation());
             }
-            if (agentDecision.getAgentAction().equals(AgentAction.CREATE)) {
+            if (agentDecision.getAgentAction().equals(AgentAction.CREATE) && !environment.emptyAdjacent(this.getLocation()).isEmpty()) {
                 childAgents = this.create(agentDecision.getLocation(), environment);
             }
         }
@@ -64,6 +64,11 @@ public class PreyAgent extends BaseAgent {
         super.getScores().setCreationCounter(super.getScores().getCreationDelay());
         Agent newAgent = new PreyAgent(childLocation, this, parentB);
         return newAgent;
+    }
+
+    @Override
+    public Object copy() {
+        return null;
     }
 
 

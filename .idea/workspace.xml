@@ -3,14 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b5c119b8-cf77-44b8-a83a-26bb30553e3a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MainController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PredatorAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PredatorAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PreyAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PreyAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PreyMotivations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PreyMotivations.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/ModelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/ModelController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/ActiveAgentsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/ActiveAgentsPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/View/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MainView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,7 +49,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
     <property name="create.test.in.the.same.root" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Controller" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -65,7 +59,7 @@
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
@@ -78,7 +72,11 @@
       <recent name="Model.Agents.AgentBaseComponents" />
       <recent name="Model.Agents.AgentBaseQualities" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\4th Year\CS408_Project\CS408_GUI\src\Controller" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="View" />
       <recent name="Model.Agents" />
       <recent name="Model.Agents.AgentConcreteComponents" />
     </key>
@@ -218,6 +216,11 @@
       <workItem from="1673352704283" duration="12833000" />
       <workItem from="1673440372571" duration="369000" />
       <workItem from="1673456033795" duration="644000" />
+      <workItem from="1673883298358" duration="11588000" />
+      <workItem from="1673964300960" duration="8779000" />
+      <workItem from="1674041521355" duration="1830000" />
+      <workItem from="1674057754941" duration="7609000" />
+      <workItem from="1674069588660" duration="2603000" />
     </task>
     <task id="LOCAL-00001" summary="added some methods">
       <created>1668354392375</created>
@@ -241,10 +244,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1666909967465" />
-    <state x="765" y="227" width="831" height="562" key="#com.intellij.ide.util.MemberChooser" timestamp="1669413684742">
+    <state x="765" y="227" width="831" height="562" key="#com.intellij.ide.util.MemberChooser" timestamp="1674062520726">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="227" width="831" height="562" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1669413684742" />
+    <state x="765" y="227" width="831" height="562" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1674062520726" />
     <state x="690" y="301" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1668074401744">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -261,10 +264,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="141" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1669408302390" />
-    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1669412220848">
+    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1673883855475">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1669412220848" />
+    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1673883855475" />
     <state x="975" y="252" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1668895118474">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -277,22 +280,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="278" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1673270795804" />
-    <state width="1877" height="140" key="GridCell.Tab.0.bottom" timestamp="1673458780127">
+    <state width="1877" height="134" key="GridCell.Tab.0.bottom" timestamp="1674073100492">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="140" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1673458780127" />
-    <state width="1877" height="140" key="GridCell.Tab.0.center" timestamp="1673458780127">
+    <state width="1877" height="134" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1674073100492" />
+    <state width="1877" height="134" key="GridCell.Tab.0.center" timestamp="1674073100492">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="140" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1673458780127" />
-    <state width="1877" height="140" key="GridCell.Tab.0.left" timestamp="1673458780127">
+    <state width="1877" height="134" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1674073100492" />
+    <state width="1877" height="134" key="GridCell.Tab.0.left" timestamp="1674073100492">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="140" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1673458780127" />
-    <state width="1877" height="140" key="GridCell.Tab.0.right" timestamp="1673458780127">
+    <state width="1877" height="134" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1674073100492" />
+    <state width="1877" height="134" key="GridCell.Tab.0.right" timestamp="1674073100492">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="140" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1673458780127" />
+    <state width="1877" height="134" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1674073100492" />
     <state width="1877" height="243" key="GridCell.Tab.1.bottom" timestamp="1671285517829">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -309,10 +312,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1877" height="243" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1671285517829" />
-    <state x="884" y="298" key="SettingsEditor" timestamp="1668820992722">
+    <state x="576" y="79" key="SettingsEditor" timestamp="1673883741043">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="884" y="298" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1668820992722" />
+    <state x="576" y="79" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1673883741043" />
     <state x="1053" y="100" width="774" height="847" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1668373631393">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -325,14 +328,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1010" y="118" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1667916642205" />
-    <state x="616" y="240" key="run.anything.popup" timestamp="1671281196323">
+    <state x="616" y="240" key="run.anything.popup" timestamp="1674043069590">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1671281196323" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1669406159358">
+    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1674043069590" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1673984273171">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1669406159358" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1673984273171" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

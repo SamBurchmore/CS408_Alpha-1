@@ -29,15 +29,17 @@ public class PredatorAgent extends BaseAgent {
         }
         ArrayList<Agent> childAgents = new ArrayList<>();
 
-        if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
-            super.move(agentDecision.getLocation());
-        }
-        if (agentDecision.getAgentAction().equals(AgentAction.CREATE)) {
-            childAgents = this.create(agentDecision.getLocation(), environment);
-        }
-        if (agentDecision.getAgentAction().equals(AgentAction.ATTACK)) {
-            this.predate();
-            super.move(agentDecision.getLocation());
+        if (agentDecision.isNull()) {
+            if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
+                super.move(agentDecision.getLocation());
+            }
+            if (agentDecision.getAgentAction().equals(AgentAction.CREATE) && !environment.emptyAdjacent(this.getLocation()).isEmpty()) {
+                childAgents = this.create(agentDecision.getLocation(), environment);
+            }
+            if (agentDecision.getAgentAction().equals(AgentAction.ATTACK)) {
+                this.predate();
+                super.move(agentDecision.getLocation());
+            }
         }
         return new AgentModelUpdate(this, childAgents);
     }
@@ -49,13 +51,18 @@ public class PredatorAgent extends BaseAgent {
     }
 
     @Override
+    public Object copy() {
+        return null;
+    }
+
+    @Override
     public ArrayList<Agent> create(Location parentBLocation, Environment environment_) {
         ArrayList<Location> childLocations = environment_.emptyAdjacent(super.getLocation(), AgentType.PREY);
         ArrayList<Agent> childAgents = new ArrayList<>();
         Collections.shuffle(childLocations);
         for (Location childLocation : childLocations.subList(0, childLocations.size() / 2)) {
             Agent child = this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation);
-            child.getScores().setHunger(child.getScores().getMAX_HUNGER() / 2);
+            child.getScores().setHunger(child.getScores().getMAX_HUNGER() / 4);
             childAgents.add(child);
         }
         return childAgents;

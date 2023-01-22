@@ -241,8 +241,6 @@ public class Environment {
 
     public BufferedImage scaledImage(int scale) {
         BufferedImage worldImage = new BufferedImage(this.size * scale, this.size * scale, BufferedImage.TYPE_INT_RGB);
-        int tx = 0;
-        int ty = 0;
         for (int x = 0; x <= scale * this.size; x += scale) {
             for (int y = 0; y <= scale * this.size; y += scale) {
                 int t = 0;
@@ -253,9 +251,7 @@ public class Environment {
                         }
                     }
                 }
-                ty++;
             }
-            tx++;
         }
         return worldImage;
     }

@@ -25,15 +25,6 @@ public abstract class BaseAttributes implements Attributes {
     public BaseAttributes(Attributes attributes_a, Attributes attributes_b){
         // set the new agents type.
         this.agentType = attributes_a.getType();
-        // First lets combine the parents attributes to get our new child attributes.
-//        this.speed = (attributes_a.getSpeed() / 2) + (attributes_b.getSpeed() / 2);
-//        this.size = (attributes_a.getSize() / 2) + (attributes_b.getSize() / 2);
-//        this.vision = (attributes_a.getVision() / 2) + (attributes_b.getVision() / 2);
-//        this.eatAmount = (attributes_a.getEatAmount() / 2) + (attributes_b.getEatAmount() / 2);
-        // Now lets randomly decide if the agent will mutate in some way.
-        //this.mutate();
-        // now we make sure the size attribute is not < 20.
-        //if (this.size < 20) { this.size = 20; }
         this.speed = attributes_a.getSpeed();
         this.size = attributes_a.getSize();
         this.vision = attributes_a.getVision();
