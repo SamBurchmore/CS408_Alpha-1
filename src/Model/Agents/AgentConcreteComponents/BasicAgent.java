@@ -2,9 +2,7 @@ package Model.Agents.AgentConcreteComponents;
 
 import Model.Agents.AgentBaseComponents.BaseAgent;
 import Model.Agents.AgentInterfaces.*;
-import Model.Agents.AgentStructs.AgentAction;
-import Model.Agents.AgentStructs.AgentDecision;
-import Model.Agents.AgentStructs.AgentModelUpdate;
+import Model.Agents.AgentStructs.*;
 import Model.Environment.Environment;
 import Model.Environment.EnvironmentTile;
 import Model.Environment.Location;
@@ -15,33 +13,36 @@ import java.util.Collections;
 
 public class BasicAgent extends BaseAgent {
 
-    public BasicAgent(Location location_, Color agentColor_, Model.Agents.AgentInterfaces.Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
-        super(location_, agentColor_, reaction_, vision_, attributes_, scores_);
+    public BasicAgent(Location location, Color agentColor, Reaction reaction, Vision vision, Attributes attributes, Scores scores) {
+        super(location, agentColor, reaction, vision, attributes, scores);
     }
 
-    public BasicAgent(Location location_, Agent parentA, Agent parentB) {
-        super(location_, parentA, parentB);
+    public BasicAgent(Location location, Agent parentA, Agent parentB) {
+        super(location, parentA, parentB);
     }
 
     @Override
     public AgentModelUpdate run(Environment environment) {
 
-        AgentDecision agentDecision = super.liveDay(environment);
+        super.liveDay(environment);
+        ArrayList<AgentVision> agentVision = this.getVision().lookAround(environment, this.getLocation(), this.getAttributes().getVision(), this.getAttributes().getSpeed());
+        AgentUpdate agentUpdate = this.getReaction().react(agentVision, this.getAttributes(), this.getScores());
+
         if (super.isDead()) {
             return new AgentModelUpdate(null, new ArrayList<Agent>());
         }
-        ArrayList<Agent> childAgents = new ArrayList<>();
-        int eatAmount = this.graze(environment.getTile(super.getLocation()));
 
-        if (!agentDecision.isNull()) {
-            if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
-                super.move(agentDecision.getLocation());
-            }
-            if (agentDecision.getAgentAction().equals(AgentAction.CREATE) && !environment.emptyAdjacent(this.getLocation()).isEmpty()) {
-                childAgents = this.create(agentDecision.getLocation(), environment);
-            }
+        ArrayList<Agent> childAgents = new ArrayList<>();
+        if (agentUpdate.getAction().equals(AgentAction.MOVE)) {
+            int eatAmount = this.graze(environment.getTile(super.getLocation()));
+            super.move(agentUpdate.getLocation());
+            return new AgentModelUpdate(this, childAgents, eatAmount);
         }
-        return new AgentModelUpdate(this, childAgents, eatAmount);
+        if (agentUpdate.getAction().equals(AgentAction.CREATE) && !environment.emptyAdjacent(this.getLocation()).isEmpty()) {
+            childAgents = this.create(agentUpdate.getLocation(), environment);
+            return new AgentModelUpdate(this, childAgents, 0);
+        }
+        return
     }
 
     @Override
@@ -58,11 +59,11 @@ public class BasicAgent extends BaseAgent {
 
     @Override
     public Agent combine(Agent parentB, Location childLocation) {
-        super.getScores().setCreationCounter(super.getScores().getCreationDelay());
+        super.getScores().setCreationCounter(super.getAttributes().getCreationDelay());
         Agent newAgent = new BasicAgent(childLocation, this, parentB);
-        super.getScores().setHunger(super.getScores().getHunger() - super.getScores().getMAX_HUNGER() / 8);
-        newAgent.getScores().setHunger(newAgent.getScores().getMAX_HUNGER() / 8);
-        newAgent.getScores().setCreationCounter(newAgent.getScores().getMAX_AGE() / 2);
+        super.getScores().setHunger(super.getAttributes().getMaxEnergy() - super.getAttributes().getMaxEnergy() / 8);
+        newAgent.getScores().setHunger(newAgent.getAttributes().getMaxEnergy() / 8);
+        newAgent.getScores().setCreationCounter(newAgent.getAttributes().getMaxAge() / 2);
         return newAgent;
     }
 

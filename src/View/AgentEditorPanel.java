@@ -215,7 +215,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         lifespanSpinner.setValue((int) agentSettings.getLifespan());
         energyCapacitySpinner.setValue((int) agentSettings.getEnergyCapacity());
         eatAmountSpinner.setValue((int) agentSettings.getEnergyAmount());
-        visionRangeSpinner.setValue((int) agentSettings.getVisionRange());
+        visionRangeSpinner.setValue((int) agentSettings.getVision());
         movementRangeSpinner.setValue((int) agentSettings.getMovementRange());
         colourChooserButton.setBackground(agentSettings.getColor());
     }

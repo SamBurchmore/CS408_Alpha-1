@@ -7,10 +7,12 @@ public class AgentUpdate {
 
     private Location location;
     private Scores scores;
+    private AgentAction action;
 
-    public AgentUpdate(Location location, Scores scores) {
+    public AgentUpdate(Location location, Scores scores, AgentAction action) {
         this.location = location;
         this.scores = scores;
+        this.action = action;
     }
 
     public Location getLocation() {
@@ -27,5 +29,13 @@ public class AgentUpdate {
 
     public void setScores(Scores scores) {
         this.scores = scores;
+    }
+
+    public AgentAction getAction() {
+        return action;
+    }
+
+    public void setAction(AgentAction action) {
+        this.action = action;
     }
 }

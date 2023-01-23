@@ -1,15 +1,11 @@
 package Model.Agents.AgentConcreteComponents;
 
 import Model.Agents.AgentBaseComponents.BaseReaction;
-import Model.Agents.AgentInterfaces.Attributes;
 import Model.Agents.AgentInterfaces.Motivations;
-import Model.Agents.AgentInterfaces.Scores;
 import Model.Agents.AgentStructs.AgentAction;
 import Model.Agents.AgentStructs.AgentDecision;
-import Model.Agents.AgentStructs.AgentType;
 import Model.Agents.AgentStructs.AgentVision;
 
-import java.awt.image.ColorConvertOp;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -28,14 +24,14 @@ public class PredatorReaction extends BaseReaction {
         for (AgentVision currentAV : agentVision) {
             if (currentAV.isInRange()) {
                 if (currentAV.isOccupied()) {
-                    if (super.getMotivations().toCreate(agentScores) == 1) {
+                    if (super.getAgentMotivations().toCreate(agentScores) == 1) {
                         if (currentAV.getAgentAttributes().getType().equals(agentAttributes.getType())) {
                             agentDecision.setLocation(currentAV.getLocation());
                             agentDecision.setAgentAction(AgentAction.CREATE);
                             matesInRange.add(agentDecision);
                         }
                     }
-                    else if (super.getMotivations().toAttack(agentScores) == 1) {
+                    else if (super.getAgentMotivations().toAttack(agentScores) == 1) {
                         agentDecision.setLocation(currentAV.getLocation());
                         agentDecision.setAgentAction(AgentAction.ATTACK);
                         preyInRange.add(agentDecision);

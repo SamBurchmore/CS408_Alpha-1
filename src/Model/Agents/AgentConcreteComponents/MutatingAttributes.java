@@ -1,6 +1,4 @@
 package Model.Agents.AgentConcreteComponents;
-import Model.Agents.AgentBaseComponents.BaseAttributes;
-import Model.Agents.AgentInterfaces.Attributes;
 import Model.Agents.AgentStructs.AgentType;
 
 public class MutatingAttributes extends BaseAttributes {

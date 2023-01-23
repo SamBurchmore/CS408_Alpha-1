@@ -1,7 +1,6 @@
 package Model.Agents.AgentConcreteComponents;
 
 import Model.Agents.AgentBaseComponents.BaseMotivations;
-import Model.Agents.AgentInterfaces.Scores;
 
 public class PredatorMotivations extends BaseMotivations {
 

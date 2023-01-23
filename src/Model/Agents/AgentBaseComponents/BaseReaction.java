@@ -45,7 +45,7 @@ public abstract class BaseReaction implements Reaction {
         return ad;
     }
 
-    public Motivations getMotivations() {
+    public Motivations getAgentMotivations() {
         return this.motivations;
     }
 

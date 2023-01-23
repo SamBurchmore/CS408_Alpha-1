@@ -37,7 +37,7 @@ public class AgentBuilder {
     }
 
     public void buildAgent(AgentSettings agentSettings, int index) {
-        activeAgents.setAgent(new BasicAgent(new Location(-1, -1), agentSettings.getColor(), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(agentSettings.getMovementRange(), 1, agentSettings.getVisionRange(), agentSettings.getEnergyAmount(), AgentType.PREY), new BasicScores(agentSettings.getEnergyCapacity(), 1, 0, agentSettings.getEnergyCapacity(), 1, agentSettings.getLifespan(), 0)), index);
+        activeAgents.setAgent(new BasicAgent(new Location(-1, -1), agentSettings.getColor(), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(agentSettings.getMovementRange(), 1, agentSettings.getVision(), agentSettings.getEnergyAmount(), AgentType.PREY), new BasicScores(agentSettings.getEnergyCapacity(), 1, 0, agentSettings.getEnergyCapacity(), 1, agentSettings.getLifespan(), 0)), index);
     }
 
     public Agent getAgent(int index) {

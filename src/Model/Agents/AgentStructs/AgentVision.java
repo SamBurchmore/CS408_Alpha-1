@@ -1,7 +1,7 @@
 package Model.Agents.AgentStructs;
 
-import Model.Agents.AgentInterfaces.Attributes;
 import Model.Environment.Location;
+import Model.Agents.AgentInterfaces.Attributes;
 
 public class AgentVision {
 

@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface Agent {
 
     AgentModelUpdate run(Environment environment_);
-    AgentDecision liveDay(Environment environment);
+    void liveDay(Environment environment);
     void move(Location newLocation);
     ArrayList<Agent> create(Location parentBLocation, Environment environment_);
     boolean isDead();

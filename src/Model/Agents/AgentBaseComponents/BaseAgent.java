@@ -2,10 +2,8 @@ package Model.Agents.AgentBaseComponents;
 
 import Model.Agents.AgentConcreteComponents.*;
 import Model.Agents.AgentInterfaces.*;
-import Model.Agents.AgentStructs.AgentDecision;
 import Model.Agents.AgentStructs.AgentModelUpdate;
 import Model.Agents.AgentStructs.AgentType;
-import Model.Agents.AgentStructs.AgentVision;
 import Model.Environment.Location;
 import Model.Environment.Environment;
 
@@ -22,28 +20,22 @@ public abstract class BaseAgent implements Agent {
     private Attributes attributes;
     private Scores scores = null;
 
-    public BaseAgent(Location location_, Color agentColor_, Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
-        this.location = location_;
-        this.agentColor = agentColor_;
-        this.reaction = reaction_;
-        this.vision = vision_;
-        this.attributes = attributes_;
-        this.scores = scores_;
+    public BaseAgent(Location location, Color agentColor, Reaction reaction, Vision vision, Attributes attributes, Scores scores) {
+        this.location = location;
+        this.agentColor = agentColor;
+        this.reaction = reaction;
+        this.vision = vision;
+        this.attributes = attributes;
+        this.scores = scores;
     }
 
-    public BaseAgent(Location location_, Agent parent_a, Agent parent_b) {
-        this.location = location_;
-        this.agentColor = parent_a.getColor();
-        if (parent_a.getAttributes().getType().equals(AgentType.PREY)) {
-            this.reaction = new PreyReaction(new PreyMotivations());
-        }
-        else {
-            this.reaction = new PredatorReaction(new PredatorMotivations());
-        }
+    public BaseAgent(Location location, Agent parentA, Agent parentB) {
+        this.location = location;
+        this.agentColor = parentA.getColor();
+        this.reaction = new BasicReaction((ArrayList<Motivations>) parentA.getReaction().getAgentMotivations().clone());
         this.vision = new BasicVision();
-        this.attributes = new BasicAttributes(parent_a.getAttributes(), parent_b.getAttributes());
-        this.scores = new BasicScores(parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), 0, parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), parent_a.getScores().getMAX_AGE(), parent_a.getScores().getCreationDelay());
-        this.scores.setCreationCounter(parent_a.getScores().getCreationDelay());
+        this.attributes = new BasicAttributes(parentB.getAttributes(), parentB.getAttributes());
+        this.scores = new BasicScores(parentA.getAttributes().getMaxEnergy(), 0, parentA.getAttributes().getMaxEnergy(), parentA.getAttributes().getMaxAge(), parentA.getAttributes().getCreationDelay());
     }
 
     @Override
@@ -52,18 +44,15 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public AgentDecision liveDay(Environment environment) {
+    public void liveDay(Environment environment) {
         this.getScores().setHunger((this.getScores().getHunger() - attributes.getSize()));
         this.getScores().setAge(this.getScores().getAge()+1);
         this.getScores().setCreationCounter((this.getScores().getCreationCounter() - 1));
-
-        ArrayList<AgentVision> agentSight = this.getVision().lookAround(environment, this.getLocation(), this.getAttributes().getVision(), this.getAttributes().getSpeed());
-        return this.getReaction().react(agentSight, this.getAttributes(), this.getScores());
     }
 
     @Override
     public boolean isDead() {
-        return this.getScores().getHunger() <= 0 || this.getScores().getAge() >= this.getScores().getMAX_AGE();
+        return this.getScores().getHunger() <= 0 || this.getScores().getAge() >= this.getScores().getMaxAge();
     }
 
     @Override
