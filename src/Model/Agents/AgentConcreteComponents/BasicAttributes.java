@@ -1,16 +1,16 @@
 package Model.Agents.AgentConcreteComponents;
+
 import Model.Agents.AgentBaseComponents.BaseAttributes;
 import Model.Agents.AgentInterfaces.Attributes;
-import Model.Agents.AgentStructs.AgentType;
+
+import java.awt.*;
 
 public class BasicAttributes extends BaseAttributes {
-
-    public BasicAttributes(int speed_, int size_, int vision_, int eatAmount_, AgentType agentType_) {
-        super(speed_, size_, vision_, eatAmount_, agentType_);
+    public BasicAttributes(int speed, int size, int vision, int eatAmount, int creationDelay, int maxEnergy, int maxAge, int agentCode, Color agentColour) {
+        super(speed, size, vision, eatAmount, creationDelay, maxEnergy, maxAge, agentCode, agentColour);
     }
 
-    public BasicAttributes(Attributes attributes_a, Attributes attributes_b){
-        super(attributes_a, attributes_b);
+    public BasicAttributes(Attributes attributesA, Attributes attributesB) {
+        super(attributesA, attributesB);
     }
-
 }
