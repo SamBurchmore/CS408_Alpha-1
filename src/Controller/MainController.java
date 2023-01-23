@@ -114,7 +114,7 @@ public class MainController {
     }
 
     public void setMinFoodLevel(int newMin) {
-        this.modelController.setEnvironmentMaxFoodLevel(newMin);
+        this.modelController.setEnvironmentMinFoodLevel(newMin);
     }
 
     public void setFoodRegenChance(double chance) {

@@ -53,7 +53,7 @@ public abstract class BaseAgent implements Agent {
 
     @Override
     public AgentDecision liveDay(Environment environment) {
-        this.getScores().setHunger((this.getScores().getHunger() - 1));
+        this.getScores().setHunger((this.getScores().getHunger() - attributes.getSize()));
         this.getScores().setAge(this.getScores().getAge()+1);
         this.getScores().setCreationCounter((this.getScores().getCreationCounter() - 1));
 

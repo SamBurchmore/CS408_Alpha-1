@@ -27,7 +27,8 @@ public class Environment {
     Color max = new Color(0, 255,0);
     Color high = new Color(102, 204,0);
     Color medium = new Color(153, 153,0);
-    Color low = new Color(102, 102, 0);
+    Color low = new Color(121, 121, 2);
+    Color lowMin = new Color(96, 96, 1);
     Color min = new Color(192, 192,192);
 
     /**
@@ -183,7 +184,6 @@ public class Environment {
      * then it will be set to the min food level.
      * @param food_level_modifier the integer value the food level will be modified by.
      */
-    //TODO There'll be a few ways to implement the logic for this, not really sure whats the optimal way but this method will be called a lot so definetly have a wee look
     public void modifyTileFoodLevel(Location location, int foodLevelModifier) {
         this.getTile(location).setFoodLevel(this.getTile(location).getFoodLevel() + foodLevelModifier);
         if (this.getTile(location).getFoodLevel() < this.minFoodLevel) {
@@ -207,6 +207,9 @@ public class Environment {
         }
         if (this.getTile(location).getFoodLevel() > this.maxFoodLevel / 2 ) {
             return this.medium;
+        }
+        if (this.getTile(location).getFoodLevel() > this.maxFoodLevel - ( (maxFoodLevel / 4) * 3)) {
+            return this.lowMin;
         }
         if (this.getTile(location).getFoodLevel() > this.minFoodLevel) {
             return this.low;

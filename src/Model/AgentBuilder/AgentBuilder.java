@@ -19,7 +19,7 @@ public class AgentBuilder {
     public AgentBuilder() {
         activeAgents = new ActiveAgents();
         for (int i = 0; i < _agentNumber_; i++) {
-            activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new Color(i * i, 20 * i, 32 * i), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(1, 15, 1, 1, AgentType.PREY), new BasicScores(6, 6, 0, 6, 6, 10, 1)), i);
+            activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new Color(0, 156, 255), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(1, 1, 1 , 2, AgentType.PREY), new BasicScores(16, 6, 0, 16, 6, 32, 0)), i);
         }
         openAgent = activeAgents.getAgent(0);
     }
