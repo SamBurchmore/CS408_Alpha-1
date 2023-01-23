@@ -26,12 +26,12 @@ public class Main {
             }
             foodRegenAmount = 8;
             mainController.setFoodRegenAmount(foodRegenAmount);
-            if (random.nextInt(5) == 0){
-                foodRegenChance -= 0.11 ;
+            if (random.nextInt(7) == 0){
+                foodRegenChance -= 0.14 ;
                 mainController.setFoodRegenChance(foodRegenChance);
             }
             else {
-                foodRegenChance += 0.02;
+                foodRegenChance += 0.03;
                 mainController.setFoodRegenChance(foodRegenChance);
             }
         }
