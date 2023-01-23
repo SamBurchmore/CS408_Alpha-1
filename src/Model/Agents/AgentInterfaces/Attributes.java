@@ -1,15 +1,16 @@
 package Model.Agents.AgentInterfaces;
 
-import Model.Agents.AgentStructs.AgentType;
+import java.awt.*;
 
 public interface Attributes {
 
-    void mutate();
-    int mutationMagnitude();
     int getSpeed();
     int getSize();
     int getVision();
     int getEatAmount();
-    AgentType getType();
-
+    int getCreationDelay();
+    int getMaxEnergy();
+    int getMaxAge();
+    int getAgentCode();
+    Color getAgentColour();
 }
