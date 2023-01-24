@@ -103,7 +103,7 @@ public class ModelController {
         }
         //System.out.println("Agent Cycle took: " + ( time - System.currentTimeMillis()) / -1000);
         IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
-            if (randomGen.nextDouble(100) < foodRegenChance) {
+            if (randomGen.nextInt(10000) / 100.0 < foodRegenChance) {
                 environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), foodRegenAmount);
             }
         });
