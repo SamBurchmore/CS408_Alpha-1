@@ -45,20 +45,12 @@ public class ModelController {
         this.minFood = minFoodLevel;
         this.maxFood = maxFoodLevel;
         this.foodRegenAmount = foodRegenAmount;
-        this.diagnostics = new Diagnostics(this.worldSize);
+        this.diagnostics = new Diagnostics();
         this.agentEditor = new AgentEditor();
     }
 
-    /**
-     * This method populates the WorldGrid object with predator and prey agents based on the input ratio.
-     * So if they are both one, then the ratio will be 1:1.
-     * The total number of agents is decided by the density parameter.
-     * Agents are populated pseudo randomly.
-     * @param predator_percent The percentage of agents to be of predators. The rest will be prey.
-     * @param density The percentage of tiles to ber occupied.
-     */
-    // TODO - implement predator prey ratio so that both controls work
-    public void populate(int predator_percent, int density) {
+
+    public void populate(int density) {
         ArrayList<Agent> activeAgents = agentEditor.getActiveAgents();
         IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
                 if (this.randomGen.nextInt(100) < density) {
@@ -71,6 +63,9 @@ public class ModelController {
                             agent.setLocation(wt.getLocation());
                             wt.setOccupant(agent);
                             agentList.add(agent);
+                            diagnostics.addToAgentPopulation(j, 1);
+                            diagnostics.addToAveragePopulationEnergy(j, agent.getScores().getHunger());
+                            diagnostics.addToAveragePopulationLifespan(j, agent.getScores().getAge());
                         }
                     }
                 }
@@ -78,6 +73,7 @@ public class ModelController {
     }
 
     public void cycle() {
+        diagnostics.clearAgentStats();
         ArrayList<Agent> aliveAgents = new ArrayList<>();
         for (Agent currentAgent : agentList) {
             Location oldLocation = currentAgent.getLocation();
@@ -87,6 +83,9 @@ public class ModelController {
                 environment.setTileAgent(agentModelUpdate.getAgent());
                 environment.modifyTileFoodLevel(agentModelUpdate.getAgent().getLocation(), -agentModelUpdate.getEatAmount());
                 aliveAgents.add(agentModelUpdate.getAgent());
+                diagnostics.addToAgentPopulation(agentModelUpdate.getAgent().getAttributes().getCode(), 1);
+                diagnostics.addToAveragePopulationEnergy(agentModelUpdate.getAgent().getAttributes().getCode(), agentModelUpdate.getAgent().getScores().getHunger());
+                diagnostics.addToAveragePopulationLifespan(agentModelUpdate.getAgent().getAttributes().getCode(), agentModelUpdate.getAgent().getScores().getAge());
             }
             if (!agentModelUpdate.getChildAgents().isEmpty()) {
                 for (Agent childAgent : agentModelUpdate.getChildAgents()) {
@@ -95,14 +94,11 @@ public class ModelController {
                 }
             }
         }
-        //System.out.println("Agent Cycle took: " + ( time - System.currentTimeMillis()) / -1000);
         IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
             if (randomGen.nextInt(10000) / 100.0 < foodRegenChance) {
                 environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), foodRegenAmount);
             }
         });
-
-        //System.out.println("Environment Cycle took: " + ( time - System.currentTimeMillis()) / -1000);
         agentList = aliveAgents;
     }
 
@@ -159,4 +155,5 @@ public class ModelController {
     public void setAgentEditor(AgentEditor agentEditor) {
         this.agentEditor = agentEditor;
     }
+
 }

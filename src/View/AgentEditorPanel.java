@@ -47,7 +47,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
     public AgentEditorPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(310, 650));
+        setPreferredSize(new Dimension(310, 665));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
         setBackground(new Color(224, 224, 224));
 
@@ -80,7 +80,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         eatAmountLabel = new JLabel("Eat Amount: ");
         eatAmountLabel.setPreferredSize(new Dimension(150, 30));
 
-        lifespanLabel = new JLabel("Lifespan: ");
+        lifespanLabel = new JLabel("Max Lifespan: ");
         lifespanLabel.setPreferredSize(new Dimension(150, 30));
 
         creationAgeLabel = new JLabel("Creation Age: ");
@@ -128,8 +128,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         agentCodeSpinner.setEnabled(false);
 
         updateSettingsButton = new JButton("Update Settings");
-        updateSettingsButton.setBackground(new Color(204, 204, 204));
-        updateSettingsButton.setPreferredSize(new Dimension(300, 80));
+        updateSettingsButton.setPreferredSize(new Dimension(300, 50));
 
         isGrazerToggle = new JToggleButton("Grazer");
         isGrazerToggle.setPreferredSize(new Dimension(300, 60));
@@ -344,7 +343,6 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
     }
 
     public AgentSettings getAgentSettings() {
-                                //String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay
         return new AgentSettings(agentNameTextField.getText(), (int) agentCodeSpinner.getValue(), colourChooserButton.getBackground(), (int) visionRangeSpinner.getValue(), (int) movementRangeSpinner.getValue(), (int) sizeSpinner.getValue(), (int) energyCapacitySpinner.getValue(), (int) eatAmountSpinner.getValue(), (int) lifespanSpinner.getValue(), (int) creationAgeSpinner.getValue(), (int) creationAmountSpinner.getValue(), (int) creationDelaySpinner.getValue());
     }
 }

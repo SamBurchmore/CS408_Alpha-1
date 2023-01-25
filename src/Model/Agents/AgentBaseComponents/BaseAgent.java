@@ -4,22 +4,20 @@ import Model.Agents.AgentConcreteComponents.*;
 import Model.Agents.AgentInterfaces.*;
 import Model.Agents.AgentStructs.AgentDecision;
 import Model.Agents.AgentStructs.AgentModelUpdate;
-import Model.Agents.AgentStructs.AgentType;
 import Model.Agents.AgentStructs.AgentVision;
 import Model.Environment.Location;
 import Model.Environment.Environment;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public abstract class BaseAgent implements Agent {
 
     private Location location;
-    private Reaction reaction = null;
-    private Vision vision = null;
+    private Reaction reaction;
+    private Vision vision;
     private Attributes attributes;
-    private Scores scores = null;
+    private Scores scores;
 
     public BaseAgent(Location location, Reaction reaction, Vision vision, Attributes attributes, Scores scores) {
         this.location = location;

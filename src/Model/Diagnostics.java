@@ -1,55 +1,70 @@
 package Model;
 
-import java.util.EventListener;
+import java.util.ArrayList;
 
 public class Diagnostics {
 
-    int environmentSize;
-    int agent0Count;
-    int agent1Count;
+    private int environmentSize;
+    final private int activeAgentsNumber = 8;
 
-    int counter;
+    ArrayList<Integer> agentPopulations; // The size of each agent population
+    ArrayList<Integer> averagePopulationsEnergy; // The average percent of max energy in each agent population
+    ArrayList<Integer> averagePopulationsLifespan; // The average percent of max age in each agent population
 
-    public Diagnostics(int size) {
-        this.agent0Count = 0;
-        this.agent1Count = 0;
-        this.environmentSize = size;
-        this.counter = 0;
+    public Diagnostics() {
+        agentPopulations = new ArrayList<>();
+        averagePopulationsEnergy = new ArrayList<>();
+        averagePopulationsLifespan = new ArrayList<>();
+        for (int i = 0; i < activeAgentsNumber; i++) {
+            agentPopulations.add(0);
+            averagePopulationsEnergy.add(0);
+            averagePopulationsLifespan.add(0);
+        }
     }
 
-    public int agent0Density() {
-        return this.agent0Count;
+    public String getAgentStatStrings() {
+        StringBuilder statString = new StringBuilder();
+        for (int i = 0; i < activeAgentsNumber; i++) {
+            statString.append("Agent ").append(i).append(": Population=").append(agentPopulations.get(i)).append(" | Avg Energy=").append(averagePopulationsEnergy.get(i) / agentPopulations.get(i)).append(" | Avg Lifespan=").append(averagePopulationsLifespan.get(i) / agentPopulations.get(i));
+            statString.append("\n");
+        }
+        return statString.toString();
     }
 
-    public int agent1Density() {
-        return this.agent1Count;
+    public void setEnvironmentSize(int environmentSize) {
+        this.environmentSize = environmentSize;
     }
 
-    public int getAgent0Count() {
-        return this.agent0Count;
+    public void setAgentPopulation(int index, int population) {
+        agentPopulations.set(index, population);
     }
 
-    public void setAgent0Count(int agent0Count) {
-        this.agent0Count = agent0Count;
+    public void setAveragePopulationEnergy(int index, int population) {
+        averagePopulationsEnergy.set(index, population);
     }
 
-    public int getAgent1Count() {
-        return this.agent1Count;
+    public void setAveragePopulationLifespan(int index, int population) {
+        averagePopulationsLifespan.set(index, population);
     }
 
-    public void setAgent1Count(int agent1Count) {
-        this.agent1Count = agent1Count;
+    public void addToAgentPopulation(int index, int newAgents) {
+        agentPopulations.set(index, agentPopulations.get(index) + newAgents);
     }
 
-    public void iterateCounter() {
-        this.counter++;
+    public void addToAveragePopulationEnergy(int index, int newValue) {
+        averagePopulationsEnergy.set(index, averagePopulationsEnergy.get(index) + newValue);
     }
 
-    public void resetCounter() {
-        this.counter = 0;
+    public void addToAveragePopulationLifespan(int index, int newValue) {
+        averagePopulationsLifespan.set(index, averagePopulationsLifespan.get(index) + newValue);
     }
 
-    public int getCounter() {
-        return this.counter;
+    public void clearAgentStats() {
+        for (int i = 0; i < activeAgentsNumber; i++) {
+            agentPopulations.set(i, 0);
+            averagePopulationsEnergy.set(i, 0);
+            averagePopulationsLifespan.set(i, 0);
+        }
     }
+
 }

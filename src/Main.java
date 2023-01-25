@@ -2,6 +2,7 @@ import Controller.MainController;
 import View.MainView;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
@@ -34,6 +35,10 @@ public class Main {
 //                foodRegenChance += 0.03;
 //                mainController.setFoodRegenChance(foodRegenChance);
 //            }
+//        }
+//        mainController.populateWorld();
+//        for (int i = 0; i < 100000; i++) {
+//            mainController.runStep();
 //        }
         //testMotivations();
     }

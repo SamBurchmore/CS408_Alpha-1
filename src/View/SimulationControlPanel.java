@@ -22,31 +22,31 @@ public class SimulationControlPanel extends JPanel {
     public SimulationControlPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(600, 124));
+        setPreferredSize(new Dimension(600, 204));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         // First all elements are defined and their attributes set
         runStepButton = new JButton("Run Step");
-        runStepButton.setPreferredSize(new Dimension(600, 40));
+        runStepButton.setPreferredSize(new Dimension(600, 65));
 
         stopStartButton = new JButton("Stop / Start");
-        stopStartButton.setPreferredSize(new Dimension(300, 40));
+        stopStartButton.setPreferredSize(new Dimension(300, 65));
 
         populateButton = new JButton("Populate");
-        populateButton.setPreferredSize(new Dimension(300, 40));
+        populateButton.setPreferredSize(new Dimension(300, 65));
 
         clearButton = new JButton("Clear");
-        clearButton.setPreferredSize(new Dimension(300, 40));
+        clearButton.setPreferredSize(new Dimension(300, 65));
 
         // Here we build the run n steps panel
         runNStepsButton = new JButton("Run N Steps: ");
-        runNStepsButton.setPreferredSize(new Dimension(150, 40));
+        runNStepsButton.setPreferredSize(new Dimension(150, 65));
 
         runNStepsSpinner = new JSpinner(new SpinnerNumberModel(10, 0, 1000000, 1));
-        runNStepsSpinner.setPreferredSize(new Dimension(150, 40));
+        runNStepsSpinner.setPreferredSize(new Dimension(150, 65));
 
         runNStepsPanel = new JPanel(new GridLayout(1, 2));
-        runNStepsPanel.setPreferredSize(new Dimension(300, 40));
+        runNStepsPanel.setPreferredSize(new Dimension(300, 65));
 
         runNStepsPanel.add(runNStepsButton);
         runNStepsPanel.add(runNStepsSpinner);

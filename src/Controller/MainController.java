@@ -43,14 +43,15 @@ public class MainController {
     }
 
     public void populateWorld() {
-        this.modelController.populate(0, 1);
+        this.modelController.populate( 1);
         this.updateWorldImage();
+        this.updateAgentStats();
     }
 
     public void runStep() {
         this.counter += 1;
         this.modelController.cycle();
-        //this.updateDiagnostics();
+        this.updateAgentStats();
         this.updateWorldImage();
     }
 
@@ -103,6 +104,10 @@ public class MainController {
         this.updateWorldImage();
     }
 
+    public void updateAgentStats() {
+        this.view.getDiagnosticsPanel().setAgentStats(this.modelController.getDiagnostics().getAgentStatStrings());
+    }
+
     public void setEditingAgent(int index) {
         // Store the old agent settings
         AgentSettings agentSettings = view.getAgentEditorPanel().getAgentSettings();
@@ -136,9 +141,11 @@ public class MainController {
         this.view.getAgent5Button().addActionListener(e -> this.setEditingAgent(5));
         this.view.getAgent6Button().addActionListener(e -> this.setEditingAgent(6));
         this.view.getAgent7Button().addActionListener(e -> this.setEditingAgent(7));
+        this.view.getAgentEditorPanel().getUpdateSettingsButton().addActionListener(e -> this.setEditingAgent(modelController.getAgentEditor().getEditingAgentIndex()));
         //this.view.getColourChooserButton().addActionListener(e -> this.setEditingButtonColor());
         initActiveAgentsPanel();
         initAgentEditorPanel();
+        updateAgentStats();
     }
 
     public void initActiveAgentsPanel() {

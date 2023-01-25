@@ -2,16 +2,15 @@ package Model.AgentEditor;
 
 import Model.Agents.AgentConcreteComponents.BasicAttributes;
 import Model.Agents.AgentInterfaces.Attributes;
-import org.w3c.dom.Attr;
 
 import java.awt.*;
 
 public class AgentSettings {
 
     private Attributes attributes;
-//                       String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
+    private int density;
+
     public AgentSettings(String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
-                                     //String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay
         this.attributes = new BasicAttributes(name, code, color, visionRange, movementRange, size, energyCapacity, eatAmount, lifespan, creationAge, creationAmount, creationDelay);
     }
 
@@ -121,5 +120,13 @@ public class AgentSettings {
 
     public int getCode() {
         return attributes.getCode();
+    }
+
+    public int getDensity() {
+        return density;
+    }
+
+    public void setDensity(int density) {
+        this.density = density;
     }
 }

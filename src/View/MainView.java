@@ -1,5 +1,7 @@
 package View;
 
+import Model.Diagnostics;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,6 +13,7 @@ public class MainView extends JFrame {
     private AgentEditorPanel agentEditorPanel;
     private WorldPanel worldPanel;
     private ActiveAgentsPanel activeAgentsPanel;
+    private DiagnosticsPanel diagnosticsPanel;
 
     public MainView() {
 
@@ -65,6 +68,14 @@ public class MainView extends JFrame {
         c.gridwidth = 2;
         c.gridheight = 1;
         this.add(simulationControlPanel, c);
+
+        diagnosticsPanel = new DiagnosticsPanel();
+        c.gridx = 3;
+        c.gridy = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = 1;
+        c.gridheight = 2;
+        this.add(diagnosticsPanel, c);
 
         pack();
     }
@@ -157,6 +168,10 @@ public class MainView extends JFrame {
 
     public ActiveAgentsPanel getActiveAgentsPanel() {
         return activeAgentsPanel;
+    }
+
+    public DiagnosticsPanel getDiagnosticsPanel() {
+        return diagnosticsPanel;
     }
 
     public JButton getColourChooserButton() {
