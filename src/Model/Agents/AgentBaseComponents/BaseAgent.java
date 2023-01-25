@@ -34,12 +34,7 @@ public abstract class BaseAgent implements Agent {
     public BaseAgent(Location location_, Agent parent_a, Agent parent_b) {
         this.location = location_;
         this.agentColor = parent_a.getColor();
-        if (parent_a.getAttributes().getType().equals(AgentType.PREY)) {
-            this.reaction = new PreyReaction(new PreyMotivations());
-        }
-        else {
-            this.reaction = new PredatorReaction(new PredatorMotivations());
-        }
+        this.reaction = new PreyReaction(new PreyMotivations());
         this.vision = new BasicVision();
         this.attributes = new BasicAttributes(parent_a.getAttributes(), parent_b.getAttributes());
         this.scores = new BasicScores(parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), 0, parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), parent_a.getScores().getMAX_AGE(), parent_a.getScores().getCreationDelay());
@@ -57,7 +52,7 @@ public abstract class BaseAgent implements Agent {
         this.getScores().setAge(this.getScores().getAge()+1);
         this.getScores().setCreationCounter((this.getScores().getCreationCounter() - 1));
 
-        ArrayList<AgentVision> agentSight = this.getVision().lookAround(environment, this.getLocation(), this.getAttributes().getVision(), this.getAttributes().getSpeed());
+        ArrayList<AgentVision> agentSight = this.getVision().lookAround(environment, this.getLocation(), this.getAttributes().getVisionRange(), this.getAttributes().getMovementRange());
         return this.getReaction().react(agentSight, this.getAttributes(), this.getScores());
     }
 

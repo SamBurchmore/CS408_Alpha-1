@@ -1,19 +1,13 @@
 package Model;
 
 import java.awt.image.BufferedImage;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
-import Model.AgentBuilder.AgentBuilder;
+import Model.AgentEditor.AgentEditor;
 import Model.Agents.AgentConcreteComponents.BasicAgent;
-import Model.Agents.AgentFactory;
 import Model.Agents.AgentInterfaces.Agent;
 import Model.Agents.AgentStructs.AgentModelUpdate;
-import Model.Agents.AgentStructs.AgentType;
 import Model.Environment.Environment;
 import Model.Environment.EnvironmentTile;
 import Model.Environment.Location;
@@ -26,7 +20,7 @@ public class ModelController {
     // The data structure which represents the world.
     private Environment environment;
 
-    private AgentBuilder agentBuilder;
+    private AgentEditor agentEditor;
 
     private ArrayList<Agent> agentList;
     // This is where all diagnostic data on the simulation is stored.
@@ -52,7 +46,7 @@ public class ModelController {
         this.maxFood = maxFoodLevel;
         this.foodRegenAmount = foodRegenAmount;
         this.diagnostics = new Diagnostics(this.worldSize);
-        this.agentBuilder = new AgentBuilder();
+        this.agentEditor = new AgentEditor();
     }
 
     /**
@@ -65,14 +59,14 @@ public class ModelController {
      */
     // TODO - implement predator prey ratio so that both controls work
     public void populate(int predator_percent, int density) {
-        ArrayList<Agent> activeAgents = agentBuilder.getActiveAgents();
+        ArrayList<Agent> activeAgents = agentEditor.getActiveAgents();
         IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
                 if (this.randomGen.nextInt(100) < density) {
                     int agentIndex = randomGen.nextInt(activeAgents.size());
                     BasicAgent agent;
                     for (int j = 0; j < activeAgents.size(); j++) {
                         if (j == agentIndex) {
-                            agent = (BasicAgent) agentBuilder.getAgent(j).copy();
+                            agent = (BasicAgent) agentEditor.getAgent(j).copy();
                             EnvironmentTile wt = environment.getGrid()[i];
                             agent.setLocation(wt.getLocation());
                             wt.setOccupant(agent);
@@ -151,18 +145,18 @@ public class ModelController {
     public int countAgents(Agent agent) {
         int count = 0;
         for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
-            if (wt_iterator.next().getOccupant().getAttributes().getType().equals(agent.getAttributes().getType())) {
+            if (wt_iterator.next().getOccupant().getAttributes().getCode() == agent.getAttributes().getCode()) {
                 count++;
             }
         }
         return count;
     }
 
-    public AgentBuilder getAgentBuilder() {
-        return agentBuilder;
+    public AgentEditor getAgentEditor() {
+        return agentEditor;
     }
 
-    public void setAgentBuilder(AgentBuilder agentBuilder) {
-        this.agentBuilder = agentBuilder;
+    public void setAgentEditor(AgentEditor agentEditor) {
+        this.agentEditor = agentEditor;
     }
 }

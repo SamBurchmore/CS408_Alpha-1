@@ -3,132 +3,160 @@ package Model.Agents.AgentBaseComponents;
 import Model.Agents.AgentInterfaces.Attributes;
 import Model.Agents.AgentStructs.AgentType;
 
+import java.awt.*;
 import java.util.Random;
 
 public abstract class BaseAttributes implements Attributes {
 
-    private int speed;
+    private String name;
+    private int code;
+    private Color color;
+
+    private int visionRange;
+    private int movementRange;
     private int size;
-    private int vision;
+    private int energyCapacity;
     private int eatAmount;
-    private AgentType agentType;
-    Random random = new Random();
+    private int lifespan;
+    private int creationAge;
+    private int creationAmount;
+    private int creationDelay;
 
-    public BaseAttributes(int speed_, int size_, int vision_, int eatAmount_, AgentType agentType_) {
-        this.speed = speed_;
-        this.size = size_;
-        this.vision = vision_;
-        this.eatAmount = eatAmount_;
-        this.agentType = agentType_;
+    public BaseAttributes(String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
+        this.code = code;
+        this.name = name;
+        this.color = color;
+        this.visionRange = visionRange;
+        this.movementRange = movementRange;
+        this.size = size;
+        this.energyCapacity = energyCapacity;
+        this.eatAmount = eatAmount;
+        this.lifespan = lifespan;
+        this.creationAge = creationAge;
+        this.creationAmount = creationAmount;
+        this.creationDelay = creationDelay;
     }
 
-    public BaseAttributes(Attributes attributes_a, Attributes attributes_b){
-        // set the new agents type.
-        this.agentType = attributes_a.getType();
-        this.speed = attributes_a.getSpeed();
-        this.size = attributes_a.getSize();
-        this.vision = attributes_a.getVision();
-        this.eatAmount = attributes_a.getEatAmount();
-    }
-
-    public void mutate() {
-        if (this.random.nextInt(100) > 98) {
-            // We've decided the agent is going to mutate, now we need to randomly decide what attribute to mutate.
-            switch (this.random.nextInt(3)) {
-                case 0: // Mutate speed
-                    this.speed += this.mutationMagnitude();
-                    break;
-                case 1: // Mutate size
-                    this.size += this.mutationMagnitude();
-                    break;
-                case 2: // Mutate vision
-                    this.vision += this.mutationMagnitude();
-                    break;
-            }
-        }
-    }
-
-    /**
-     * @return
-     * This method returns an integer value between -5 and +5 excluding 0.
-     * A magnitude is first calculated, a lower magnitude has a higher probability
-     * of being returned. Before being returned, the magnitude is combined with a
-     * modifier which has an equal chance of being -1 or +1.
-     */
-    public int mutationMagnitude() {
-        // Used to make the weighted decision
-        int r = this.random.nextInt(100);
-        int modifier = this.random.nextInt(2);
-        if (modifier == 0) {
-            modifier -= 1;
-        }
-        if (r < 45) {
-            return modifier;
-        }
-        else if (r < 70) {
-            return 2*modifier;
-        }
-        else if (r < 85) {
-            return 3*modifier;
-        }
-        else if (r < 95) {
-            return 4*modifier;
-        }
-        else {
-            return 5*modifier;
-        }
-    }
-
-    public int getSpeed() {
-        return this.speed;
-    }
-
-    public int getSize() {
-        return this.size;
-    }
-
-    public int getVision() {
-        return this.vision;
+    public BaseAttributes(Attributes attributesA, Attributes attributesB) {
+        this.code = attributesA.getCode();
+        this.name = attributesA.getName();
+        this.color = attributesA.getColor();
+        this.visionRange = attributesA.getVisionRange();
+        this.movementRange = attributesA.getMovementRange();
+        this.size = attributesA.getSize();
+        this.energyCapacity = attributesA.getEnergyCapacity();
+        this.eatAmount = attributesA.getEatAmount();
+        this.lifespan = attributesA.getLifespan();
+        this.creationAge = attributesA.getCreationAge();
+        this.creationAmount = attributesA.getCreationAmount();
+        this.creationDelay = attributesA.getCreationDelay();
     }
 
     @Override
-    public int getEatAmount() {
-        return this.eatAmount;
+    public String getName() {
+        return name;
     }
 
-    public AgentType getType() {
-        return this.agentType;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    @Override
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    @Override
+    public int getVisionRange() {
+        return visionRange;
+    }
+
+    public void setVisionRange(int visionRange) {
+        this.visionRange = visionRange;
+    }
+
+    @Override
+    public int getMovementRange() {
+        return movementRange;
+    }
+
+    public void setMovementRange(int movementRange) {
+        this.movementRange = movementRange;
+    }
+
+    @Override
+    public int getSize() {
+        return size;
     }
 
     public void setSize(int size) {
         this.size = size;
     }
 
-    public void setVision(int vision) {
-        this.vision = vision;
+    @Override
+    public int getEnergyCapacity() {
+        return energyCapacity;
     }
 
-    public void setAgentType(AgentType agentType) {
-        this.agentType = agentType;
+    public void setEnergyCapacity(int energyCapacity) {
+        this.energyCapacity = energyCapacity;
     }
 
-    public Random getRandom() {
-        return this.random;
-    }
-
-    public void setRandom(Random random) {
-        this.random = random;
+    @Override
+    public int getEatAmount() {
+        return eatAmount;
     }
 
     public void setEatAmount(int eatAmount) {
         this.eatAmount = eatAmount;
     }
 
-    public AgentType getAgentType() {
-        return this.agentType;
+    @Override
+    public int getLifespan() {
+        return lifespan;
+    }
+
+    public void setLifespan(int lifespan) {
+        this.lifespan = lifespan;
+    }
+
+    @Override
+    public int getCreationAge() {
+        return creationAge;
+    }
+
+    public void setCreationAge(int creationAge) {
+        this.creationAge = creationAge;
+    }
+
+    @Override
+    public int getCreationAmount() {
+        return creationAmount;
+    }
+
+    public void setCreationAmount(int creationAmount) {
+        this.creationAmount = creationAmount;
+    }
+
+    @Override
+    public int getCreationDelay() {
+        return creationDelay;
+    }
+
+    public void setCreationDelay(int creationDelay) {
+        this.creationDelay = creationDelay;
     }
 }

@@ -203,34 +203,43 @@ public class ActiveAgentsPanel extends JPanel {
         return agent7Button;
     }
 
-    public void setAgentButtonColour(Color color, int index) {
+    public void setAgentSelector(int index, Color color, String name) {
         switch (index) {
             case 0:
                 this.agent0Button.setBackground(color);
+                this.agent0NameLabel.setText(name);
                 break;
             case 1:
                 this.agent1Button.setBackground(color);
+                this.agent1NameLabel.setText(name);
                 break;
             case 2:
                 this.agent2Button.setBackground(color);
+                this.agent2NameLabel.setText(name);
                 break;
             case 3:
                 this.agent3Button.setBackground(color);
+                this.agent3NameLabel.setText(name);
                 break;
             case 4:
                 this.agent4Button.setBackground(color);
+                this.agent4NameLabel.setText(name);
                 break;
             case 5:
                 this.agent5Button.setBackground(color);
+                this.agent5NameLabel.setText(name);
                 break;
             case 6:
                 this.agent6Button.setBackground(color);
+                this.agent6NameLabel.setText(name);
                 break;
             case 7:
                 this.agent7Button.setBackground(color);
+                this.agent7NameLabel.setText(name);
                 break;
         }
     }
+
 
     public void setAgent0ButtonColour(Color color){
         this.agent0Button.setBackground(color);

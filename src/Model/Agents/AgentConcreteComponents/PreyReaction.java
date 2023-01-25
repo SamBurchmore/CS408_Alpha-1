@@ -26,7 +26,7 @@ public class PreyReaction extends BaseReaction {
             if (currentAV.isInRange()) {
                 if (currentAV.isOccupied()) {
                     if (super.getMotivations().toCreate(agentScores) == 1) {
-                        if (currentAV.getAgentAttributes().getType().equals(agentAttributes.getType())) {
+                        if (currentAV.getAgentAttributes().getCode() == agentAttributes.getCode()) {
                             agentDecision.setLocation(currentAV.getLocation());
                             agentDecision.setAgentAction(AgentAction.CREATE);
                             matesInRange.add(agentDecision);

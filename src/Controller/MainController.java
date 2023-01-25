@@ -1,14 +1,8 @@
 package Controller;
 
-import Model.AgentBuilder.ActiveAgents;
-import Model.AgentBuilder.AgentSettings;
-import Model.Agents.AgentConcreteComponents.*;
-import Model.Agents.AgentStructs.AgentType;
-import Model.Environment.Location;
+import Model.AgentEditor.AgentSettings;
 import Model.ModelController;
 import View.MainView;
-
-import java.awt.*;
 
 public class MainController {
 
@@ -16,8 +10,6 @@ public class MainController {
     private MainView view;
     // The world model
     private ModelController modelController;
-
-    private ActiveAgents activeAgents;
 
     private int counter = 0;
     private int scale = 0;
@@ -41,14 +33,6 @@ public class MainController {
         this.view = new MainView();
         this.initView();
         this.initController();
-    }
-
-    private void cycleController() {
-        while (true) {
-            if (cycleToggle) {
-                runStep();
-            }
-        }
     }
 
     public void updateWorldImage() {
@@ -90,24 +74,11 @@ public class MainController {
 
     }
 
-//    public int[] getAgentDensityRatio() {
-//        int[] agentRatios = new int[3];
-//        agentRatios[0] = (int) this.view.getAgent0Ratio().getValue();
-//        agentRatios[1] = (int) this.view.getAgent1Ratio().getValue();
-//        agentRatios[2] = (int) this.view.getAgentDensity().getValue();
-//        return agentRatios;
-//    }
-
     public void clear() {
         this.modelController.clear();
         this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), 0);
         this.counter = 0;
     }
-
-//    private void updateDiagnostics() {
-//        this.view.setagent1DensityValue(this.modelController.getDiagnostics().agent1Density());
-//        this.view.setagent0DensityValue(this.modelController.getDiagnostics().agent0Density());
-//    }
 
     public void setMaxFoodLevel(int newMax) {
         this.modelController.setEnvironmentMaxFoodLevel(newMax);
@@ -133,22 +104,20 @@ public class MainController {
 
         // Store the old agent settings
         AgentSettings agentSettings = view.getAgentEditorPanel().getAgentSettings();
-        modelController.getAgentBuilder().buildAgent(agentSettings, editingAgent);
+        modelController.getAgentEditor().setEditingAgentSettings(agentSettings);
         // Update the active agents panel
-        view.getActiveAgentsPanel().setAgentButtonColour(agentSettings.getColor(), editingAgent);
+        view.getActiveAgentsPanel().setAgentSelector(modelController.getAgentEditor().getEditingAgentIndex(), agentSettings.getColor(), agentSettings.getName());
 
-        // Set the new agent to be edited in the agent builder
-        modelController.getAgentBuilder().setOpenAgent(index);
-        // Update the agent editor panel with the agent now being edited
-        view.getAgentEditorPanel().setAgent(modelController.getAgentBuilder().getOpenAgentView(index));
-        // Update the active agents panel
-        view.getActiveAgentsPanel().setAgentButtonColour(modelController.getAgentBuilder().getOpenAgent().getColor(), index);
-        editingAgent = index;
+        // Update the agent editor
+        modelController.getAgentEditor().setEditingAgentIndex(index);
+        // update the agent editor panel);
+        view.getAgentEditorPanel().setAgentSettings(modelController.getAgentEditor().getEditingAgentSettings());
+
     }
 
-    public void setEditingButtonColor() {
-        view.getActiveAgentsPanel().setAgentButtonColour(view.getAgentEditorPanel().getCurrentColour(), editingAgent);
-    }
+//    public void setEditingButtonColor() {
+//        view.getActiveAgentsPanel().setAgentSelector(view.getAgentEditorPanel().getCurrentColour(), editingAgent);
+//    }
 
     public void initController() {
         this.view.getRunStepButton().addActionListener(e -> this.runStep());
@@ -164,7 +133,7 @@ public class MainController {
         this.view.getAgent5Button().addActionListener(e -> this.setEditingAgent(5));
         this.view.getAgent6Button().addActionListener(e -> this.setEditingAgent(6));
         this.view.getAgent7Button().addActionListener(e -> this.setEditingAgent(7));
-        this.view.getColourChooserButton().addActionListener(e -> this.setEditingButtonColor());
+        //this.view.getColourChooserButton().addActionListener(e -> this.setEditingButtonColor());
     }
 
 }

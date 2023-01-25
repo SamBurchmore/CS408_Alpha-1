@@ -30,5 +30,4 @@ public interface Agent {
     void setScores(Scores scores_);
     Agent combine(Agent parent_b, Location childLocation);
     Object copy();
-
 }

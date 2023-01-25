@@ -1,12 +1,7 @@
-package Model.AgentBuilder;
+package Model.AgentEditor;
 
-import Model.Agents.AgentBaseComponents.BaseAgent;
-import Model.Agents.AgentConcreteComponents.*;
 import Model.Agents.AgentInterfaces.Agent;
-import Model.Agents.AgentStructs.AgentType;
-import Model.Environment.Location;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class ActiveAgents {
