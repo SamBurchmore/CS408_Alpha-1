@@ -21,25 +21,25 @@ public abstract class BaseAgent implements Agent {
     private Attributes attributes;
     private Scores scores = null;
 
-    public BaseAgent(Location location_, Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
-        this.location = location_;
-        this.reaction = reaction_;
-        this.vision = vision_;
-        this.attributes = attributes_;
-        this.scores = scores_;
+    public BaseAgent(Location location, Reaction reaction, Vision vision, Attributes attributes, Scores scores) {
+        this.location = location;
+        this.reaction = reaction;
+        this.vision = vision;
+        this.attributes = attributes;
+        this.scores = scores;
     }
 
-    public BaseAgent(Location location_, Agent parent_a, Agent parent_b) {
-        this.location = location_;
+    public BaseAgent(Location location, Agent parent_a, Agent parent_b) {
+        this.location = location;
         this.reaction = new PreyReaction(new PreyMotivations());
         this.vision = new BasicVision();
         this.attributes = new BasicAttributes(parent_a.getAttributes(), parent_b.getAttributes());
-        this.scores = new BasicScores(parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), 0, parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), parent_a.getScores().getMAX_AGE(), parent_a.getScores().getCreationDelay());
-        this.scores.setCreationCounter(parent_a.getScores().getCreationDelay());
+        this.scores = new BasicScores(parent_a.getAttributes().getEnergyCapacity(), parent_a.getScores().getMAX_HEALTH(), 0, parent_a.getAttributes().getEnergyCapacity(), parent_a.getScores().getMAX_HEALTH(), parent_a.getAttributes().getLifespan(), parent_a.getAttributes().getCreationDelay());
+        this.scores.setCreationCounter(parent_a.getAttributes().getCreationAge());
     }
 
     @Override
-    public AgentModelUpdate run(Environment environment_) {
+    public AgentModelUpdate run(Environment environment) {
         return new AgentModelUpdate(this, null);
     }
 
@@ -55,7 +55,7 @@ public abstract class BaseAgent implements Agent {
 
     @Override
     public boolean isDead() {
-        return this.getScores().getHunger() <= 0 || this.getScores().getAge() >= this.getScores().getMAX_AGE();
+        return this.getScores().getHunger() <= 0 || this.getScores().getAge() >= this.getAttributes().getLifespan();
     }
 
     @Override
@@ -64,13 +64,12 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public ArrayList<Agent> create(Location parentBLocation, Environment environment_) {
-        ArrayList<Location> childLocations = environment_.emptyAdjacent(this.location);
+    public ArrayList<Agent> create(Location parentBLocation, Environment environment) {
+        ArrayList<Location> childLocations = environment.emptyAdjacent(this.getLocation());
         ArrayList<Agent> childAgents = new ArrayList<>();
-        if (childLocations.size() > 0) {
-            Collections.shuffle(childLocations);
-            Location childLocation = childLocations.get(0);
-            Agent child = this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation);
+        Collections.shuffle(childLocations);
+        for (Location childLocation : childLocations.subList(0, Math.min(childLocations.size(), this.getAttributes().getCreationAmount()) )) {
+            Agent child = this.combine(environment.getTile(parentBLocation).getOccupant(), childLocation);
             childAgents.add(child);
         }
         return childAgents;
@@ -82,13 +81,13 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public void setAttributes(Attributes attributes_) {
-        this.attributes = attributes_;
+    public void setAttributes(Attributes attributes) {
+        this.attributes = attributes;
     }
 
     @Override
-    public void setLocation(Location location_) {
-        this.location = location_;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     @Override
@@ -102,8 +101,8 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public void setReaction(Reaction reaction_) {
-        this.reaction = reaction_;
+    public void setReaction(Reaction reaction) {
+        this.reaction = reaction;
     }
 
     @Override
@@ -112,8 +111,8 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public void setVision(Vision vision_) {
-        this.vision = vision_;
+    public void setVision(Vision vision) {
+        this.vision = vision;
     }
 
     @Override
@@ -122,8 +121,8 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public void setScores(Scores scores_) {
-        this.scores = scores_;
+    public void setScores(Scores scores) {
+        this.scores = scores;
     }
 
 }
