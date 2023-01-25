@@ -4,6 +4,9 @@ import Model.AgentEditor.AgentSettings;
 import Model.ModelController;
 import View.MainView;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 public class MainController {
 
     // The Graphical User Interface
@@ -101,18 +104,18 @@ public class MainController {
     }
 
     public void setEditingAgent(int index) {
-
         // Store the old agent settings
         AgentSettings agentSettings = view.getAgentEditorPanel().getAgentSettings();
         modelController.getAgentEditor().setEditingAgentSettings(agentSettings);
+
         // Update the active agents panel
         view.getActiveAgentsPanel().setAgentSelector(modelController.getAgentEditor().getEditingAgentIndex(), agentSettings.getColor(), agentSettings.getName());
 
         // Update the agent editor
         modelController.getAgentEditor().setEditingAgentIndex(index);
-        // update the agent editor panel);
-        view.getAgentEditorPanel().setAgentSettings(modelController.getAgentEditor().getEditingAgentSettings());
 
+        // update the agent editor panel
+        view.getAgentEditorPanel().setAgentSettings(modelController.getAgentEditor().getEditingAgentSettings());
     }
 
 //    public void setEditingButtonColor() {
@@ -134,6 +137,18 @@ public class MainController {
         this.view.getAgent6Button().addActionListener(e -> this.setEditingAgent(6));
         this.view.getAgent7Button().addActionListener(e -> this.setEditingAgent(7));
         //this.view.getColourChooserButton().addActionListener(e -> this.setEditingButtonColor());
+        initActiveAgentsPanel();
+        initAgentEditorPanel();
+    }
+
+    public void initActiveAgentsPanel() {
+        for (int i = 0; i < 8; i++) {
+            view.getActiveAgentsPanel().setAgentSelector(i, modelController.getAgentEditor().getAgent(i).getAttributes().getColor(), modelController.getAgentEditor().getAgent(i).getAttributes().getName());
+        }
+    }
+
+    public void initAgentEditorPanel() {
+        view.getAgentEditorPanel().setAgentSettings(modelController.getAgentEditor().getEditingAgentSettings());
     }
 
 }

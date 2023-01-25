@@ -159,4 +159,22 @@ public abstract class BaseAttributes implements Attributes {
     public void setCreationDelay(int creationDelay) {
         this.creationDelay = creationDelay;
     }
+
+    @Override
+    public String toString() {
+        return "BaseAttributes{" +
+                "name='" + name + '\'' +
+                ", code=" + code +
+                ", color=" + color +
+                ", visionRange=" + visionRange +
+                ", movementRange=" + movementRange +
+                ", size=" + size +
+                ", energyCapacity=" + energyCapacity +
+                ", eatAmount=" + eatAmount +
+                ", lifespan=" + lifespan +
+                ", creationAge=" + creationAge +
+                ", creationAmount=" + creationAmount +
+                ", creationDelay=" + creationDelay +
+                '}';
+    }
 }

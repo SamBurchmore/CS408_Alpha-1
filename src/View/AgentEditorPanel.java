@@ -177,22 +177,22 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         c.gridx = 1;
         add(sizeSpinner, c);
 
-
-        // First we add the fifth row components
+        // Now we add the fifth row components
         c.gridy = 4;
+
+        c.gridx = 0;
+        add(energyCapacityLabel, c);
+        c.gridx = 1;
+        add(energyCapacitySpinner, c);
+
+        // First we add the sixth row components
+        c.gridy = 5;
 
         c.gridx = 0;
         add(eatAmountLabel, c);
         c.gridx = 1;
         add(eatAmountSpinner, c);
 
-        // Now we add the sixth row components
-        c.gridy = 5;
-
-        c.gridx = 0;
-        add(energyCapacityLabel, c);
-        c.gridx = 1;
-        add(energyCapacitySpinner, c);
 
         // Now we add the seventh row components
         c.gridy = 6;
@@ -344,6 +344,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
     }
 
     public AgentSettings getAgentSettings() {
-        return new AgentSettings(agentNameTextField.getText(), (int) agentCodeSpinner.getValue(), colourChooserButton.getBackground(), (int) energyCapacitySpinner.getValue(), (int) eatAmountSpinner.getValue(), (int) lifespanSpinner.getValue(), (int) visionRangeSpinner.getValue(), (int) visionRangeSpinner.getValue(), (int) movementRangeSpinner.getValue(), (int) creationAgeSpinner.getValue(), (int) creationAmountSpinner.getValue(), (int) creationDelaySpinner.getValue());
+                                //String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay
+        return new AgentSettings(agentNameTextField.getText(), (int) agentCodeSpinner.getValue(), colourChooserButton.getBackground(), (int) visionRangeSpinner.getValue(), (int) movementRangeSpinner.getValue(), (int) sizeSpinner.getValue(), (int) energyCapacitySpinner.getValue(), (int) eatAmountSpinner.getValue(), (int) lifespanSpinner.getValue(), (int) creationAgeSpinner.getValue(), (int) creationAmountSpinner.getValue(), (int) creationDelaySpinner.getValue());
     }
 }

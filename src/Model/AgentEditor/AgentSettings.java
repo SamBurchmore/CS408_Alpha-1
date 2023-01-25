@@ -9,8 +9,9 @@ import java.awt.*;
 public class AgentSettings {
 
     private Attributes attributes;
-
+//                       String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
     public AgentSettings(String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
+                                     //String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay
         this.attributes = new BasicAttributes(name, code, color, visionRange, movementRange, size, energyCapacity, eatAmount, lifespan, creationAge, creationAmount, creationDelay);
     }
 

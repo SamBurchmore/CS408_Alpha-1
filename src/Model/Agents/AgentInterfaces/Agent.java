@@ -16,8 +16,6 @@ public interface Agent {
     void move(Location newLocation);
     ArrayList<Agent> create(Location parentBLocation, Environment environment_);
     boolean isDead();
-    Color getColor();
-    void setColor(Color color_);
     Attributes getAttributes();
     void setAttributes(Attributes attributes_);
     void setLocation(Location location_);

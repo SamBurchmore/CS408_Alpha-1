@@ -176,7 +176,7 @@ public class Environment {
     public Color getTileColor(int x, int y) {
         Location location = new Location(x, y);
         if (this.getTile(location).isOccupied()) {
-            return this.getTile(location).getOccupant().getColor();
+            return this.getTile(location).getOccupant().getAttributes().getColor();
         }
         if (this.getTile(location).getFoodLevel() >= this.maxFoodLevel) {
             return this.max;

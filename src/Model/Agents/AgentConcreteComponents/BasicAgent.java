@@ -15,8 +15,8 @@ import java.util.Collections;
 
 public class BasicAgent extends BaseAgent {
 
-    public BasicAgent(Location location_, Color agentColor_, Model.Agents.AgentInterfaces.Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
-        super(location_, agentColor_, reaction_, vision_, attributes_, scores_);
+    public BasicAgent(Location location_, Model.Agents.AgentInterfaces.Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
+        super(location_, reaction_, vision_, attributes_, scores_);
     }
 
     public BasicAgent(Location location_, Agent parentA, Agent parentB) {

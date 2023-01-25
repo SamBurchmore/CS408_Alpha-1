@@ -16,15 +16,13 @@ import java.util.Collections;
 public abstract class BaseAgent implements Agent {
 
     private Location location;
-    private Color agentColor;
     private Reaction reaction = null;
     private Vision vision = null;
     private Attributes attributes;
     private Scores scores = null;
 
-    public BaseAgent(Location location_, Color agentColor_, Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
+    public BaseAgent(Location location_, Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
         this.location = location_;
-        this.agentColor = agentColor_;
         this.reaction = reaction_;
         this.vision = vision_;
         this.attributes = attributes_;
@@ -33,7 +31,6 @@ public abstract class BaseAgent implements Agent {
 
     public BaseAgent(Location location_, Agent parent_a, Agent parent_b) {
         this.location = location_;
-        this.agentColor = parent_a.getColor();
         this.reaction = new PreyReaction(new PreyMotivations());
         this.vision = new BasicVision();
         this.attributes = new BasicAttributes(parent_a.getAttributes(), parent_b.getAttributes());
@@ -77,16 +74,6 @@ public abstract class BaseAgent implements Agent {
             childAgents.add(child);
         }
         return childAgents;
-    }
-
-    @Override
-    public Color getColor() {
-        return this.agentColor;
-    }
-
-    @Override
-    public void setColor(Color color_) {
-        this.agentColor = color_;
     }
 
     @Override
