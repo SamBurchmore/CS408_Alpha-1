@@ -63,9 +63,7 @@ public class ModelController {
                             agent.setLocation(wt.getLocation());
                             wt.setOccupant(agent);
                             agentList.add(agent);
-                            diagnostics.addToAgentPopulation(j, 1);
-                            diagnostics.addToAveragePopulationEnergy(j, agent.getScores().getHunger());
-                            diagnostics.addToAveragePopulationLifespan(j, agent.getScores().getAge());
+                            diagnostics.addToStats(j, 1, agent.getScores().getHunger(), agent.getScores().getAge());
                         }
                     }
                 }
@@ -83,9 +81,7 @@ public class ModelController {
                 environment.setTileAgent(agentModelUpdate.getAgent());
                 environment.modifyTileFoodLevel(agentModelUpdate.getAgent().getLocation(), -agentModelUpdate.getEatAmount());
                 aliveAgents.add(agentModelUpdate.getAgent());
-                diagnostics.addToAgentPopulation(agentModelUpdate.getAgent().getAttributes().getCode(), 1);
-                diagnostics.addToAveragePopulationEnergy(agentModelUpdate.getAgent().getAttributes().getCode(), agentModelUpdate.getAgent().getScores().getHunger());
-                diagnostics.addToAveragePopulationLifespan(agentModelUpdate.getAgent().getAttributes().getCode(), agentModelUpdate.getAgent().getScores().getAge());
+                diagnostics.addToStats(agentModelUpdate.getAgent().getAttributes().getCode(), 1, agentModelUpdate.getAgent().getScores().getHunger(), agentModelUpdate.getAgent().getScores().getAge());
             }
             if (!agentModelUpdate.getChildAgents().isEmpty()) {
                 for (Agent childAgent : agentModelUpdate.getChildAgents()) {
@@ -150,6 +146,10 @@ public class ModelController {
 
     public AgentEditor getAgentEditor() {
         return agentEditor;
+    }
+
+    public void updateAgentNames() {
+        diagnostics.setAgentNames(agentEditor.getAgentNames());
     }
 
     public void setAgentEditor(AgentEditor agentEditor) {

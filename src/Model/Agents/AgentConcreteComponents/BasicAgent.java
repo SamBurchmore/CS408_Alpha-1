@@ -49,8 +49,8 @@ public class BasicAgent extends BaseAgent {
     public Agent combine(Agent parentB, Location childLocation) {
         super.getScores().setCreationCounter(super.getScores().getCreationDelay());
         Agent newAgent = new BasicAgent(childLocation, this, parentB);
-        super.getScores().setHunger(super.getScores().getHunger() - super.getScores().getMAX_HUNGER() / 8);
 
+        super.getScores().setHunger(super.getScores().getHunger() - super.getScores().getMAX_HUNGER() / 8);
         newAgent.getScores().setHunger(newAgent.getScores().getMAX_HUNGER() / 8);
 
         return newAgent;

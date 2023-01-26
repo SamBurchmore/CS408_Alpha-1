@@ -105,7 +105,7 @@ public class MainController {
     }
 
     public void updateAgentStats() {
-        this.view.getDiagnosticsPanel().setAgentStats(this.modelController.getDiagnostics().getAgentStatStrings());
+        this.view.getDiagnosticsPanel().setAgentStats(modelController.getDiagnostics().getAgentStats());
     }
 
     public void setEditingAgent(int index) {
@@ -121,6 +121,9 @@ public class MainController {
 
         // update the agent editor panel
         view.getAgentEditorPanel().setAgentSettings(modelController.getAgentEditor().getEditingAgentSettings());
+        modelController.updateAgentNames();
+        view.getDiagnosticsPanel().setAgentStats(modelController.getDiagnostics().getAgentStats());
+
     }
 
 //    public void setEditingButtonColor() {
@@ -145,7 +148,7 @@ public class MainController {
         //this.view.getColourChooserButton().addActionListener(e -> this.setEditingButtonColor());
         initActiveAgentsPanel();
         initAgentEditorPanel();
-        updateAgentStats();
+        //updateAgentStats();
     }
 
     public void initActiveAgentsPanel() {

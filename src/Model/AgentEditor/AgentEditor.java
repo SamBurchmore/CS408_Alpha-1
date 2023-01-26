@@ -53,4 +53,12 @@ public class AgentEditor {
     public Agent getAgent(int index) {
         return activeAgents.getAgent(index);
     }
+
+    public String[] getAgentNames() {
+        String[] names = new String[8];
+        for (int i = 0; i < 8; i++) {
+            names[i] = activeAgents.getAgent(i).getAttributes().getName();
+        }
+        return names;
+    }
 }

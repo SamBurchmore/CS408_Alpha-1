@@ -4,67 +4,76 @@ import java.util.ArrayList;
 
 public class Diagnostics {
 
-    private int environmentSize;
     final private int activeAgentsNumber = 8;
 
-    ArrayList<Integer> agentPopulations; // The size of each agent population
-    ArrayList<Integer> averagePopulationsEnergy; // The average percent of max energy in each agent population
-    ArrayList<Integer> averagePopulationsLifespan; // The average percent of max age in each agent population
+    String[] agentNames; // The names of the agents
+    Integer[] agentPopulations; // The size of each agent population
+    Double[] averagePopulationsEnergy; // The average percent of max energy in each agent population
+    Double[] averagePopulationsLifespan; // The average percent of max age in each agent population
 
     public Diagnostics() {
-        agentPopulations = new ArrayList<>();
-        averagePopulationsEnergy = new ArrayList<>();
-        averagePopulationsLifespan = new ArrayList<>();
-        for (int i = 0; i < activeAgentsNumber; i++) {
-            agentPopulations.add(0);
-            averagePopulationsEnergy.add(0);
-            averagePopulationsLifespan.add(0);
-        }
-    }
-
-    public String getAgentStatStrings() {
-        StringBuilder statString = new StringBuilder();
-        for (int i = 0; i < activeAgentsNumber; i++) {
-            statString.append("Agent ").append(i).append(": Population=").append(agentPopulations.get(i)).append(" | Avg Energy=").append(averagePopulationsEnergy.get(i) / agentPopulations.get(i)).append(" | Avg Lifespan=").append(averagePopulationsLifespan.get(i) / agentPopulations.get(i));
-            statString.append("\n");
-        }
-        return statString.toString();
-    }
-
-    public void setEnvironmentSize(int environmentSize) {
-        this.environmentSize = environmentSize;
+        agentNames = new String[]{"Agent 1", "Agent 2", "Agent 3", "Agent 4", "Agent 5", "Agent 6", "Agent 7", "Agent 8"};
+        agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
+        averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
     }
 
     public void setAgentPopulation(int index, int population) {
-        agentPopulations.set(index, population);
+        agentPopulations[index] = population;
     }
 
-    public void setAveragePopulationEnergy(int index, int population) {
-        averagePopulationsEnergy.set(index, population);
+    public void setAveragePopulationEnergy(int index, Double populationEnergy) {
+        averagePopulationsEnergy[index] = populationEnergy;
     }
 
-    public void setAveragePopulationLifespan(int index, int population) {
-        averagePopulationsLifespan.set(index, population);
+    public void setAveragePopulationLifespan(int index, Double populationAge) {
+        averagePopulationsLifespan[index] = populationAge;
+    }
+
+    public void setAgentName(int index, String name) {
+        agentNames[index] = name;
     }
 
     public void addToAgentPopulation(int index, int newAgents) {
-        agentPopulations.set(index, agentPopulations.get(index) + newAgents);
+        agentPopulations[index] += newAgents;
     }
 
-    public void addToAveragePopulationEnergy(int index, int newValue) {
-        averagePopulationsEnergy.set(index, averagePopulationsEnergy.get(index) + newValue);
+    public void addToAveragePopulationEnergy(int index, double energy) {
+        averagePopulationsEnergy[index] += energy;
     }
 
-    public void addToAveragePopulationLifespan(int index, int newValue) {
-        averagePopulationsLifespan.set(index, averagePopulationsLifespan.get(index) + newValue);
+    public void addToAveragePopulationLifespan(int index, double age) {
+        averagePopulationsLifespan[index] += age;
+    }
+
+    public void addToStats(int index, int population, double energy, double age) {
+        addToAgentPopulation(index, population);
+        addToAveragePopulationEnergy(index, energy);
+        addToAveragePopulationLifespan(index, age);
+    }
+
+    public void setAgentNames(String[] agentNames) {
+        for (int i = 0; i < activeAgentsNumber; i++) {
+            setAgentName(i, agentNames[i]);
+        }
+    }
+
+    public Object[][] getAgentStats() {
+        return new Object[][]{agentNames, agentPopulations, calculateAverages(averagePopulationsEnergy), calculateAverages(averagePopulationsLifespan)};
+    }
+
+    private Double[] calculateAverages(Double[] statistics) {
+        Double[] averages = new Double[statistics.length];
+        for (int i = 0; i < 8; i++) {
+            averages[i] = Math.round((statistics[i] / agentPopulations[i]) * 10) / 10.0;
+        }
+        return averages;
     }
 
     public void clearAgentStats() {
-        for (int i = 0; i < activeAgentsNumber; i++) {
-            agentPopulations.set(i, 0);
-            averagePopulationsEnergy.set(i, 0);
-            averagePopulationsLifespan.set(i, 0);
-        }
+        agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
+        averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
     }
 
 }
