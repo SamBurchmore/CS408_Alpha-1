@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         Random random = new Random();
 
-        MainController mainController = new MainController(200, 8, 0, 8, 3, 8, 3);
+        MainController mainController = new MainController(600, 8, 0, 8, 3, 8);
 //        TimeUnit.SECONDS.sleep(5);
 //        mainController.populateWorld();
 //        int maxFood = 8;
@@ -37,7 +37,7 @@ public class Main {
 //            }
 //        }
         mainController.populateWorld();
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 1000000; i++) {
             mainController.runStep();
         }
         //testMotivations();

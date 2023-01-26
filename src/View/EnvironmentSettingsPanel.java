@@ -2,8 +2,10 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class EnvironmentSettingsPanel extends JPanel {
+public class EnvironmentSettingsPanel extends JPanel implements ActionListener {
 
     // The labels for the user to tell which spinner corresponds to which setting
     private JLabel maxEnergyLabel;
@@ -22,6 +24,16 @@ public class EnvironmentSettingsPanel extends JPanel {
     // The button which will refresh the environment settings
     private JButton refreshSettingsButton;
 
+    // The panel where the environment colours are set
+    private JPanel colorsPanel;
+
+    private JButton maxColorButton;
+    private JButton highColorButton;
+    private JButton mediumHighColorButton;
+    private JButton mediumLowColorButton;
+    private JButton lowColorButton;
+    private JButton minColorButton;
+
     public EnvironmentSettingsPanel() {
         super();
         setLayout(new GridBagLayout());
@@ -30,37 +42,72 @@ public class EnvironmentSettingsPanel extends JPanel {
 
         // First all elements are defined and their attributes set
         maxEnergyLabel = new JLabel("Max Tile Energy: ");
-        maxEnergyLabel.setPreferredSize(new Dimension(150, 30));
+        maxEnergyLabel.setPreferredSize(new Dimension(150, 20));
 
         minEnergyLabel = new JLabel("Min Tile Energy: ");
-        minEnergyLabel.setPreferredSize(new Dimension(150, 30));
+        minEnergyLabel.setPreferredSize(new Dimension(150, 20));
 
         energyRegenChanceLabel = new JLabel("Energy Regeneration Chance: ");
-        energyRegenChanceLabel.setPreferredSize(new Dimension(150, 30));
+        energyRegenChanceLabel.setPreferredSize(new Dimension(150, 20));
 
         energyRegenAmountLabel = new JLabel("Energy Regeneration Amount: ");
-        energyRegenAmountLabel.setPreferredSize(new Dimension(150, 30));
+        energyRegenAmountLabel.setPreferredSize(new Dimension(150, 20));
 
         environmentSizeLabel = new JLabel("Environment Size: ");
-        environmentSizeLabel.setPreferredSize(new Dimension(150, 30));
+        environmentSizeLabel.setPreferredSize(new Dimension(150, 20));
 
         maxEnergySpinner = new JSpinner(new SpinnerNumberModel(5, 0, 1000000, 1));
-        maxEnergySpinner.setPreferredSize(new Dimension(150, 30));
+        maxEnergySpinner.setPreferredSize(new Dimension(150, 20));
 
         minEnergySpinner = new JSpinner(new SpinnerNumberModel(0, 0, 1000000, 1));
-        minEnergySpinner.setPreferredSize(new Dimension(150, 30));
+        minEnergySpinner.setPreferredSize(new Dimension(150, 20));
 
         energyRegenChanceSpinner = new JSpinner(new SpinnerNumberModel(100.0, 0, 100.0, 0.01));
-        energyRegenChanceSpinner.setPreferredSize(new Dimension(150, 30));
+        energyRegenChanceSpinner.setPreferredSize(new Dimension(150, 20));
 
         energyRegenAmountSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 1000000, 1));
-        energyRegenAmountSpinner.setPreferredSize(new Dimension(150, 30));
+        energyRegenAmountSpinner.setPreferredSize(new Dimension(150, 20));
 
         environmentSizeSpinner = new JSpinner(new SpinnerNumberModel(300, 1, 600, 1));
-        environmentSizeSpinner.setPreferredSize(new Dimension(150, 30));
+        environmentSizeSpinner.setPreferredSize(new Dimension(150, 20));
 
         refreshSettingsButton = new JButton("Refresh");
         refreshSettingsButton.setPreferredSize(new Dimension(300, 50));
+
+        // Now we set up the color panel
+        colorsPanel = new JPanel();
+        colorsPanel.setPreferredSize(new Dimension(300, 50));
+
+        maxColorButton = new JButton();
+        maxColorButton.setPreferredSize(new Dimension(35, 35));
+        maxColorButton.addActionListener(this);
+
+        highColorButton = new JButton();
+        highColorButton.setPreferredSize(new Dimension(35, 35));
+        highColorButton.addActionListener(this);
+
+        mediumHighColorButton = new JButton();
+        mediumHighColorButton.setPreferredSize(new Dimension(35, 35));
+        mediumHighColorButton.addActionListener(this);
+
+        mediumLowColorButton = new JButton();
+        mediumLowColorButton.setPreferredSize(new Dimension(35, 35));
+        mediumLowColorButton.addActionListener(this);
+
+        lowColorButton = new JButton();
+        lowColorButton.setPreferredSize(new Dimension(35, 35));
+        lowColorButton.addActionListener(this);
+
+        minColorButton = new JButton();
+        minColorButton.setPreferredSize(new Dimension(35, 35));
+        minColorButton.addActionListener(this);
+
+        colorsPanel.add(maxColorButton);
+        colorsPanel.add(highColorButton);
+        colorsPanel.add(mediumHighColorButton);
+        colorsPanel.add(mediumLowColorButton);
+        colorsPanel.add(lowColorButton);
+        colorsPanel.add(minColorButton);
 
         // The GridBag constraints we'll be using to build this panel
         GridBagConstraints c = new GridBagConstraints();
@@ -126,6 +173,10 @@ public class EnvironmentSettingsPanel extends JPanel {
         c.gridx = 0;
         c.gridwidth = 4;
         this.add(refreshSettingsButton, c);
+
+        // Now we add the seventh row of components
+        c.gridy = 6;
+        this.add(colorsPanel, c);
     }
 
     public JSpinner getMaxEnergySpinner() {
@@ -150,5 +201,51 @@ public class EnvironmentSettingsPanel extends JPanel {
 
     public JSpinner getEnvironmentSizeSpinner() {
         return environmentSizeSpinner;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        if (actionEvent.getSource().equals(maxColorButton)) {
+            setMaxColor();
+        }
+        if (actionEvent.getSource().equals(highColorButton)) {
+            setHighColor();
+        }
+        if (actionEvent.getSource().equals(mediumHighColorButton)) {
+            setMediumHighColor();
+        }
+        if (actionEvent.getSource().equals(mediumLowColorButton)) {
+            setMediumLowColor();
+        }
+        if (actionEvent.getSource().equals(lowColorButton)) {
+            setLowColor();
+        }
+        if (actionEvent.getSource().equals(minColorButton)) {
+            setMinColor();
+        }
+    }
+
+    public void setMaxColor() {
+        maxColorButton.setBackground(JColorChooser.showDialog(null, "Select Agent Colour", Color.white));
+    }
+
+    public void setHighColor() {
+        highColorButton.setBackground(JColorChooser.showDialog(null, "Select Agent Colour", Color.white));
+    }
+
+    public void setMediumHighColor() {
+        mediumHighColorButton.setBackground(JColorChooser.showDialog(null, "Select Agent Colour", Color.white));
+    }
+
+    public void setMediumLowColor() {
+        mediumLowColorButton.setBackground(JColorChooser.showDialog(null, "Select Agent Colour", Color.white));
+    }
+
+    public void setLowColor() {
+        lowColorButton.setBackground(JColorChooser.showDialog(null, "Select Agent Colour", Color.white));
+    }
+
+    public void setMinColor() {
+        minColorButton.setBackground(JColorChooser.showDialog(null, "Select Agent Colour", Color.white));
     }
 }

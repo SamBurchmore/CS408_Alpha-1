@@ -49,7 +49,6 @@ public class ModelController {
         this.agentEditor = new AgentEditor();
     }
 
-
     public void populate(int density) {
         ArrayList<Agent> activeAgents = agentEditor.getActiveAgents();
         IntStream.range(0, worldSize*worldSize).sequential().forEach(i->{
@@ -85,7 +84,6 @@ public class ModelController {
             }
             if (!agentModelUpdate.getChildAgents().isEmpty()) {
                 for (Agent childAgent : agentModelUpdate.getChildAgents()) {
-                    System.out.println(childAgent);
                     environment.setTileAgent(childAgent);
                     aliveAgents.add(childAgent);
                 }
@@ -105,6 +103,13 @@ public class ModelController {
             current_wt.setOccupant(null);
         });
         agentList = new ArrayList<Agent>();
+    }
+
+    public void replenishEnvironmentEnergy() {
+        IntStream.range(0, worldSize*worldSize).sequential().forEach(i->{
+            EnvironmentTile current_wt = environment.getGrid()[i];
+            current_wt.setFoodLevel(maxFood);
+        });
     }
 
     public void setEnvironmentMaxFoodLevel(int newMax) {
@@ -129,20 +134,6 @@ public class ModelController {
 
     public BufferedImage getEnvironmentImage(int scale) {
         return this.environment.toBufferedImage(scale);
-    }
-
-    public int getRandomDecision(int things) {
-        return this.randomGen.nextInt(things);
-    }
-
-    public int countAgents(Agent agent) {
-        int count = 0;
-        for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
-            if (wt_iterator.next().getOccupant().getAttributes().getCode() == agent.getAttributes().getCode()) {
-                count++;
-            }
-        }
-        return count;
     }
 
     public AgentEditor getAgentEditor() {

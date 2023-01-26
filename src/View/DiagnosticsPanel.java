@@ -5,40 +5,22 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class DiagnosticsPanel extends JPanel {
 
     // The label where the current simulation step is displayed
     private JLabel currentStepLabel;
 
-    // The panel where the agent stat components are held
-    private JPanel agentStatsPanel;
-
-    // The labels which identify which agent stats are which
-    private JLabel agentPopulationLabel;
-    private JLabel agentEnergyLabel;
-    private JLabel agentAgeLabel;
-
-    // The labels which identify which agent stats belong to which agent
-    private JLabel agent0Label;
-    private JLabel agent1Label;
-    private JLabel agent2Label;
-    private JLabel agent3Label;
-    private JLabel agent4Label;
-    private JLabel agent5Label;
-    private JLabel agent6Label;
-    private JLabel agent7Label;
-
     private Object[][] agentStatistics = {{"Agent 1", 0, 0.0, 0.0}, {"Agent 2", 0, 0.0, 0.0}, {"Agent 3", 0, 0.0, 0.0}, {"Agent 4", 0, 0.0, 0.0}, {"Agent 5", 0, 0.0, 0.0}, {"Agent 6", 0, 0.0, 0.0}, {"Agent 7", 0, 0.0, 0.0}, {"Agent 8", 0, 0.0, 0.0}};
     private String[] agentStatNames = {"<html>Agent<br></html>" , "<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>"}; //{"<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>"};
     private JTable agentStatsTable;
     private JScrollPane agentStatsTableScrollPane;
 
-    // The text area where the agent statistics are displayed
-    private JTextArea agentStatsTextArea;
-
     // This is where log messages will be output, stuff like "[AGENT] step 5343: blue agent has gone extinct", or [ENVIRONMENT] step 1000: year 4
     private JTextArea logTextArea;
+    private JScrollPane logScrollPane;
+    private JLabel logTextAreaLabel;
 
     // This is where the environments statistics will be shown, stuff like total energy, available space, etc
     private JPanel environmentStatsPanel;
@@ -60,7 +42,6 @@ public class DiagnosticsPanel extends JPanel {
         // Here we build the agent stats table
         TableModel tableModel = new DefaultTableModel(agentStatistics, agentStatNames);
         agentStatsTable = new JTable(tableModel);
-        //agentStatsTable.setModel(new DefaultTableModel());
         agentStatsTableScrollPane = new JScrollPane(agentStatsTable);
         agentStatsTableScrollPane.setBorder(null);
         agentStatsTableScrollPane.setPreferredSize(new Dimension(400, 166));
@@ -69,17 +50,14 @@ public class DiagnosticsPanel extends JPanel {
         agentStatsTable.getTableHeader().setPreferredSize(new Dimension(400, 35));
         agentStatsTable.getTableHeader().setFont(new Font("Dialog", Font.BOLD, 12));
 
-
-        // Now we configure the log output text area
-        agentStatsTextArea = new JTextArea(8, 10);
-        agentStatsTextArea.setFont(new Font("Dialog", Font.BOLD, 12));
-        agentStatsTextArea.setPreferredSize(new Dimension(400, 180));
-        agentStatsTextArea.setBackground(Color.lightGray);
-
-        // Now we configure the log output text area
-        logTextArea = new JTextArea(20, 10);
-        logTextArea.setPreferredSize(new Dimension(400, 150));
-        logTextArea.setBackground(Color.lightGray);
+        // Now we configure the log output text area and its label
+        logTextArea = new JTextArea(18, 8);
+        logScrollPane = new JScrollPane(logTextArea);
+        logScrollPane.setPreferredSize(new Dimension(400, 300));
+        logTextAreaLabel = new JLabel("Info Log:");
+        logTextAreaLabel.setOpaque(true);
+        logTextAreaLabel.setPreferredSize(new Dimension(400, 15));
+        logTextAreaLabel.setFont(new Font("Dialog", Font.BOLD, 12));
 
         // Now we configure the environment statistics panel
         environmentStatsPanel = new JPanel();
@@ -107,7 +85,13 @@ public class DiagnosticsPanel extends JPanel {
 
         // Now we add the forth row components
         c.gridy = 3;
-        add(logTextArea, c);
+        c.insets = new Insets(1, 1, 0, 1);
+        add(logTextAreaLabel, c);
+
+        // Now we add the fifth row components
+        c.gridy = 4;
+        c.insets = new Insets(0, 1, 0, 1);
+        add(logScrollPane, c);
 
     }
 
@@ -123,6 +107,14 @@ public class DiagnosticsPanel extends JPanel {
             model.insertRow(i, row);
         }
         agentStatsTable.setModel(model);
+    }
+
+    public void clearLogTextArea() {
+        logTextArea.setText("");
+    }
+
+    public void addLogMessage(String logMessage) {
+        logTextArea.append(logMessage + "\n");
     }
 
 }

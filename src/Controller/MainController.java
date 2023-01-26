@@ -4,9 +4,6 @@ import Model.AgentEditor.AgentSettings;
 import Model.ModelController;
 import View.MainView;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 public class MainController {
 
     // The Graphical User Interface
@@ -18,20 +15,18 @@ public class MainController {
     private int scale = 0;
     private int size;
 
-    private int editingAgent = 0;
-
     private boolean cycleToggle = false;
 
-    public MainController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount) {
-        this.modelController = new ModelController(size_, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
+    public MainController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount) {
+        this.modelController = new ModelController(size, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
         this.view = new MainView();
         this.initView();
         this.initController();
-        this.size = size_;
+        this.size = size;
     }
 
-    public MainController(int size_, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount, int scale) {
-        this.modelController = new ModelController(size_, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
+    public MainController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount, int scale) {
+        this.modelController = new ModelController(size, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
         this.scale = scale;
         this.view = new MainView();
         this.initView();
@@ -43,7 +38,7 @@ public class MainController {
     }
 
     public void populateWorld() {
-        this.modelController.populate( 50);
+        this.modelController.populate( (int) view.getSimulationControlPanel().getPopulationDensitySpinner().getValue());
         this.updateWorldImage();
         this.updateAgentStats();
     }
@@ -53,16 +48,22 @@ public class MainController {
         this.modelController.cycle();
         this.updateAgentStats();
         this.updateWorldImage();
+        view.getDiagnosticsPanel().addLogMessage("Step complete");
     }
 
     public void runNSteps() {
-        int n = (int) this.view.getRunNStepsSpinner().getValue();
+        int n = (int) this.view.getSimulationControlPanel().getRunNStepsSpinner().getValue();
         for (int i = 0; i < n; i++) {
             runStep();
         }
     }
 
-    public void refreshEnvironmentSettings() {
+    public void replenishEnvironment() {
+        modelController.replenishEnvironmentEnergy();
+        updateWorldImage();
+    }
+
+    public void refreshEnvironment() {
         if (size != (int) this.view.getEnvironmentSize().getValue()) {
             size = (int) this.view.getEnvironmentSize().getValue();
             this.modelController = new ModelController(size, (int) this.view.getMaxEnergyLevel().getValue(), (int) this.view.getMinEnergyLevel().getValue(), (int) this.view.getMaxEnergyLevel().getValue(), (double) this.view.getEnergyRegenChance().getValue(), (int) this.view.getEnergyRegenAmount().getValue());
@@ -126,29 +127,25 @@ public class MainController {
 
     }
 
-//    public void setEditingButtonColor() {
-//        view.getActiveAgentsPanel().setAgentSelector(view.getAgentEditorPanel().getCurrentColour(), editingAgent);
-//    }
-
     public void initController() {
-        this.view.getRunStepButton().addActionListener(e -> this.runStep());
-        this.view.getPopulateButton().addActionListener(e -> this.populateWorld());
-        this.view.getClearButton().addActionListener(e -> this.clear());
-        this.view.getRunNStepsButton().addActionListener(e -> this.runNSteps());
-        this.view.getRefreshSettingsButton().addActionListener(e -> this.refreshEnvironmentSettings());
-        this.view.getAgent0Button().addActionListener(e -> this.setEditingAgent(0));
-        this.view.getAgent1Button().addActionListener(e -> this.setEditingAgent(1));
-        this.view.getAgent2Button().addActionListener(e -> this.setEditingAgent(2));
-        this.view.getAgent3Button().addActionListener(e -> this.setEditingAgent(3));
-        this.view.getAgent4Button().addActionListener(e -> this.setEditingAgent(4));
-        this.view.getAgent5Button().addActionListener(e -> this.setEditingAgent(5));
-        this.view.getAgent6Button().addActionListener(e -> this.setEditingAgent(6));
-        this.view.getAgent7Button().addActionListener(e -> this.setEditingAgent(7));
+        this.view.getSimulationControlPanel().getRunStepButton().addActionListener(e -> this.runStep());
+        this.view.getSimulationControlPanel().getPopulateButton().addActionListener(e -> this.populateWorld());
+        this.view.getSimulationControlPanel().getClearButton().addActionListener(e -> this.clear());
+        this.view.getSimulationControlPanel().getRunNStepsButton().addActionListener(e -> this.runNSteps());
+        this.view.getRefreshSettingsButton().addActionListener(e -> this.refreshEnvironment());
+        this.view.getActiveAgentsPanel().getAgent0Button().addActionListener(e -> this.setEditingAgent(0));
+        this.view.getActiveAgentsPanel().getAgent1Button().addActionListener(e -> this.setEditingAgent(1));
+        this.view.getActiveAgentsPanel().getAgent2Button().addActionListener(e -> this.setEditingAgent(2));
+        this.view.getActiveAgentsPanel().getAgent3Button().addActionListener(e -> this.setEditingAgent(3));
+        this.view.getActiveAgentsPanel().getAgent4Button().addActionListener(e -> this.setEditingAgent(4));
+        this.view.getActiveAgentsPanel().getAgent5Button().addActionListener(e -> this.setEditingAgent(5));
+        this.view.getActiveAgentsPanel().getAgent6Button().addActionListener(e -> this.setEditingAgent(6));
+        this.view.getActiveAgentsPanel().getAgent7Button().addActionListener(e -> this.setEditingAgent(7));
         this.view.getAgentEditorPanel().getUpdateSettingsButton().addActionListener(e -> this.setEditingAgent(modelController.getAgentEditor().getEditingAgentIndex()));
-        //this.view.getColourChooserButton().addActionListener(e -> this.setEditingButtonColor());
+        this.view.getSimulationControlPanel().getReplenishEnvironmentEnergyButton().addActionListener(e -> this.replenishEnvironment());
         initActiveAgentsPanel();
         initAgentEditorPanel();
-        //updateAgentStats();
+        updateAgentStats();
     }
 
     public void initActiveAgentsPanel() {
