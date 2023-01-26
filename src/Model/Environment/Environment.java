@@ -43,7 +43,7 @@ public class Environment {
             // First we declare the array where the tiles are stored. The grid is a square so the number of cells needed equals the size^2.
             this.grid = new EnvironmentTile[size_*size_];
             // Populate the array with WorldTile objects. We also keep track of each array cells corresponding coordinate in order to initialise each WorldTile with it.
-            int x = 0; int y =  0;
+            int x = 0; int y = 0;
             for (int i = 0; i<size_*size_; i++){
                 this.grid[i] = new EnvironmentTile(starting_food_level, x, y);
                 x++;

@@ -43,7 +43,7 @@ public class MainController {
     }
 
     public void populateWorld() {
-        this.modelController.populate( 1);
+        this.modelController.populate( 50);
         this.updateWorldImage();
         this.updateAgentStats();
     }

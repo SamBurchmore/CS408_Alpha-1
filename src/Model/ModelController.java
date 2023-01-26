@@ -52,8 +52,8 @@ public class ModelController {
 
     public void populate(int density) {
         ArrayList<Agent> activeAgents = agentEditor.getActiveAgents();
-        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
-                if (this.randomGen.nextInt(100) < density) {
+        IntStream.range(0, worldSize*worldSize).sequential().forEach(i->{
+                if (this.randomGen.nextInt(100) < density && !environment.getGrid()[i].isOccupied()) {
                     int agentIndex = randomGen.nextInt(activeAgents.size());
                     BasicAgent agent;
                     for (int j = 0; j < activeAgents.size(); j++) {
@@ -85,6 +85,7 @@ public class ModelController {
             }
             if (!agentModelUpdate.getChildAgents().isEmpty()) {
                 for (Agent childAgent : agentModelUpdate.getChildAgents()) {
+                    System.out.println(childAgent);
                     environment.setTileAgent(childAgent);
                     aliveAgents.add(childAgent);
                 }
@@ -99,7 +100,7 @@ public class ModelController {
     }
 
     public void clear() {
-        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
+        IntStream.range(0, worldSize*worldSize).sequential().forEach(i->{
             EnvironmentTile current_wt = environment.getGrid()[i];
             current_wt.setOccupant(null);
         });
