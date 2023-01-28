@@ -64,15 +64,21 @@ public class MainController {
     }
 
     public void refreshEnvironment() {
-        if (size != (int) this.view.getEnvironmentSize().getValue()) {
-            size = (int) this.view.getEnvironmentSize().getValue();
-            this.modelController = new ModelController(size, (int) this.view.getMaxEnergyLevel().getValue(), (int) this.view.getMinEnergyLevel().getValue(), (int) this.view.getMaxEnergyLevel().getValue(), (double) this.view.getEnergyRegenChance().getValue(), (int) this.view.getEnergyRegenAmount().getValue());
+        if (size != (int) this.view.getEnvironmentSettingsPanel().getEnvironmentSizeSpinner().getValue()) {
+            size = (int) this.view.getEnvironmentSettingsPanel().getEnvironmentSizeSpinner().getValue();
+            this.modelController = new ModelController(size, (int) this.view.getEnvironmentSettingsPanel().getMaxEnergySpinner().getValue(),
+                                                             (int) this.view.getEnvironmentSettingsPanel().getMinEnergySpinner().getValue(),
+                                                             (int) this.view.getEnvironmentSettingsPanel().getMaxEnergySpinner().getValue(),
+                                                             (double) this.view.getEnvironmentSettingsPanel().getEnergyRegenChanceSpinner().getValue(),
+                                                             (int) this.view.getEnvironmentSettingsPanel().getEnergyRegenAmountSpinner().getValue());
+            modelController.setEnvironmentColors(this.view.getEnvironmentSettingsPanel().getColors());
         }
         else {
-            setMaxFoodLevel((int) this.view.getMaxEnergyLevel().getValue());
-            setMinFoodLevel((int) this.view.getMinEnergyLevel().getValue());
-            setFoodRegenAmount((int) this.view.getEnergyRegenAmount().getValue());
-            setFoodRegenChance((double) this.view.getEnergyRegenChance().getValue());
+            setMaxFoodLevel((int) this.view.getEnvironmentSettingsPanel().getMaxEnergySpinner().getValue());
+            setMinFoodLevel((int) this.view.getEnvironmentSettingsPanel().getMinEnergySpinner().getValue());
+            setFoodRegenAmount((int) this.view.getEnvironmentSettingsPanel().getEnergyRegenAmountSpinner().getValue());
+            setFoodRegenChance((double) this.view.getEnvironmentSettingsPanel().getEnergyRegenChanceSpinner().getValue());
+            modelController.setEnvironmentColors(this.view.getEnvironmentSettingsPanel().getColors());
         }
         scale = 600 / size;
         updateWorldImage();
@@ -94,11 +100,11 @@ public class MainController {
     }
 
     public void setFoodRegenChance(double chance) {
-        this.modelController.setFoodRegenChance(chance);
+        this.modelController.setEnergyRegenChance(chance);
     }
 
     public void setFoodRegenAmount(int amount) {
-        this.modelController.setFoodRegenAmount(amount);
+        this.modelController.setEnergyRegenAmount(amount);
     }
 
     public void initView() {
@@ -132,7 +138,7 @@ public class MainController {
         this.view.getSimulationControlPanel().getPopulateButton().addActionListener(e -> this.populateWorld());
         this.view.getSimulationControlPanel().getClearButton().addActionListener(e -> this.clear());
         this.view.getSimulationControlPanel().getRunNStepsButton().addActionListener(e -> this.runNSteps());
-        this.view.getRefreshSettingsButton().addActionListener(e -> this.refreshEnvironment());
+        this.view.getEnvironmentSettingsPanel().getRefreshSettingsButton().addActionListener(e -> this.refreshEnvironment());
         this.view.getActiveAgentsPanel().getAgent0Button().addActionListener(e -> this.setEditingAgent(0));
         this.view.getActiveAgentsPanel().getAgent1Button().addActionListener(e -> this.setEditingAgent(1));
         this.view.getActiveAgentsPanel().getAgent2Button().addActionListener(e -> this.setEditingAgent(2));
@@ -145,6 +151,7 @@ public class MainController {
         this.view.getSimulationControlPanel().getReplenishEnvironmentEnergyButton().addActionListener(e -> this.replenishEnvironment());
         initActiveAgentsPanel();
         initAgentEditorPanel();
+        initEnvironmentSettingsPanel();
         updateAgentStats();
     }
 
@@ -156,6 +163,16 @@ public class MainController {
 
     public void initAgentEditorPanel() {
         view.getAgentEditorPanel().setAgentSettings(modelController.getAgentEditor().getEditingAgentSettings());
+    }
+
+    public void initEnvironmentSettingsPanel() {
+        view.getEnvironmentSettingsPanel().setColors(modelController.getEnvironmentColors());
+        view.getEnvironmentSettingsPanel().getMaxEnergySpinner().setValue(modelController.getMaxEnergy());
+        view.getEnvironmentSettingsPanel().getMinEnergySpinner().setValue(modelController.getMinEnergy());
+        view.getEnvironmentSettingsPanel().getEnergyRegenChanceSpinner().setValue(modelController.getEnergyRegenChance());
+        view.getEnvironmentSettingsPanel().getEnergyRegenAmountSpinner().setValue(modelController.getEnergyRegenAmount());
+        view.getEnvironmentSettingsPanel().getEnvironmentSizeSpinner().setValue(modelController.getEnvironmentSize());
+
     }
 
 }

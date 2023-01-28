@@ -31,7 +31,7 @@ public class MainView extends JFrame {
         agentEditorPanel = new AgentEditorPanel();
         environmentSettingsPanel = new EnvironmentSettingsPanel();
         leftPanel = new JPanel(new GridLayout(2, 1));
-        leftPanel.setPreferredSize(new Dimension(410, 765));
+        leftPanel.setPreferredSize(new Dimension(460, 765));
         leftPanel.add(agentEditorPanel);
         leftPanel.add(environmentSettingsPanel);
 
@@ -79,30 +79,6 @@ public class MainView extends JFrame {
         this.setTitle("Step: " + ((Integer) i));
     }
 
-    public JSpinner getMaxEnergyLevel() {
-        return environmentSettingsPanel.getMaxEnergySpinner();
-    }
-
-    public JSpinner getMinEnergyLevel() {
-        return environmentSettingsPanel.getMinEnergySpinner();
-    }
-
-    public JSpinner getEnergyRegenChance() {
-        return environmentSettingsPanel.getEnergyRegenChanceSpinner();
-    }
-
-    public JSpinner getEnergyRegenAmount() {
-        return environmentSettingsPanel.getEnergyRegenAmountSpinner();
-    }
-
-    public JButton getRefreshSettingsButton() {
-        return environmentSettingsPanel.getRefreshSettingsButton();
-    }
-
-    public JSpinner getEnvironmentSize() {
-        return environmentSettingsPanel.getEnvironmentSizeSpinner();
-    }
-
     public AgentEditorPanel getAgentEditorPanel() {
         return agentEditorPanel;
     }
@@ -116,4 +92,8 @@ public class MainView extends JFrame {
     }
 
     public SimulationControlPanel getSimulationControlPanel() { return simulationControlPanel; }
+
+    public EnvironmentSettingsPanel getEnvironmentSettingsPanel() {
+        return environmentSettingsPanel;
+    }
 }

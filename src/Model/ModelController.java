@@ -1,5 +1,6 @@
 package Model;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.stream.IntStream;
@@ -27,31 +28,31 @@ public class ModelController {
     private Diagnostics diagnostics;
 
 
-    private int foodRegenAmount;
-    double foodRegenChance;
-    private int maxFood;
-    private int minFood;
-    private final int worldSize;
+    private int energyRegenAmount;
+    private double energyRegenChance;
+    private int maxEnergy;
+    private int minEnergy;
+    private final int environmentSize;
 
 
     private Random randomGen;
 
-    public ModelController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double foodRegenChance, int foodRegenAmount){
-        this.environment = new Environment(size, starting_food_level, maxFoodLevel, minFoodLevel);
+    public ModelController(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount){
+        this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel);
         this.randomGen = new Random();
         this.agentList = new ArrayList<>();
-        this.worldSize = size;
-        this.foodRegenChance = foodRegenChance;
-        this.minFood = minFoodLevel;
-        this.maxFood = maxFoodLevel;
-        this.foodRegenAmount = foodRegenAmount;
+        this.environmentSize = size;
+        this.energyRegenChance = energyRegenChance;
+        this.minEnergy = minEnergyLevel;
+        this.maxEnergy = maxEnergyLevel;
+        this.energyRegenAmount = energyRegenAmount;
         this.diagnostics = new Diagnostics();
         this.agentEditor = new AgentEditor();
     }
 
     public void populate(int density) {
         ArrayList<Agent> activeAgents = agentEditor.getActiveAgents();
-        IntStream.range(0, worldSize*worldSize).sequential().forEach(i->{
+        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
                 if (this.randomGen.nextInt(100) < density && !environment.getGrid()[i].isOccupied()) {
                     int agentIndex = randomGen.nextInt(activeAgents.size());
                     BasicAgent agent;
@@ -89,16 +90,16 @@ public class ModelController {
                 }
             }
         }
-        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
-            if (randomGen.nextInt(10000) / 100.0 < foodRegenChance) {
-                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), foodRegenAmount);
+        IntStream.range(0, environmentSize * environmentSize).parallel().forEach(i->{
+            if (randomGen.nextInt(10000) / 100.0 < energyRegenChance) {
+                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), energyRegenAmount);
             }
         });
         agentList = aliveAgents;
     }
 
     public void clear() {
-        IntStream.range(0, worldSize*worldSize).sequential().forEach(i->{
+        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
             EnvironmentTile current_wt = environment.getGrid()[i];
             current_wt.setOccupant(null);
         });
@@ -106,9 +107,9 @@ public class ModelController {
     }
 
     public void replenishEnvironmentEnergy() {
-        IntStream.range(0, worldSize*worldSize).sequential().forEach(i->{
+        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
             EnvironmentTile current_wt = environment.getGrid()[i];
-            current_wt.setFoodLevel(maxFood);
+            current_wt.setFoodLevel(maxEnergy);
         });
     }
 
@@ -120,12 +121,12 @@ public class ModelController {
         this.environment.setMinFoodLevel(newMin);
     }
 
-    public void setFoodRegenAmount(int foodRegenAmount) {
-        this.foodRegenAmount = foodRegenAmount;
+    public void setEnergyRegenAmount(int energyRegenAmount) {
+        this.energyRegenAmount = energyRegenAmount;
     }
 
-    public void setFoodRegenChance(double foodRegenChance) {
-        this.foodRegenChance = foodRegenChance;
+    public void setEnergyRegenChance(double energyRegenChance) {
+        this.energyRegenChance = energyRegenChance;
     }
 
     public Diagnostics getDiagnostics() {
@@ -148,4 +149,43 @@ public class ModelController {
         this.agentEditor = agentEditor;
     }
 
+    public void setEnvironmentColors(Color[] color) {
+        environment.setMinColor(color[0]);
+        environment.setLowColor(color[1]);
+        environment.setMediumLowColor(color[2]);
+        environment.setMediumHighColor(color[3]);
+        environment.setHighColor(color[4]);
+        environment.setMaxColor(color[5]);
+    }
+
+    public Color[] getEnvironmentColors() {
+        Color[] colors = new Color[6];
+        colors[0] = environment.getMinColor();
+        colors[1] = environment.getLowColor();
+        colors[2] = environment.getMediumLowColor();
+        colors[3] = environment.getMediumHighColor();
+        colors[4] = environment.getHighColor();
+        colors[5] = environment.getMaxColor();
+        return colors;
+    }
+
+    public int getEnergyRegenAmount() {
+        return energyRegenAmount;
+    }
+
+    public double getEnergyRegenChance() {
+        return energyRegenChance;
+    }
+
+    public int getMaxEnergy() {
+        return maxEnergy;
+    }
+
+    public int getMinEnergy() {
+        return minEnergy;
+    }
+
+    public int getEnvironmentSize() {
+        return environmentSize;
+    }
 }

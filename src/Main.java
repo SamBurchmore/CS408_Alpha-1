@@ -37,9 +37,9 @@ public class Main {
 //            }
 //        }
         mainController.populateWorld();
-        for (int i = 0; i < 1000000; i++) {
-            mainController.runStep();
-        }
+//        for (int i = 0; i < 1000000; i++) {
+//            mainController.runStep();
+//        }
         //testMotivations();
     }
 

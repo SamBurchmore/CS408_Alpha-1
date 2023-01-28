@@ -37,7 +37,7 @@ public class EnvironmentSettingsPanel extends JPanel implements ActionListener {
     public EnvironmentSettingsPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(410, 382));
+        setPreferredSize(new Dimension(460, 382));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         // First all elements are defined and their attributes set
@@ -72,34 +72,34 @@ public class EnvironmentSettingsPanel extends JPanel implements ActionListener {
         environmentSizeSpinner.setPreferredSize(new Dimension(150, 20));
 
         refreshSettingsButton = new JButton("Refresh");
-        refreshSettingsButton.setPreferredSize(new Dimension(300, 50));
+        refreshSettingsButton.setPreferredSize(new Dimension(300, 75));
 
         // Now we set up the color panel
         colorsPanel = new JPanel();
-        colorsPanel.setPreferredSize(new Dimension(300, 50));
+        colorsPanel.setPreferredSize(new Dimension(450, 80));
 
-        maxColorButton = new JButton();
-        maxColorButton.setPreferredSize(new Dimension(35, 35));
+        maxColorButton = new JButton("100%");
+        maxColorButton.setPreferredSize(new Dimension(65, 65));
         maxColorButton.addActionListener(this);
 
-        highColorButton = new JButton();
-        highColorButton.setPreferredSize(new Dimension(35, 35));
+        highColorButton = new JButton(">75%");
+        highColorButton.setPreferredSize(new Dimension(65, 65));
         highColorButton.addActionListener(this);
 
-        mediumHighColorButton = new JButton();
-        mediumHighColorButton.setPreferredSize(new Dimension(35, 35));
+        mediumHighColorButton = new JButton(">50%");
+        mediumHighColorButton.setPreferredSize(new Dimension(65, 65));
         mediumHighColorButton.addActionListener(this);
 
-        mediumLowColorButton = new JButton();
-        mediumLowColorButton.setPreferredSize(new Dimension(35, 35));
+        mediumLowColorButton = new JButton(">25%");
+        mediumLowColorButton.setPreferredSize(new Dimension(65, 65));
         mediumLowColorButton.addActionListener(this);
 
-        lowColorButton = new JButton();
-        lowColorButton.setPreferredSize(new Dimension(35, 35));
+        lowColorButton = new JButton(">0%");
+        lowColorButton.setPreferredSize(new Dimension(65, 65));
         lowColorButton.addActionListener(this);
 
-        minColorButton = new JButton();
-        minColorButton.setPreferredSize(new Dimension(35, 35));
+        minColorButton = new JButton("0%");
+        minColorButton.setPreferredSize(new Dimension(65, 65));
         minColorButton.addActionListener(this);
 
         colorsPanel.add(maxColorButton);
@@ -168,16 +168,17 @@ public class EnvironmentSettingsPanel extends JPanel implements ActionListener {
         this.add(environmentSizeSpinner, c);
 
         // Now we add the sixth row of components
+        c.gridx = 0;
         c.gridy = 5;
+        c.gridwidth = 4;
+        this.add(colorsPanel, c);
+
+        // Now we add the seventh row of components
+        c.gridy = 6;
 
         c.gridx = 0;
         c.gridwidth = 4;
         this.add(refreshSettingsButton, c);
-
-        // Now we add the seventh row of components
-        c.gridy = 6;
-        this.add(colorsPanel, c);
-
     }
 
     public JSpinner getMaxEnergySpinner() {
@@ -248,5 +249,25 @@ public class EnvironmentSettingsPanel extends JPanel implements ActionListener {
 
     public void setMinColor() {
         minColorButton.setBackground(JColorChooser.showDialog(null, "Select Agent Colour", Color.white));
+    }
+
+    public Color[] getColors() {
+        Color[] colors = new Color[6];
+        colors[0] = minColorButton.getBackground();
+        colors[1] = lowColorButton.getBackground();
+        colors[2] = mediumLowColorButton.getBackground();
+        colors[3] = mediumHighColorButton.getBackground();
+        colors[4] = highColorButton.getBackground();
+        colors[5] = maxColorButton.getBackground();
+        return colors;
+    }
+
+    public void setColors(Color[] colors) {
+        minColorButton.setBackground(colors[0]);
+        lowColorButton.setBackground(colors[1]);
+        mediumLowColorButton.setBackground(colors[2]);
+        mediumHighColorButton.setBackground(colors[3]);
+        highColorButton.setBackground(colors[4]);
+        maxColorButton.setBackground(colors[5]);
     }
 }

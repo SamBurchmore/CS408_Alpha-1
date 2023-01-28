@@ -1,7 +1,6 @@
 package Model.Environment;
 
 import Model.Agents.AgentInterfaces.Agent;
-import Model.Agents.AgentStructs.AgentType;
 import Model.Agents.AgentStructs.AgentVision;
 
 import java.awt.*;
@@ -24,12 +23,12 @@ public class Environment {
     final int size;
     private int maxFoodLevel;
     private int minFoodLevel;
-    Color max = new Color(0, 255,0);
-    Color high = new Color(102, 204,0);
-    Color medium = new Color(153, 153,0);
-    Color low = new Color(121, 121, 2);
-    Color lowMin = new Color(96, 96, 1);
-    Color min = new Color(192, 192,192);
+    Color maxColor = new Color(0, 255,0);
+    Color highColor = new Color(102, 204,0);
+    Color mediumHighColor = new Color(153, 153,0);
+    Color mediumLowColor = new Color(121, 121, 2);
+    Color lowColor = new Color(96, 96, 1);
+    Color minColor = new Color(192, 192,192);
 
     /**
      * @param size_ : An int value corresponding to the length of a squares side.
@@ -179,21 +178,21 @@ public class Environment {
             return this.getTile(location).getOccupant().getAttributes().getColor();
         }
         if (this.getTile(location).getFoodLevel() >= this.maxFoodLevel) {
-            return this.max;
+            return this.maxColor;
         }
         if (this.getTile(location).getFoodLevel() > this.maxFoodLevel - this.maxFoodLevel / 4 ) {
-            return this.high;
+            return this.highColor;
         }
         if (this.getTile(location).getFoodLevel() > this.maxFoodLevel / 2 ) {
-            return this.medium;
+            return this.mediumHighColor;
         }
         if (this.getTile(location).getFoodLevel() > this.maxFoodLevel - ( (maxFoodLevel / 4) * 3)) {
-            return this.lowMin;
+            return this.lowColor;
         }
         if (this.getTile(location).getFoodLevel() > this.minFoodLevel) {
-            return this.low;
+            return this.mediumLowColor;
         }
-        return this.min;
+        return this.minColor;
     }
 
     public AgentVision getTileView(Location location) {
@@ -248,4 +247,51 @@ public class Environment {
 
     }
 
+    public void setMaxColor(Color maxColor) {
+        this.maxColor = maxColor;
+    }
+
+    public void setHighColor(Color highColor) {
+        this.highColor = highColor;
+    }
+
+    public void setMediumHighColor(Color mediumHighColor) {
+        this.mediumHighColor = mediumHighColor;
+    }
+
+    public void setMediumLowColor(Color mediumLowColor) {
+        this.mediumLowColor = mediumLowColor;
+    }
+
+    public void setLowColor(Color lowColor) {
+        this.lowColor = lowColor;
+    }
+
+    public void setMinColor(Color minColor) {
+        this.minColor = minColor;
+    }
+
+    public Color getMaxColor() {
+        return maxColor;
+    }
+
+    public Color getHighColor() {
+        return highColor;
+    }
+
+    public Color getMediumHighColor() {
+        return mediumHighColor;
+    }
+
+    public Color getMediumLowColor() {
+        return mediumLowColor;
+    }
+
+    public Color getLowColor() {
+        return lowColor;
+    }
+
+    public Color getMinColor() {
+        return minColor;
+    }
 }
