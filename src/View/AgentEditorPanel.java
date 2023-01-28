@@ -47,7 +47,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
     public AgentEditorPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(310, 665));
+        setPreferredSize(new Dimension(410, 382));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
         setBackground(new Color(224, 224, 224));
 
@@ -63,78 +63,78 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
 
         // Set up the agent name text input
         agentNameTextField = new JTextField("Agent Name");
-        agentNameTextField.setPreferredSize(new Dimension(150, 30));
+        agentNameTextField.setPreferredSize(new Dimension(150, 25));
 
         visionRangeLabel = new JLabel("Vision Range: ");
-        visionRangeLabel.setPreferredSize(new Dimension(150, 30));
+        visionRangeLabel.setPreferredSize(new Dimension(150, 25));
 
         movementRangeLabel = new JLabel("Movement Range: ");
-        movementRangeLabel.setPreferredSize(new Dimension(150, 30));
+        movementRangeLabel.setPreferredSize(new Dimension(150, 25));
 
         sizeLabel = new JLabel("Size: ");
-        sizeLabel.setPreferredSize(new Dimension(150, 30));
+        sizeLabel.setPreferredSize(new Dimension(150, 25));
 
         energyCapacityLabel = new JLabel("Energy Capacity: ");
-        energyCapacityLabel.setPreferredSize(new Dimension(150, 30));
+        energyCapacityLabel.setPreferredSize(new Dimension(150, 25));
 
         eatAmountLabel = new JLabel("Eat Amount: ");
-        eatAmountLabel.setPreferredSize(new Dimension(150, 30));
+        eatAmountLabel.setPreferredSize(new Dimension(150, 25));
 
         lifespanLabel = new JLabel("Max Lifespan: ");
-        lifespanLabel.setPreferredSize(new Dimension(150, 30));
+        lifespanLabel.setPreferredSize(new Dimension(150, 25));
 
         creationAgeLabel = new JLabel("Creation Age: ");
-        creationAgeLabel.setPreferredSize(new Dimension(150, 30));
+        creationAgeLabel.setPreferredSize(new Dimension(150, 25));
 
         creationAmountLabel = new JLabel("Creation Amount: ");
-        creationAmountLabel.setPreferredSize(new Dimension(150, 30));
+        creationAmountLabel.setPreferredSize(new Dimension(150, 25));
 
         creationDelayLabel = new JLabel("Creation Delay: ");
-        creationDelayLabel.setPreferredSize(new Dimension(150, 30));
+        creationDelayLabel.setPreferredSize(new Dimension(150, 25));
 
         agentCodeLabel = new JLabel("Agent Code: ");
-        agentCodeLabel.setPreferredSize(new Dimension(150, 30));
+        agentCodeLabel.setPreferredSize(new Dimension(150, 25));
 
         // Now we do the spinners
         visionRangeSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 25, 1));
-        visionRangeSpinner.setPreferredSize(new Dimension(150, 30));
+        visionRangeSpinner.setPreferredSize(new Dimension(150, 25));
 
         movementRangeSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 25, 1));
-        movementRangeSpinner.setPreferredSize(new Dimension(150, 30));
+        movementRangeSpinner.setPreferredSize(new Dimension(150, 25));
 
         sizeSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 255, 1));
-        sizeSpinner.setPreferredSize(new Dimension(150, 30));
+        sizeSpinner.setPreferredSize(new Dimension(150, 25));
 
         energyCapacitySpinner = new JSpinner(new SpinnerNumberModel(10, 0, 999999, 1));
-        energyCapacitySpinner.setPreferredSize(new Dimension(150, 30));
+        energyCapacitySpinner.setPreferredSize(new Dimension(150, 25));
 
         eatAmountSpinner = new JSpinner(new SpinnerNumberModel(2, 0, 999999, 1));
-        eatAmountSpinner.setPreferredSize(new Dimension(150, 30));
+        eatAmountSpinner.setPreferredSize(new Dimension(150, 25));
 
         lifespanSpinner = new JSpinner(new SpinnerNumberModel(10, 0, 999999, 1));
-        lifespanSpinner.setPreferredSize(new Dimension(150, 30));
+        lifespanSpinner.setPreferredSize(new Dimension(150, 25));
 
         creationAgeSpinner = new JSpinner(new SpinnerNumberModel(5, 0, 999999, 1));
-        creationAgeSpinner.setPreferredSize(new Dimension(150, 30));
+        creationAgeSpinner.setPreferredSize(new Dimension(150, 25));
 
         creationAmountSpinner = new JSpinner(new SpinnerNumberModel(4, 1, 9, 1));
-        creationAmountSpinner.setPreferredSize(new Dimension(150, 30));
+        creationAmountSpinner.setPreferredSize(new Dimension(150, 25));
 
         creationDelaySpinner = new JSpinner(new SpinnerNumberModel(1, 0, 999999, 1));
-        creationDelaySpinner.setPreferredSize(new Dimension(150, 30));
+        creationDelaySpinner.setPreferredSize(new Dimension(150, 25));
 
         agentCodeSpinner = new JSpinner();
-        agentCodeSpinner.setPreferredSize(new Dimension(150, 30));
+        agentCodeSpinner.setPreferredSize(new Dimension(150, 25));
         agentCodeSpinner.setEnabled(false);
 
-        updateSettingsButton = new JButton("Update Settings");
-        updateSettingsButton.setPreferredSize(new Dimension(300, 50));
-
         isGrazerToggle = new JToggleButton("Grazer");
-        isGrazerToggle.setPreferredSize(new Dimension(300, 60));
+        isGrazerToggle.setPreferredSize(new Dimension(300, 25));
 
         isPredatorToggle = new JToggleButton("Predator");
-        isPredatorToggle.setPreferredSize(new Dimension(300, 60));
+        isPredatorToggle.setPreferredSize(new Dimension(300, 25));
+
+        updateSettingsButton = new JButton("Update Settings");
+        updateSettingsButton.setPreferredSize(new Dimension(300, 25));
 
         // The GridBag constraints we'll be using to build this panel
         GridBagConstraints c = new GridBagConstraints();

@@ -29,7 +29,7 @@ public class DiagnosticsPanel extends JPanel {
     public DiagnosticsPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(410, 665));
+        setPreferredSize(new Dimension(410, 765));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
         setBackground(new Color(224, 224, 224));
 

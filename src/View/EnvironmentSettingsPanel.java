@@ -37,7 +37,7 @@ public class EnvironmentSettingsPanel extends JPanel implements ActionListener {
     public EnvironmentSettingsPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(300, 204));
+        setPreferredSize(new Dimension(410, 382));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         // First all elements are defined and their attributes set
@@ -177,6 +177,7 @@ public class EnvironmentSettingsPanel extends JPanel implements ActionListener {
         // Now we add the seventh row of components
         c.gridy = 6;
         this.add(colorsPanel, c);
+
     }
 
     public JSpinner getMaxEnergySpinner() {
