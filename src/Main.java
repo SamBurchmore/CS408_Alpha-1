@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         Random random = new Random();
 
-        MainController mainController = new MainController(600, 8, 0, 8, 3, 8);
+        MainController mainController = new MainController(600, 8, 0, 8, 1, 8);
 //        TimeUnit.SECONDS.sleep(5);
 //        mainController.populateWorld();
 //        int maxFood = 8;
@@ -56,6 +56,7 @@ public class Main {
         }
         System.out.println("create: " + count);
     }
+
 }
 
 // Useful diagnostics print

@@ -65,10 +65,12 @@ public abstract class BaseAgent implements Agent {
     public ArrayList<Agent> create(Location parentBLocation, Environment environment) {
         ArrayList<Location> childLocations = environment.emptyAdjacent(this.getLocation());
         ArrayList<Agent> childAgents = new ArrayList<>();
-        Collections.shuffle(childLocations);
-        for (Location childLocation : childLocations.subList(0, Math.min(childLocations.size(), this.getAttributes().getCreationAmount()) )) {
-            Agent child = this.combine(environment.getTile(parentBLocation).getOccupant(), childLocation);
-            childAgents.add(child);
+        if (!childLocations.isEmpty()) {
+            Collections.shuffle(childLocations);
+            for (Location childLocation : childLocations.subList(0, Math.min(childLocations.size(), this.getAttributes().getCreationAmount()))) {
+                Agent child = this.combine(environment.getTile(parentBLocation).getOccupant(), childLocation);
+                childAgents.add(child);
+            }
         }
         return childAgents;
     }
@@ -122,5 +124,7 @@ public abstract class BaseAgent implements Agent {
     public void setScores(Scores scores) {
         this.scores = scores;
     }
+
+
 
 }

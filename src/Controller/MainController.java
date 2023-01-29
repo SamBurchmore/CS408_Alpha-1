@@ -15,7 +15,8 @@ public class MainController {
     private int scale = 0;
     private int size;
 
-    private boolean cycleToggle = false;
+    private boolean runFlag = false;
+
 
     public MainController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount) {
         this.modelController = new ModelController(size, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
@@ -48,7 +49,7 @@ public class MainController {
         this.modelController.cycle();
         this.updateAgentStats();
         this.updateWorldImage();
-        view.getDiagnosticsPanel().addLogMessage("Step complete");
+        //view.getDiagnosticsPanel().addLogMessage("Step complete");
     }
 
     public void runNSteps() {
@@ -74,37 +75,21 @@ public class MainController {
             modelController.setEnvironmentColors(this.view.getEnvironmentSettingsPanel().getColors());
         }
         else {
-            setMaxFoodLevel((int) this.view.getEnvironmentSettingsPanel().getMaxEnergySpinner().getValue());
-            setMinFoodLevel((int) this.view.getEnvironmentSettingsPanel().getMinEnergySpinner().getValue());
-            setFoodRegenAmount((int) this.view.getEnvironmentSettingsPanel().getEnergyRegenAmountSpinner().getValue());
-            setFoodRegenChance((double) this.view.getEnvironmentSettingsPanel().getEnergyRegenChanceSpinner().getValue());
+            modelController.updateEnvironmentSettings((int) this.view.getEnvironmentSettingsPanel().getMinEnergySpinner().getValue(),
+                                                      (int) this.view.getEnvironmentSettingsPanel().getMaxEnergySpinner().getValue(),
+                                                      (double) this.view.getEnvironmentSettingsPanel().getEnergyRegenChanceSpinner().getValue(),
+                                                      (int) this.view.getEnvironmentSettingsPanel().getEnergyRegenAmountSpinner().getValue());
             modelController.setEnvironmentColors(this.view.getEnvironmentSettingsPanel().getColors());
         }
-        scale = 600 / size;
+        scale = (int) Math.ceil(600.0 / size);
         updateWorldImage();
-
+        view.getDiagnosticsPanel().addLogMessage(modelController.getEnvironment().toString());
     }
 
     public void clear() {
         this.modelController.clear();
         this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), 0);
         this.counter = 0;
-    }
-
-    public void setMaxFoodLevel(int newMax) {
-        this.modelController.setEnvironmentMaxFoodLevel(newMax);
-    }
-
-    public void setMinFoodLevel(int newMin) {
-        this.modelController.setEnvironmentMinFoodLevel(newMin);
-    }
-
-    public void setFoodRegenChance(double chance) {
-        this.modelController.setEnergyRegenChance(chance);
-    }
-
-    public void setFoodRegenAmount(int amount) {
-        this.modelController.setEnergyRegenAmount(amount);
     }
 
     public void initView() {
@@ -135,6 +120,7 @@ public class MainController {
 
     public void initController() {
         this.view.getSimulationControlPanel().getRunStepButton().addActionListener(e -> this.runStep());
+        //this.view.getSimulationControlPanel().getStopStartButton().addActionListener();
         this.view.getSimulationControlPanel().getPopulateButton().addActionListener(e -> this.populateWorld());
         this.view.getSimulationControlPanel().getClearButton().addActionListener(e -> this.clear());
         this.view.getSimulationControlPanel().getRunNStepsButton().addActionListener(e -> this.runNSteps());
@@ -175,4 +161,7 @@ public class MainController {
 
     }
 
+    public MainView getView() {
+        return view;
+    }
 }

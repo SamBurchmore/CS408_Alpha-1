@@ -12,12 +12,15 @@ public class WorldPanel extends JPanel {
         this.setPreferredSize(new Dimension(600, 600));
         this.worldImage = new BufferedImage(600, 600, BufferedImage.TYPE_INT_RGB);
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
+        setBackground(Color.white);
     }
 
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        g.drawImage(this.worldImage, 0, 0, this);
+        int x = (600 - worldImage.getWidth(null)) / 2;
+        int y = (600 - worldImage.getHeight(null)) / 2;
+        g.drawImage(this.worldImage, x, y, this);
     }
 
     public void updateWorldImage(BufferedImage worldImage) {

@@ -27,25 +27,15 @@ public class ModelController {
     // This is where all diagnostic data on the simulation is stored.
     private Diagnostics diagnostics;
 
-
-    private int energyRegenAmount;
-    private double energyRegenChance;
-    private int maxEnergy;
-    private int minEnergy;
     private final int environmentSize;
-
 
     private Random randomGen;
 
     public ModelController(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount){
-        this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel);
+        this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel, energyRegenChance, energyRegenAmount);
         this.randomGen = new Random();
         this.agentList = new ArrayList<>();
         this.environmentSize = size;
-        this.energyRegenChance = energyRegenChance;
-        this.minEnergy = minEnergyLevel;
-        this.maxEnergy = maxEnergyLevel;
-        this.energyRegenAmount = energyRegenAmount;
         this.diagnostics = new Diagnostics();
         this.agentEditor = new AgentEditor();
     }
@@ -91,8 +81,8 @@ public class ModelController {
             }
         }
         IntStream.range(0, environmentSize * environmentSize).parallel().forEach(i->{
-            if (randomGen.nextInt(10000) / 100.0 < energyRegenChance) {
-                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), energyRegenAmount);
+            if (randomGen.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {
+                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
             }
         });
         agentList = aliveAgents;
@@ -109,24 +99,16 @@ public class ModelController {
     public void replenishEnvironmentEnergy() {
         IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
             EnvironmentTile current_wt = environment.getGrid()[i];
-            current_wt.setFoodLevel(maxEnergy);
+            current_wt.setFoodLevel(environment.getMaxEnergyLevel());
         });
     }
 
-    public void setEnvironmentMaxFoodLevel(int newMax) {
-        this.environment.setMaxFoodLevel(newMax);
-    }
+    public void updateEnvironmentSettings(int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
+        environment.setMinEnergyLevel(minEnergyLevel);
+        environment.setMaxEnergyLevel(maxEnergyLevel);
+        environment.setEnergyRegenChance(energyRegenChance);
+        environment.setEnergyRegenAmount(energyRegenAmount);
 
-    public void setEnvironmentMinFoodLevel(int newMin) {
-        this.environment.setMinFoodLevel(newMin);
-    }
-
-    public void setEnergyRegenAmount(int energyRegenAmount) {
-        this.energyRegenAmount = energyRegenAmount;
-    }
-
-    public void setEnergyRegenChance(double energyRegenChance) {
-        this.energyRegenChance = energyRegenChance;
     }
 
     public Diagnostics getDiagnostics() {
@@ -170,22 +152,35 @@ public class ModelController {
     }
 
     public int getEnergyRegenAmount() {
-        return energyRegenAmount;
+        return environment.getEnergyRegenAmount();
     }
 
     public double getEnergyRegenChance() {
-        return energyRegenChance;
+        return environment.getEnergyRegenChance();
     }
 
     public int getMaxEnergy() {
-        return maxEnergy;
+        return environment.getMaxEnergyLevel();
     }
 
     public int getMinEnergy() {
-        return minEnergy;
+        return environment.getMinEnergyLevel();
+    }
+
+    public void setMaxEnergy(int maxEnergy) {
+        environment.setMaxEnergyLevel(maxEnergy);
+    }
+
+    public void setMinEnergy(int minEnergy) {
+        environment.setMinEnergyLevel(minEnergy);
+    }
+
+    public Environment getEnvironment() {
+        return environment;
     }
 
     public int getEnvironmentSize() {
         return environmentSize;
     }
+
 }

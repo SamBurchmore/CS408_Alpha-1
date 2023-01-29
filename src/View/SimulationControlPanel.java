@@ -128,4 +128,8 @@ public class SimulationControlPanel extends JPanel {
     public JSpinner getPopulationDensitySpinner() {
         return populationDensitySpinner;
     }
+
+    public JButton getStopStartButton() {
+        return stopStartButton;
+    }
 }
