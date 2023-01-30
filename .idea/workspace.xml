@@ -5,19 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5c119b8-cf77-44b8-a83a-26bb30553e3a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sam-burchmore-CS408-prototype-1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/sam-burchmore-CS408-prototype-1.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MainController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/AgentEditor/AgentEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/AgentEditor/AgentEditor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PreyMotivations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PreyMotivations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/AgentEditor/AgentSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/AgentEditor/AgentSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAttributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/BasicAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/BasicAttributes.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Agent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Attributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Attributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Diagnostics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Diagnostics.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Environment/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Environment/Environment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/ModelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/ModelController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/View/AgentEditorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/AgentEditorPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/SimulationControlPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/SimulationControlPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/WorldPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/WorldPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MainView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,20 +45,28 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="2Gif3ijxSuz7hFblJugXrbQaHhh" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/sambu/Downloads/flatlaf-3.0.jar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
       <recent name="WorldStructs" />
@@ -150,6 +161,7 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -216,6 +228,9 @@
       <workItem from="1674041521355" duration="1830000" />
       <workItem from="1674057754941" duration="7609000" />
       <workItem from="1674069588660" duration="2603000" />
+      <workItem from="1674997000854" duration="3906000" />
+      <workItem from="1675010310196" duration="1475000" />
+      <workItem from="1675031797321" duration="5830000" />
     </task>
     <task id="LOCAL-00001" summary="added some methods">
       <created>1668354392375</created>
@@ -227,11 +242,23 @@
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added some methods" />
     <option name="LAST_COMMIT_MESSAGE" value="added some methods" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Controller/MainController.java</url>
+          <line>104</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="wt_iterator" />
