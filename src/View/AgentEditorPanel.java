@@ -97,7 +97,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
 
         agentCodeSpinner = new JSpinner();
         agentCodeSpinner.setPreferredSize(new Dimension(60, 25));
-        agentCodeSpinner.setEnabled(false);
+        agentCodeSpinner.setEnabled(true);
 
         agentCodePanel.add(agentCodeLabel);
         agentCodePanel.add(agentCodeSpinner);
@@ -109,8 +109,6 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         nameColorPanel.add(agentNameTextField);
         nameColorPanel.add(colourChooserButton);
         nameColorPanel.add(agentCodePanel);
-
-
 
         // Now we set up the agent attributes panel
 

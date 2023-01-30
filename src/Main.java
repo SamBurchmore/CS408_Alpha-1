@@ -7,60 +7,52 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
+    int C = 10;
+    int Ae = 16;
+    int Te = 8;
+    int S = 1;
     public static void main(String[] args) throws InterruptedException {
         Random random = new Random();
 
         FlatIntelliJLaf.setup();
         MainController mainController = new MainController(600, 8, 0, 8, 1, 8);
-//        TimeUnit.SECONDS.sleep(5);
-//        mainController.populateWorld();
-//        int maxFood = 8;
-//        int minFood = 0;
-//        int foodRegenAmount = 8;
-//        double foodRegenChance = 3;
-//        for (int i = 0; i < 1000000; i++) {
-//            System.out.println("      Year " + i + ": Max Food = " + maxFood + ". Min Food = " + minFood + ". Food Regen Chance: " + foodRegenChance + ". Food Regen Amount: " + foodRegenAmount + ". ");
-//            for (int j = 0; j < 4; j++) { // Year
-//                System.out.println("Season " + j + ": Max Food = " + maxFood + ". Min Food = " + minFood + ". Food Regen Chance: " + foodRegenChance + ". Food Regen Amount: " + foodRegenAmount + ". ");
-//                for (int k = 0; k < random.nextInt(100) + 71 + (j * 10); k++) { // Season
-//                    mainController.runStep();
-//                }
-//                foodRegenAmount -= 1;
-//                mainController.setFoodRegenAmount(foodRegenAmount);
-//            }
-//            foodRegenAmount = 8;
-//            mainController.setFoodRegenAmount(foodRegenAmount);
-//            if (random.nextInt(7) == 0){
-//                foodRegenChance -= 0.14 ;
-//                mainController.setFoodRegenChance(foodRegenChance);
-//            }
-//            else {
-//                foodRegenChance += 0.03;
-//                mainController.setFoodRegenChance(foodRegenChance);
-//            }
-//        }
-//        mainController.populateWorld();
-//        for (int i = 0; i < 1000000; i++) {
-//            mainController.runStep();
-//        }
         //testMotivations();
     }
 
     public static void testMotivations(){
-        int max = 8;
-        int dynamic = 8;
-        int count = 0;
-        for (int i = 0; i < 8; i++) {
-            if (max + dynamic > max * 2 - dynamic) {
-                count += 1;
-                System.out.println(dynamic);
+        int C = 10;
+        int maxEnergy = 16;
+        int maxTileEnergy = 8;
+        int S = 3;
+        for (int i = 16; i > 0; i--) {
+            for (int j = 0; j < maxTileEnergy; j++) {
+                getMotivation(i, j, 1);
+                }
             }
-            dynamic--;
         }
-        System.out.println("create: " + count);
+
+        public static void getMotivation(int neededEnergy, int tileEnergy, int size) {
+        int constant = 10;
+            if (constant * (neededEnergy / size) > (neededEnergy * tileEnergy)) {
+                System.out.println("Main{" +
+                        "C=" + constant +
+                        ", neededEnergy=" + neededEnergy +
+                        ", tileEnergy=" + tileEnergy +
+                        ", S=" + size +
+                        '}'+ " CREATE=" + (constant * (neededEnergy / size)) + " graze=" + (neededEnergy * tileEnergy));
+            }
+            else {
+                System.out.println("Main{" +
+                        "C=" + constant +
+                        ", neededEnergy=" + neededEnergy +
+                        ", tileEnergy=" + tileEnergy +
+                        ", S=" + size +
+                        '}'+ " create=" + (constant * (neededEnergy / size)) + " GRAZE=" + (neededEnergy * tileEnergy));
+            }
+        }
+
     }
 
-}
 
 // Useful diagnostics print
 //System.out.println("Hunger: " + super.getScores().getHunger() + ", Health: " + super.getScores().getHealth() + ", Age: " + super.getScores().getAge() + ", (" + super.getLocation().getX() + "," + super.getLocation().getY() + ")");

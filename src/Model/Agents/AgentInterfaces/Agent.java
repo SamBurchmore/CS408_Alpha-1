@@ -27,4 +27,5 @@ public interface Agent {
     String toString();
     ArrayList<Motivation> getMotivations();
     void setMotivations(ArrayList<Motivation> motivations);
+    ArrayList<Motivation> copyMotivations();
 }

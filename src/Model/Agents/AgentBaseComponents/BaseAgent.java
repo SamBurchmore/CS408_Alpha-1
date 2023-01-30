@@ -30,7 +30,7 @@ public abstract class BaseAgent implements Agent {
     public BaseAgent(Location location, Agent parentA, Agent parentB) {
         this.location = location;
         this.attributes = new BasicAttributes(parentA.getAttributes(), parentB.getAttributes());
-        this.motivations = parentA.getMotivations();
+        this.motivations = parentA.copyMotivations();
         this.scores = new BasicScores(parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), 0, parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), parentA.getAttributes().getLifespan(), parentA.getAttributes().getCreationDelay());
         this.scores.setCreationCounter(parentA.getAttributes().getCreationAge());
     }
@@ -146,6 +146,15 @@ public abstract class BaseAgent implements Agent {
         this.motivations = motivations;
     }
 
+    @Override
+    public ArrayList<Motivation> copyMotivations() {
+        ArrayList<Motivation> motivations = new ArrayList<>();
+        for (Motivation motivation : getMotivations()) {
+            motivations.add(motivation.copy());
+        }
+        return motivations;
+    }
+
     public ArrayList<AgentVision> lookAround(Environment environment) {
         Location agentLocation = this.getLocation();
         int visionRange = this.getAttributes().getVisionRange();
@@ -159,7 +168,7 @@ public abstract class BaseAgent implements Agent {
                 int x_coord = agentLocation.getX() + i;
                 int y_coord = agentLocation.getY() + j;
                 // Checks the agent isn't looking outside the grid and prevents a null pointer exception // TODO - there must be a better way to do this.
-                if (((x_coord < environment.getSize()) && (y_coord < environment.getSize())) && ((x_coord >= 0) && (y_coord >= 0))) {
+                if (((x_coord < environment.getSize()) && (y_coord < environment.getSize())) && ((x_coord >= 0) && (y_coord >= 0)) && !(i == 0 && j == 0)) {
                     AgentVision av = environment.getTileView(x_coord, y_coord);
                     if (Math.abs(i) <= agentRange && Math.abs(j) <= agentRange) {
                         av.setInRange(true);
