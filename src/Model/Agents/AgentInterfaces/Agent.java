@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface Agent {
 
     AgentModelUpdate run(Environment environment);
-    AgentDecision liveDay(Environment environment);
+    void liveDay();
     void move(Location newLocation);
     ArrayList<Agent> create(Location parentBLocation, Environment environment);
     boolean isDead();
@@ -20,13 +20,11 @@ public interface Agent {
     void setAttributes(Attributes attributes);
     void setLocation(Location location);
     Location getLocation();
-    Reaction getReaction();
-    void setReaction(Reaction reaction);
-    Vision getVision();
-    void setVision(Vision vision);
     Scores getScores();
     void setScores(Scores scores);
     Agent combine(Agent parentB, Location childLocation);
     Object copy();
     String toString();
+    ArrayList<Motivation> getMotivations();
+    void setMotivations(ArrayList<Motivation> motivations);
 }

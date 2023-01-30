@@ -31,7 +31,6 @@ public abstract class BaseScores implements Scores {
         if (this.hunger > this.MAX_HUNGER) {
             this.hunger = this.MAX_HUNGER;
         }
-        //System.out.println(this.hunger);
     }
 
     @Override

@@ -15,58 +15,12 @@ import java.util.Collections;
 
 public class BasicAgent extends BaseAgent {
 
-    public BasicAgent(Location location_, Model.Agents.AgentInterfaces.Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
-        super(location_, reaction_, vision_, attributes_, scores_);
+    public BasicAgent(Location location, Attributes attributes, Scores scores, ArrayList<Motivation> motivations) {
+        super(location, attributes, scores, motivations);
     }
 
-    public BasicAgent(Location location_, Agent parentA, Agent parentB) {
-        super(location_, parentA, parentB);
-    }
-
-    @Override
-    public AgentModelUpdate run(Environment environment) {
-
-        AgentDecision agentDecision = super.liveDay(environment);
-        if (super.isDead()) {
-            return new AgentModelUpdate(null, new ArrayList<Agent>());
-        }
-        ArrayList<Agent> childAgents = new ArrayList<>();
-        int eatAmount = this.graze(environment.getTile(super.getLocation()));
-
-        if (!agentDecision.isNull()) {
-            if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
-                super.move(agentDecision.getLocation());
-            }
-            if (agentDecision.getAgentAction().equals(AgentAction.CREATE) && !environment.emptyAdjacent(this.getLocation()).isEmpty()) {
-                childAgents = super.create(agentDecision.getLocation(), environment);
-            }
-        }
-        return new AgentModelUpdate(this, childAgents, eatAmount);
-    }
-
-
-    @Override
-    public Agent combine(Agent parentB, Location childLocation) {
-        super.getScores().setCreationCounter(super.getScores().getCreationDelay());
-        Agent newAgent = new BasicAgent(childLocation, this, parentB);
-
-        super.getScores().setHunger(super.getScores().getHunger() - super.getScores().getMAX_HUNGER() / 8);
-        newAgent.getScores().setHunger(newAgent.getScores().getMAX_HUNGER() / 8);
-
-        return newAgent;
-    }
-
-
-    public int graze(EnvironmentTile environmentTile) {
-        if (environmentTile.getFoodLevel() <= 0) {
-            return 0;
-        }
-        if (environmentTile.getFoodLevel() >= super.getAttributes().getEatAmount()) {
-            super.getScores().setHunger(super.getScores().getHunger() + super.getAttributes().getEatAmount());
-            return super.getAttributes().getEatAmount();
-        }
-        super.getScores().setHunger(super.getScores().getHunger() + environmentTile.getFoodLevel());
-        return environmentTile.getFoodLevel();
+    public BasicAgent(Location location, Agent parentA, Agent parentB) {
+        super(location, parentA, parentB);
     }
 
     public BasicAgent copy() {

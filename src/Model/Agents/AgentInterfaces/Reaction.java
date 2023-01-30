@@ -9,6 +9,6 @@ public interface Reaction {
 
     AgentDecision react(ArrayList<AgentVision> agentVision, Attributes agentAttributes, Scores agentScores);
 
-    Motivations getMotivations();
+    Motivation getMotivations();
 
 }
