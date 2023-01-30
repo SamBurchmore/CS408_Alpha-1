@@ -11,76 +11,102 @@ public class SimulationControlPanel extends JPanel {
     private JButton runNStepsButton;
     private JButton populateButton;
     private JButton clearButton;
+    private JButton replenishEnvironmentEnergyButton;
 
     // The spinners which control the value of the settings
     private JSpinner runNStepsSpinner;
+    private JSpinner populationDensitySpinner;
 
     // The panel where we group the run n steps button with its spinner
     private JPanel runNStepsPanel;
 
+    // The panel where we group the populate button with the density spinner
+    private JPanel populatePanel;
 
     public SimulationControlPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(600, 124));
+        setPreferredSize(new Dimension(600, 100));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         // First all elements are defined and their attributes set
         runStepButton = new JButton("Run Step");
-        runStepButton.setPreferredSize(new Dimension(600, 40));
+        runStepButton.setPreferredSize(new Dimension(600, 25));
 
         stopStartButton = new JButton("Stop / Start");
-        stopStartButton.setPreferredSize(new Dimension(300, 40));
-
-        populateButton = new JButton("Populate");
-        populateButton.setPreferredSize(new Dimension(300, 40));
+        stopStartButton.setPreferredSize(new Dimension(300, 25));
 
         clearButton = new JButton("Clear");
-        clearButton.setPreferredSize(new Dimension(300, 40));
+        clearButton.setPreferredSize(new Dimension(300, 25));
+
+        replenishEnvironmentEnergyButton = new JButton("Replenish Environment Energy");
+        replenishEnvironmentEnergyButton.setPreferredSize(new Dimension(600, 25));
 
         // Here we build the run n steps panel
         runNStepsButton = new JButton("Run N Steps: ");
-        runNStepsButton.setPreferredSize(new Dimension(150, 40));
+        runNStepsButton.setPreferredSize(new Dimension(225, 25));
 
         runNStepsSpinner = new JSpinner(new SpinnerNumberModel(10, 0, 1000000, 1));
-        runNStepsSpinner.setPreferredSize(new Dimension(150, 40));
+        runNStepsSpinner.setPreferredSize(new Dimension(75, 25));
 
-        runNStepsPanel = new JPanel(new GridLayout(1, 2));
-        runNStepsPanel.setPreferredSize(new Dimension(300, 40));
+        runNStepsPanel = new JPanel(new GridBagLayout());
+        runNStepsPanel.setPreferredSize(new Dimension(300, 25));
 
-        runNStepsPanel.add(runNStepsButton);
-        runNStepsPanel.add(runNStepsSpinner);
+        // Here we build the population panel
+        populateButton = new JButton("Populate");
+        populateButton.setPreferredSize(new Dimension(225, 25));
 
-        // The GridBag constraints we'll be using to build this panel
+        populationDensitySpinner = new JSpinner(new SpinnerNumberModel(1, 0, 100, 1));
+        populationDensitySpinner.setPreferredSize(new Dimension(75, 25));
+
+        populatePanel = new JPanel(new GridBagLayout());
+        populatePanel.setPreferredSize(new Dimension(300, 25));
+
+        // The GridBag constraints we'll be using to build our panels
         GridBagConstraints c = new GridBagConstraints();
-        // This forces components to be fill their container horizontally, we want this for every component
-        c.fill = GridBagConstraints.HORIZONTAL;
+        c.fill = GridBagConstraints.BOTH;
         c.weightx = 1;
         c.weighty = 1;
+        c.gridwidth = 3;
+        runNStepsPanel.add(runNStepsButton, c);
+        c.gridwidth = 1;
+        runNStepsPanel.add(runNStepsSpinner, c);
+
+        c.gridwidth = 3;
+        populatePanel.add(populateButton, c);
+        c.gridwidth = 1;
+        populatePanel.add(populationDensitySpinner, c);
 
         // Now all elements are added to the panel
         // First we add the top row components
         c.gridwidth = 2;
         c.gridx = 0;
-        this.add(runStepButton, c);
+        add(runStepButton, c);
 
         // Now we add the second row components, these will be 1 per cell so we reset gridwidth to 1
         c.gridy = 1;
         c.gridwidth = 1;
 
-        this.add(stopStartButton, c);
+        add(stopStartButton, c);
 
         c.gridx = 1;
-        this.add(runNStepsPanel, c);
+        add(runNStepsPanel, c);
 
         // Now we add the third row components
         c.gridy = 2;
 
         c.gridx = 0;
-        this.add(populateButton, c);
+        add(populatePanel, c);
 
         c.gridx = 1;
-        this.add(clearButton, c);
+        add(clearButton, c);
+
+        // Now we add the forth row components
+        c.gridy = 3;
+
+        c.gridwidth = 4;
+        c.gridx = 0;
+        add(replenishEnvironmentEnergyButton, c);
     }
 
     public JButton getRunStepButton() {
@@ -95,4 +121,15 @@ public class SimulationControlPanel extends JPanel {
 
     public JButton getClearButton() { return this.clearButton; }
 
+    public JButton getReplenishEnvironmentEnergyButton() {
+        return replenishEnvironmentEnergyButton;
+    }
+
+    public JSpinner getPopulationDensitySpinner() {
+        return populationDensitySpinner;
+    }
+
+    public JButton getStopStartButton() {
+        return stopStartButton;
+    }
 }

@@ -1,55 +1,105 @@
 package Model;
 
-import java.util.EventListener;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Queue;
 
 public class Diagnostics {
 
-    int environmentSize;
-    int agent0Count;
-    int agent1Count;
+    final private int activeAgentsNumber = 8;
 
-    int counter;
+    String[] agentNames; // The names of the agents
+    Integer[] agentPopulations; // The size of each agent population
+    Double[] averagePopulationsEnergy; // The average percent of max energy in each agent population
+    Double[] averagePopulationsLifespan; // The average percent of max age in each agent population
 
-    public Diagnostics(int size) {
-        this.agent0Count = 0;
-        this.agent1Count = 0;
-        this.environmentSize = size;
-        this.counter = 0;
+    private ArrayDeque<String> logQueue;
+
+    public void addToLogQueue(String logMsg) {
+        logQueue.add(logMsg);
     }
 
-    public int agent0Density() {
-        return this.agent0Count;
+    public String printLogQueue() {
+            StringBuilder logString = new StringBuilder();
+            for (String logMsg : logQueue) {
+                logString.append(logMsg).append("\n");
+            }
+            logQueue.clear();
+            return logString.toString();
     }
 
-    public int agent1Density() {
-        return this.agent1Count;
+    public boolean logMsgsInQueue() {
+        return !logQueue.isEmpty();
     }
 
-    public int getAgent0Count() {
-        return this.agent0Count;
+    public Diagnostics() {
+        agentNames = new String[]{"Agent 1", "Agent 2", "Agent 3", "Agent 4", "Agent 5", "Agent 6", "Agent 7", "Agent 8"};
+        agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
+        averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        logQueue = new ArrayDeque<>();
     }
 
-    public void setAgent0Count(int agent0Count) {
-        this.agent0Count = agent0Count;
+    public void setAgentPopulation(int index, int population) {
+        agentPopulations[index] = population;
     }
 
-    public int getAgent1Count() {
-        return this.agent1Count;
+    public void setAveragePopulationEnergy(int index, Double populationEnergy) {
+        averagePopulationsEnergy[index] = populationEnergy;
     }
 
-    public void setAgent1Count(int agent1Count) {
-        this.agent1Count = agent1Count;
+    public void setAveragePopulationLifespan(int index, Double populationAge) {
+        averagePopulationsLifespan[index] = populationAge;
     }
 
-    public void iterateCounter() {
-        this.counter++;
+    public void setAgentName(int index, String name) {
+        agentNames[index] = name;
     }
 
-    public void resetCounter() {
-        this.counter = 0;
+    public void addToAgentPopulation(int index, int newAgents) {
+        agentPopulations[index] += newAgents;
     }
 
-    public int getCounter() {
-        return this.counter;
+    public void addToAveragePopulationEnergy(int index, double energy) {
+        averagePopulationsEnergy[index] += energy;
     }
+
+    public void addToAveragePopulationLifespan(int index, double age) {
+        averagePopulationsLifespan[index] += age;
+    }
+
+    public void addToStats(int index, int population, double energy, double age) {
+        addToAgentPopulation(index, population);
+        addToAveragePopulationEnergy(index, energy);
+        addToAveragePopulationLifespan(index, age);
+    }
+
+    public void setAgentNames(String[] agentNames) {
+        for (int i = 0; i < activeAgentsNumber; i++) {
+            setAgentName(i, agentNames[i]);
+        }
+    }
+
+    public Object[][] getAgentStats() {
+        return new Object[][]{agentNames, agentPopulations, calculateAverages(averagePopulationsEnergy), calculateAverages(averagePopulationsLifespan)};
+    }
+
+    private Double[] calculateAverages(Double[] statistics) {
+        Double[] averages = new Double[statistics.length];
+        for (int i = 0; i < 8; i++) {
+            averages[i] = Math.round((statistics[i] / agentPopulations[i]) * 10) / 10.0;
+        }
+        return averages;
+    }
+
+    public void clearAgentStats() {
+        agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
+        averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+    }
+
+    public Integer[] getAgentPopulations() {
+        return agentPopulations;
+    }
+
 }

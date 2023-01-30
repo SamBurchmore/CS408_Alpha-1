@@ -15,8 +15,8 @@ import java.util.Collections;
 
 public class BasicAgent extends BaseAgent {
 
-    public BasicAgent(Location location_, Color agentColor_, Model.Agents.AgentInterfaces.Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
-        super(location_, agentColor_, reaction_, vision_, attributes_, scores_);
+    public BasicAgent(Location location_, Model.Agents.AgentInterfaces.Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
+        super(location_, reaction_, vision_, attributes_, scores_);
     }
 
     public BasicAgent(Location location_, Agent parentA, Agent parentB) {
@@ -38,31 +38,21 @@ public class BasicAgent extends BaseAgent {
                 super.move(agentDecision.getLocation());
             }
             if (agentDecision.getAgentAction().equals(AgentAction.CREATE) && !environment.emptyAdjacent(this.getLocation()).isEmpty()) {
-                childAgents = this.create(agentDecision.getLocation(), environment);
+                childAgents = super.create(agentDecision.getLocation(), environment);
             }
         }
         return new AgentModelUpdate(this, childAgents, eatAmount);
     }
 
-    @Override
-    public ArrayList<Agent> create(Location parentBLocation, Environment environment_) {
-        ArrayList<Location> childLocations = environment_.emptyAdjacent(super.getLocation());
-        ArrayList<Agent> childAgents = new ArrayList<>();
-        Collections.shuffle(childLocations);
-        for (Location childLocation : childLocations.subList(0, childLocations.size() / 2)) {
-            Agent child = this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation);
-            childAgents.add(child);
-        }
-        return childAgents;
-}
 
     @Override
     public Agent combine(Agent parentB, Location childLocation) {
         super.getScores().setCreationCounter(super.getScores().getCreationDelay());
         Agent newAgent = new BasicAgent(childLocation, this, parentB);
+
         super.getScores().setHunger(super.getScores().getHunger() - super.getScores().getMAX_HUNGER() / 8);
         newAgent.getScores().setHunger(newAgent.getScores().getMAX_HUNGER() / 8);
-        newAgent.getScores().setCreationCounter(newAgent.getScores().getMAX_AGE() / 2);
+
         return newAgent;
     }
 

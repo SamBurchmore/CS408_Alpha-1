@@ -1,19 +1,14 @@
 package Model;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
-import Model.AgentBuilder.AgentBuilder;
+import Model.AgentEditor.AgentEditor;
 import Model.Agents.AgentConcreteComponents.BasicAgent;
-import Model.Agents.AgentFactory;
 import Model.Agents.AgentInterfaces.Agent;
 import Model.Agents.AgentStructs.AgentModelUpdate;
-import Model.Agents.AgentStructs.AgentType;
 import Model.Environment.Environment;
 import Model.Environment.EnvironmentTile;
 import Model.Environment.Location;
@@ -26,57 +21,39 @@ public class ModelController {
     // The data structure which represents the world.
     private Environment environment;
 
-    private AgentBuilder agentBuilder;
+    private AgentEditor agentEditor;
 
     private ArrayList<Agent> agentList;
     // This is where all diagnostic data on the simulation is stored.
     private Diagnostics diagnostics;
 
-
-    private int foodRegenAmount;
-    double foodRegenChance;
-    private int maxFood;
-    private int minFood;
-    private final int worldSize;
-
+    private final int environmentSize;
 
     private Random randomGen;
 
-    public ModelController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double foodRegenChance, int foodRegenAmount){
-        this.environment = new Environment(size, starting_food_level, maxFoodLevel, minFoodLevel);
+    public ModelController(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount){
+        this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel, energyRegenChance, energyRegenAmount);
         this.randomGen = new Random();
         this.agentList = new ArrayList<>();
-        this.worldSize = size;
-        this.foodRegenChance = foodRegenChance;
-        this.minFood = minFoodLevel;
-        this.maxFood = maxFoodLevel;
-        this.foodRegenAmount = foodRegenAmount;
-        this.diagnostics = new Diagnostics(this.worldSize);
-        this.agentBuilder = new AgentBuilder();
+        this.environmentSize = size;
+        this.diagnostics = new Diagnostics();
+        this.agentEditor = new AgentEditor();
     }
 
-    /**
-     * This method populates the WorldGrid object with predator and prey agents based on the input ratio.
-     * So if they are both one, then the ratio will be 1:1.
-     * The total number of agents is decided by the density parameter.
-     * Agents are populated pseudo randomly.
-     * @param predator_percent The percentage of agents to be of predators. The rest will be prey.
-     * @param density The percentage of tiles to ber occupied.
-     */
-    // TODO - implement predator prey ratio so that both controls work
-    public void populate(int predator_percent, int density) {
-        ArrayList<Agent> activeAgents = agentBuilder.getActiveAgents();
-        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
-                if (this.randomGen.nextInt(100) < density) {
+    public void populate(int density) {
+        ArrayList<Agent> activeAgents = agentEditor.getActiveAgents();
+        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
+                if (this.randomGen.nextInt(100) < density && !environment.getGrid()[i].isOccupied()) {
                     int agentIndex = randomGen.nextInt(activeAgents.size());
                     BasicAgent agent;
                     for (int j = 0; j < activeAgents.size(); j++) {
                         if (j == agentIndex) {
-                            agent = (BasicAgent) agentBuilder.getAgent(j).copy();
+                            agent = (BasicAgent) agentEditor.getAgent(j).copy();
                             EnvironmentTile wt = environment.getGrid()[i];
                             agent.setLocation(wt.getLocation());
                             wt.setOccupant(agent);
                             agentList.add(agent);
+                            diagnostics.addToStats(j, 1, agent.getScores().getHunger(), agent.getScores().getAge());
                         }
                     }
                 }
@@ -84,6 +61,7 @@ public class ModelController {
     }
 
     public void cycle() {
+        diagnostics.clearAgentStats();
         ArrayList<Agent> aliveAgents = new ArrayList<>();
         for (Agent currentAgent : agentList) {
             Location oldLocation = currentAgent.getLocation();
@@ -93,6 +71,7 @@ public class ModelController {
                 environment.setTileAgent(agentModelUpdate.getAgent());
                 environment.modifyTileFoodLevel(agentModelUpdate.getAgent().getLocation(), -agentModelUpdate.getEatAmount());
                 aliveAgents.add(agentModelUpdate.getAgent());
+                diagnostics.addToStats(agentModelUpdate.getAgent().getAttributes().getCode(), 1, agentModelUpdate.getAgent().getScores().getHunger(), agentModelUpdate.getAgent().getScores().getAge());
             }
             if (!agentModelUpdate.getChildAgents().isEmpty()) {
                 for (Agent childAgent : agentModelUpdate.getChildAgents()) {
@@ -101,39 +80,40 @@ public class ModelController {
                 }
             }
         }
-        //System.out.println("Agent Cycle took: " + ( time - System.currentTimeMillis()) / -1000);
-        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
-            if (randomGen.nextInt(10000) / 100.0 < foodRegenChance) {
-                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), foodRegenAmount);
+//        for (int i = 0; i < agentEditor.getActiveAgents().size(); i++) {
+//            if (diagnostics.getAgentPopulations()[i] <= 0) {
+//                diagnostics.addToLogQueue("[AGENT]: Agent " + agentEditor.getAgent(i).getAttributes().getCode() + " has gone extinct.");
+//            }
+//        }
+        IntStream.range(0, environmentSize * environmentSize).parallel().forEach(i->{
+            if (randomGen.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {
+                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
             }
         });
-
-        //System.out.println("Environment Cycle took: " + ( time - System.currentTimeMillis()) / -1000);
         agentList = aliveAgents;
     }
 
     public void clear() {
-        IntStream.range(0, worldSize*worldSize).parallel().forEach(i->{
+        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
             EnvironmentTile current_wt = environment.getGrid()[i];
             current_wt.setOccupant(null);
         });
         agentList = new ArrayList<Agent>();
     }
 
-    public void setEnvironmentMaxFoodLevel(int newMax) {
-        this.environment.setMaxFoodLevel(newMax);
+    public void replenishEnvironmentEnergy() {
+        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
+            EnvironmentTile current_wt = environment.getGrid()[i];
+            current_wt.setFoodLevel(environment.getMaxEnergyLevel());
+        });
     }
 
-    public void setEnvironmentMinFoodLevel(int newMin) {
-        this.environment.setMinFoodLevel(newMin);
-    }
+    public void updateEnvironmentSettings(int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
+        environment.setMinEnergyLevel(minEnergyLevel);
+        environment.setMaxEnergyLevel(maxEnergyLevel);
+        environment.setEnergyRegenChance(energyRegenChance);
+        environment.setEnergyRegenAmount(energyRegenAmount);
 
-    public void setFoodRegenAmount(int foodRegenAmount) {
-        this.foodRegenAmount = foodRegenAmount;
-    }
-
-    public void setFoodRegenChance(double foodRegenChance) {
-        this.foodRegenChance = foodRegenChance;
     }
 
     public Diagnostics getDiagnostics() {
@@ -144,25 +124,69 @@ public class ModelController {
         return this.environment.toBufferedImage(scale);
     }
 
-    public int getRandomDecision(int things) {
-        return this.randomGen.nextInt(things);
+    public AgentEditor getAgentEditor() {
+        return agentEditor;
     }
 
-    public int countAgents(Agent agent) {
-        int count = 0;
-        for (Iterator<EnvironmentTile> wt_iterator = this.environment.iterator(); wt_iterator.hasNext();) {
-            if (wt_iterator.next().getOccupant().getAttributes().getType().equals(agent.getAttributes().getType())) {
-                count++;
-            }
-        }
-        return count;
+    public void updateAgentNames() {
+        diagnostics.setAgentNames(agentEditor.getAgentNames());
     }
 
-    public AgentBuilder getAgentBuilder() {
-        return agentBuilder;
+    public void setAgentEditor(AgentEditor agentEditor) {
+        this.agentEditor = agentEditor;
     }
 
-    public void setAgentBuilder(AgentBuilder agentBuilder) {
-        this.agentBuilder = agentBuilder;
+    public void setEnvironmentColors(Color[] color) {
+        environment.setMinColor(color[0]);
+        environment.setLowColor(color[1]);
+        environment.setMediumLowColor(color[2]);
+        environment.setMediumHighColor(color[3]);
+        environment.setHighColor(color[4]);
+        environment.setMaxColor(color[5]);
     }
+
+    public Color[] getEnvironmentColors() {
+        Color[] colors = new Color[6];
+        colors[0] = environment.getMinColor();
+        colors[1] = environment.getLowColor();
+        colors[2] = environment.getMediumLowColor();
+        colors[3] = environment.getMediumHighColor();
+        colors[4] = environment.getHighColor();
+        colors[5] = environment.getMaxColor();
+        return colors;
+    }
+
+    public int getEnergyRegenAmount() {
+        return environment.getEnergyRegenAmount();
+    }
+
+    public double getEnergyRegenChance() {
+        return environment.getEnergyRegenChance();
+    }
+
+    public int getMaxEnergy() {
+        return environment.getMaxEnergyLevel();
+    }
+
+    public int getMinEnergy() {
+        return environment.getMinEnergyLevel();
+    }
+
+    public void setMaxEnergy(int maxEnergy) {
+        environment.setMaxEnergyLevel(maxEnergy);
+    }
+
+    public void setMinEnergy(int minEnergy) {
+        environment.setMinEnergyLevel(minEnergy);
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public int getEnvironmentSize() {
+        return environmentSize;
+    }
+
+
 }

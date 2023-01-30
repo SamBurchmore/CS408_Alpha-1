@@ -7,7 +7,7 @@ public class PreyMotivations extends BaseMotivations {
 
     @Override
     public int toCreate(Scores agentScores) {
-        if (agentScores.getCreationCounter() <= 0 && agentScores.getHunger() >= agentScores.getMAX_HUNGER() / 4) {
+        if (agentScores.getCreationCounter() <= 0 && agentScores.getHunger() >= agentScores.getMAX_HUNGER() / 3) {
             return 1;
         }
         return 0;

@@ -4,66 +4,56 @@ import Model.Agents.AgentConcreteComponents.*;
 import Model.Agents.AgentInterfaces.*;
 import Model.Agents.AgentStructs.AgentDecision;
 import Model.Agents.AgentStructs.AgentModelUpdate;
-import Model.Agents.AgentStructs.AgentType;
 import Model.Agents.AgentStructs.AgentVision;
 import Model.Environment.Location;
 import Model.Environment.Environment;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public abstract class BaseAgent implements Agent {
 
     private Location location;
-    private Color agentColor;
-    private Reaction reaction = null;
-    private Vision vision = null;
+    private Reaction reaction;
+    private Vision vision;
     private Attributes attributes;
-    private Scores scores = null;
+    private Scores scores;
 
-    public BaseAgent(Location location_, Color agentColor_, Reaction reaction_, Vision vision_, Attributes attributes_, Scores scores_) {
-        this.location = location_;
-        this.agentColor = agentColor_;
-        this.reaction = reaction_;
-        this.vision = vision_;
-        this.attributes = attributes_;
-        this.scores = scores_;
+    public BaseAgent(Location location, Reaction reaction, Vision vision, Attributes attributes, Scores scores) {
+        this.location = location;
+        this.reaction = reaction;
+        this.vision = vision;
+        this.attributes = attributes;
+        this.scores = scores;
     }
 
-    public BaseAgent(Location location_, Agent parent_a, Agent parent_b) {
-        this.location = location_;
-        this.agentColor = parent_a.getColor();
-        if (parent_a.getAttributes().getType().equals(AgentType.PREY)) {
-            this.reaction = new PreyReaction(new PreyMotivations());
-        }
-        else {
-            this.reaction = new PredatorReaction(new PredatorMotivations());
-        }
+    public BaseAgent(Location location, Agent parent_a, Agent parent_b) {
+        this.location = location;
+        this.reaction = new PreyReaction(new PreyMotivations());
         this.vision = new BasicVision();
         this.attributes = new BasicAttributes(parent_a.getAttributes(), parent_b.getAttributes());
-        this.scores = new BasicScores(parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), 0, parent_a.getScores().getMAX_HUNGER(), parent_a.getScores().getMAX_HEALTH(), parent_a.getScores().getMAX_AGE(), parent_a.getScores().getCreationDelay());
-        this.scores.setCreationCounter(parent_a.getScores().getCreationDelay());
+        this.scores = new BasicScores(parent_a.getAttributes().getEnergyCapacity(), parent_a.getScores().getMAX_HEALTH(), 0, parent_a.getAttributes().getEnergyCapacity(), parent_a.getScores().getMAX_HEALTH(), parent_a.getAttributes().getLifespan(), parent_a.getAttributes().getCreationDelay());
+        this.scores.setCreationCounter(parent_a.getAttributes().getCreationAge());
     }
 
     @Override
-    public AgentModelUpdate run(Environment environment_) {
+    public AgentModelUpdate run(Environment environment) {
         return new AgentModelUpdate(this, null);
     }
 
     @Override
     public AgentDecision liveDay(Environment environment) {
-        this.getScores().setHunger((this.getScores().getHunger() - attributes.getSize()));
+        this.getScores().setHunger((this.getScores().getHunger() - this.getAttributes().getSize()));
         this.getScores().setAge(this.getScores().getAge()+1);
         this.getScores().setCreationCounter((this.getScores().getCreationCounter() - 1));
 
-        ArrayList<AgentVision> agentSight = this.getVision().lookAround(environment, this.getLocation(), this.getAttributes().getVision(), this.getAttributes().getSpeed());
+        ArrayList<AgentVision> agentSight = this.getVision().lookAround(environment, this.getLocation(), this.getAttributes().getVisionRange(), this.getAttributes().getMovementRange());
         return this.getReaction().react(agentSight, this.getAttributes(), this.getScores());
     }
 
     @Override
     public boolean isDead() {
-        return this.getScores().getHunger() <= 0 || this.getScores().getAge() >= this.getScores().getMAX_AGE();
+        return this.getScores().getHunger() <= 0 || this.getScores().getAge() >= this.getAttributes().getLifespan();
     }
 
     @Override
@@ -72,26 +62,17 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public ArrayList<Agent> create(Location parentBLocation, Environment environment_) {
-        ArrayList<Location> childLocations = environment_.emptyAdjacent(this.location);
+    public ArrayList<Agent> create(Location parentBLocation, Environment environment) {
+        ArrayList<Location> childLocations = environment.emptyAdjacent(this.getLocation());
         ArrayList<Agent> childAgents = new ArrayList<>();
-        if (childLocations.size() > 0) {
+        if (!childLocations.isEmpty()) {
             Collections.shuffle(childLocations);
-            Location childLocation = childLocations.get(0);
-            Agent child = this.combine(environment_.getTile(parentBLocation).getOccupant(), childLocation);
-            childAgents.add(child);
+            for (Location childLocation : childLocations.subList(0, Math.min(childLocations.size(), this.getAttributes().getCreationAmount()))) {
+                Agent child = this.combine(environment.getTile(parentBLocation).getOccupant(), childLocation);
+                childAgents.add(child);
+            }
         }
         return childAgents;
-    }
-
-    @Override
-    public Color getColor() {
-        return this.agentColor;
-    }
-
-    @Override
-    public void setColor(Color color_) {
-        this.agentColor = color_;
     }
 
     @Override
@@ -100,13 +81,13 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public void setAttributes(Attributes attributes_) {
-        this.attributes = attributes_;
+    public void setAttributes(Attributes attributes) {
+        this.attributes = attributes;
     }
 
     @Override
-    public void setLocation(Location location_) {
-        this.location = location_;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     @Override
@@ -120,8 +101,8 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public void setReaction(Reaction reaction_) {
-        this.reaction = reaction_;
+    public void setReaction(Reaction reaction) {
+        this.reaction = reaction;
     }
 
     @Override
@@ -130,8 +111,8 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public void setVision(Vision vision_) {
-        this.vision = vision_;
+    public void setVision(Vision vision) {
+        this.vision = vision;
     }
 
     @Override
@@ -140,8 +121,10 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public void setScores(Scores scores_) {
-        this.scores = scores_;
+    public void setScores(Scores scores) {
+        this.scores = scores;
     }
+
+
 
 }
