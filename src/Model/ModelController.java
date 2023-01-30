@@ -80,6 +80,11 @@ public class ModelController {
                 }
             }
         }
+//        for (int i = 0; i < agentEditor.getActiveAgents().size(); i++) {
+//            if (diagnostics.getAgentPopulations()[i] <= 0) {
+//                diagnostics.addToLogQueue("[AGENT]: Agent " + agentEditor.getAgent(i).getAttributes().getCode() + " has gone extinct.");
+//            }
+//        }
         IntStream.range(0, environmentSize * environmentSize).parallel().forEach(i->{
             if (randomGen.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {
                 environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
@@ -182,5 +187,6 @@ public class ModelController {
     public int getEnvironmentSize() {
         return environmentSize;
     }
+
 
 }

@@ -44,7 +44,7 @@ public class DiagnosticsPanel extends JPanel {
         agentStatsTable = new JTable(tableModel);
         agentStatsTableScrollPane = new JScrollPane(agentStatsTable);
         agentStatsTableScrollPane.setBorder(null);
-        agentStatsTableScrollPane.setPreferredSize(new Dimension(400, 166));
+        agentStatsTableScrollPane.setPreferredSize(new Dimension(400, 206));
         agentStatsTable.setFillsViewportHeight(true);
         agentStatsTable.setDefaultEditor(Object.class, null);
         agentStatsTable.getTableHeader().setPreferredSize(new Dimension(400, 35));

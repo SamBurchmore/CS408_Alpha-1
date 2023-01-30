@@ -8,6 +8,7 @@ import java.util.Random;
 
 public abstract class BaseAttributes implements Attributes {
 
+    private int spawningWeight;
     private String name;
     private int code;
     private Color color;
@@ -22,7 +23,8 @@ public abstract class BaseAttributes implements Attributes {
     private int creationAmount;
     private int creationDelay;
 
-    public BaseAttributes(String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
+    public BaseAttributes(int spawningWeight, String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
+        this.spawningWeight = spawningWeight;
         this.code = code;
         this.name = name;
         this.color = color;
@@ -50,6 +52,7 @@ public abstract class BaseAttributes implements Attributes {
         this.creationAge = attributesA.getCreationAge();
         this.creationAmount = attributesA.getCreationAmount();
         this.creationDelay = attributesA.getCreationDelay();
+        this.spawningWeight = attributesA.getSpawningWeight();
     }
 
     @Override
@@ -158,6 +161,16 @@ public abstract class BaseAttributes implements Attributes {
 
     public void setCreationDelay(int creationDelay) {
         this.creationDelay = creationDelay;
+    }
+
+    @Override
+    public int getSpawningWeight() {
+        return spawningWeight;
+    }
+
+    @Override
+    public void setSpawningWeight(int spawningWeight) {
+        this.spawningWeight = spawningWeight;
     }
 
     @Override

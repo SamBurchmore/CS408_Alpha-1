@@ -1,6 +1,8 @@
 package Model;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Queue;
 
 public class Diagnostics {
 
@@ -11,11 +13,31 @@ public class Diagnostics {
     Double[] averagePopulationsEnergy; // The average percent of max energy in each agent population
     Double[] averagePopulationsLifespan; // The average percent of max age in each agent population
 
+    private ArrayDeque<String> logQueue;
+
+    public void addToLogQueue(String logMsg) {
+        logQueue.add(logMsg);
+    }
+
+    public String printLogQueue() {
+            StringBuilder logString = new StringBuilder();
+            for (String logMsg : logQueue) {
+                logString.append(logMsg).append("\n");
+            }
+            logQueue.clear();
+            return logString.toString();
+    }
+
+    public boolean logMsgsInQueue() {
+        return !logQueue.isEmpty();
+    }
+
     public Diagnostics() {
         agentNames = new String[]{"Agent 1", "Agent 2", "Agent 3", "Agent 4", "Agent 5", "Agent 6", "Agent 7", "Agent 8"};
         agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
         averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        logQueue = new ArrayDeque<>();
     }
 
     public void setAgentPopulation(int index, int population) {
@@ -74,6 +96,10 @@ public class Diagnostics {
         agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
         averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+    }
+
+    public Integer[] getAgentPopulations() {
+        return agentPopulations;
     }
 
 }

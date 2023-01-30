@@ -19,18 +19,18 @@ public class AgentEditor {
 
     public AgentEditor() {
         activeAgents = new ActiveAgents();
-        for (int i = 0; i < AGENT_NUMBER; i++) { //                                                                                                                                         (String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
-
-            activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes("Agent " + (i+1), i, new Color(245 - i * (i * 5), 0, i * (i * 5)), 1, 1, 1, 16, 2, 32, 5, 4, 1), new BasicScores(16, 6, 0, 16, 6, 32, 0)), i);
-        }
-//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes("Agent 1", 0, Color.red, 1, 1, 1, 16, 2, 32, 5, 4, 1), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 0);
-//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes("Agent 2", 1, Color.orange, 1, 1, 1, 16, 2, 36, 7, 4, 1), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 1);
-//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes("Agent 3", 2, Color.yellow, 1, 1, 1, 16, 2, 40, 9, 4, 1), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 2);
-//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes("Agent 4", 3, Color.blue, 1, 1, 1, 16, 2, 44, 11, 4, 1), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 3);
-//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes("Agent 5", 4, Color.magenta, 1, 1, 1, 16, 2, 48, 13, 4, 1), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 4);
-//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes("Agent 6", 5, Color.cyan, 1, 1, 1, 16, 2, 52, 15, 4, 1), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 5);
-//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes("Agent 7", 6, Color.pink, 1, 1, 1, 16, 2, 56, 17, 4, 1), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 6);
-//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes("Agent 8", 7, Color.darkGray, 1, 1, 1, 16, 2, 60, 19, 4, 1), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 7);
+//        for (int i = 0; i < AGENT_NUMBER; i++) { //                                                                                                                                         (String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
+//
+//            activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(1, "Agent " + (i+1), i, new Color(245 - i * (i * 5), 0, i * (i * 5)), 1, 1, 1, 16, 2, 32, 5, 4, 1), new BasicScores(16, 6, 0, 16, 6, 32, 0)), i);
+//        }
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(1, "Agent 1", 0, Color.red, 1, 1, 1, 16, 2, 96, 20, 2, 5), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 0);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(1, "Agent 2", 1, Color.orange, 1, 1, 1, 16, 2, 96, 20, 2, 5), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 1);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(1, "Agent 3", 2, Color.yellow, 1, 1, 1, 16, 2, 96, 20, 2, 5), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 2);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(1, "Agent 4", 3, Color.blue, 1, 1, 1, 16, 2, 96, 20, 2, 5), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 3);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(1, "Agent 5", 4, Color.magenta, 1, 1, 1, 16, 2, 96, 20, 2, 5), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 4);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(1, "Agent 6", 5, Color.cyan, 1, 1, 1, 16, 2, 96, 20, 2, 5), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 5);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(1, "Agent 7", 6, new Color(255, 102, 0), 1, 1, 1, 16, 2, 96, 20, 2, 5), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 6);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new PreyReaction(new PreyMotivations()), new BasicVision(), new BasicAttributes(1, "Agent 8", 7, new Color(180, 0, 190), 1, 1, 1, 16, 2, 96, 20, 2, 5), new BasicScores(16, 6, 0, 16, 6, 32, 0)), 7);
 
         editingAgentIndex = 0;
     }
@@ -69,6 +69,14 @@ public class AgentEditor {
             names[i] = activeAgents.getAgent(i).getAttributes().getName();
         }
         return names;
+    }
+
+    public int getWeight() {
+        int weight = 0;
+        for (Agent agent : activeAgents.getActiveAgents()) {
+            weight += agent.getAttributes().getSpawningWeight();
+        }
+        return weight;
     }
 
 

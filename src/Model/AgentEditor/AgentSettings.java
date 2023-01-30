@@ -8,10 +8,9 @@ import java.awt.*;
 public class AgentSettings {
 
     private Attributes attributes;
-    private int density;
 
-    public AgentSettings(String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
-        this.attributes = new BasicAttributes(name, code, color, visionRange, movementRange, size, energyCapacity, eatAmount, lifespan, creationAge, creationAmount, creationDelay);
+    public AgentSettings(int spawningWeight, String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
+        this.attributes = new BasicAttributes(spawningWeight, name, code, color, visionRange, movementRange, size, energyCapacity, eatAmount, lifespan, creationAge, creationAmount, creationDelay);
     }
 
     public AgentSettings(Attributes attributes) {
@@ -122,11 +121,11 @@ public class AgentSettings {
         return attributes.getCode();
     }
 
-    public int getDensity() {
-        return density;
+    public int getSpawningWeight() {
+        return attributes.getSpawningWeight();
     }
 
-    public void setDensity(int density) {
-        this.density = density;
+    public void setSpawningWeight(int spawningWeight) {
+        attributes.setSpawningWeight(spawningWeight);
     }
 }

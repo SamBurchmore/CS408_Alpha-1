@@ -49,7 +49,6 @@ public class MainController {
         this.modelController.cycle();
         this.updateAgentStats();
         this.updateWorldImage();
-        //view.getDiagnosticsPanel().addLogMessage("Step complete");
     }
 
     public void runNSteps() {
@@ -90,6 +89,7 @@ public class MainController {
         this.modelController.clear();
         this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), 0);
         this.counter = 0;
+        view.getDiagnosticsPanel().clearLogTextArea();
     }
 
     public void initView() {

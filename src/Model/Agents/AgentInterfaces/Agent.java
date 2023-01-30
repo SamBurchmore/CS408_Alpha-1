@@ -11,22 +11,22 @@ import java.util.UUID;
 
 public interface Agent {
 
-    AgentModelUpdate run(Environment environment_);
+    AgentModelUpdate run(Environment environment);
     AgentDecision liveDay(Environment environment);
     void move(Location newLocation);
-    ArrayList<Agent> create(Location parentBLocation, Environment environment_);
+    ArrayList<Agent> create(Location parentBLocation, Environment environment);
     boolean isDead();
     Attributes getAttributes();
-    void setAttributes(Attributes attributes_);
-    void setLocation(Location location_);
+    void setAttributes(Attributes attributes);
+    void setLocation(Location location);
     Location getLocation();
     Reaction getReaction();
-    void setReaction(Reaction reaction_);
+    void setReaction(Reaction reaction);
     Vision getVision();
-    void setVision(Vision vision_);
+    void setVision(Vision vision);
     Scores getScores();
-    void setScores(Scores scores_);
-    Agent combine(Agent parent_b, Location childLocation);
+    void setScores(Scores scores);
+    Agent combine(Agent parentB, Location childLocation);
     Object copy();
     String toString();
 }

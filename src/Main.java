@@ -1,5 +1,7 @@
 import Controller.MainController;
 import View.MainView;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -8,6 +10,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         Random random = new Random();
 
+        FlatIntelliJLaf.setup();
         MainController mainController = new MainController(600, 8, 0, 8, 1, 8);
 //        TimeUnit.SECONDS.sleep(5);
 //        mainController.populateWorld();
@@ -36,7 +39,7 @@ public class Main {
 //                mainController.setFoodRegenChance(foodRegenChance);
 //            }
 //        }
-        mainController.populateWorld();
+//        mainController.populateWorld();
 //        for (int i = 0; i < 1000000; i++) {
 //            mainController.runStep();
 //        }

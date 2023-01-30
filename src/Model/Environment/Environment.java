@@ -26,12 +26,19 @@ public class Environment {
     private double energyRegenChance;
     private int energyRegenAmount;
 
-    Color maxColor = new Color(0, 255,0);
-    Color highColor = new Color(102, 204,0);
-    Color mediumHighColor = new Color(153, 153,0);
-    Color mediumLowColor = new Color(121, 121, 2);
-    Color lowColor = new Color(96, 96, 1);
-    Color minColor = new Color(192, 192,192);
+//    Color maxColor = new Color(0, 255,0);
+//    Color highColor = new Color(102, 204,0);
+//    Color mediumHighColor = new Color(153, 153,0);
+//    Color mediumLowColor = new Color(121, 121, 2);
+//    Color lowColor = new Color(96, 96, 1);
+//    Color minColor = new Color(192, 192,192);
+
+    Color minColor = new Color(0, 0,0);
+    Color lowColor = new Color(11, 11,11);
+    Color mediumLowColor = new Color(21, 21,21);
+    Color mediumHighColor = new Color(31, 31, 31);
+    Color highColor = new Color(41, 41, 41);
+    Color maxColor = new Color(51, 51,51);
 
     /**
      * @param size : An int value corresponding to the length of a squares side.
