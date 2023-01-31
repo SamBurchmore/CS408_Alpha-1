@@ -5,15 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5c119b8-cf77-44b8-a83a-26bb30553e3a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/AgentEditor/AgentEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/AgentEditor/AgentEditor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/CreatorMotivation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/CreatorMotivation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Diagnostics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Diagnostics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Agent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Environment/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Environment/Environment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Environment/EnvironmentTile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Environment/EnvironmentTile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/ModelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/ModelController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/SimulationControlPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/SimulationControlPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -231,6 +228,7 @@
       <workItem from="1675095983980" duration="373000" />
       <workItem from="1675098757615" duration="25827000" />
       <workItem from="1675174733513" duration="1947000" />
+      <workItem from="1675182124796" duration="5466000" />
     </task>
     <task id="LOCAL-00001" summary="added some methods">
       <created>1668354392375</created>

@@ -16,7 +16,7 @@ public class EnvironmentTile {
         this.location = new Location(x_, y_);
     }
 
-    public Integer getFoodLevel() {
+    public Integer getEnergyLevel() {
         return this.food_level;
     }
 

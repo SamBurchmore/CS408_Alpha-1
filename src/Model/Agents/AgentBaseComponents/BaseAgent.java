@@ -2,13 +2,9 @@ package Model.Agents.AgentBaseComponents;
 
 import Model.Agents.AgentConcreteComponents.*;
 import Model.Agents.AgentInterfaces.*;
-import Model.Agents.AgentStructs.AgentAction;
-import Model.Agents.AgentStructs.AgentDecision;
-import Model.Agents.AgentStructs.AgentModelUpdate;
-import Model.Agents.AgentStructs.AgentVision;
+import Model.Environment.Environment;
 import Model.Environment.EnvironmentTile;
 import Model.Environment.Location;
-import Model.Environment.Environment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,11 +16,14 @@ public abstract class BaseAgent implements Agent {
     private Scores scores;
     private ArrayList<Motivation> motivations;
 
+    private boolean hasBeenEaten; // A flag which lets the model controller know this agents been eaten.
+
     public BaseAgent(Location location, Attributes attributes, Scores scores, ArrayList<Motivation> motivations) {
         this.location = location;
         this.attributes = attributes;
         this.scores = scores;
         this.motivations = motivations;
+        hasBeenEaten = false;
     }
 
     public BaseAgent(Location location, Agent parentA, Agent parentB) {
@@ -33,36 +32,7 @@ public abstract class BaseAgent implements Agent {
         this.motivations = parentA.copyMotivations();
         this.scores = new BasicScores(parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), 0, parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), parentA.getAttributes().getLifespan(), parentA.getAttributes().getCreationDelay());
         this.scores.setCreationCounter(parentA.getAttributes().getCreationAge());
-    }
-
-    @Override
-    public AgentModelUpdate run(Environment environment) {
-        liveDay(); // Live a day, i.e. reduce hunger, increase age, reduce creation cooldown.
-        if (isDead()) {
-            return new AgentModelUpdate(null, new ArrayList<>());
-        }
-        ArrayList<AgentVision> agentView = lookAround(environment);
-        AgentDecision agentDecision = reactToView(agentView);
-        if (agentDecision.getAgentAction().equals(AgentAction.NONE)) {
-            return new AgentModelUpdate(this, new ArrayList<>());
-        }
-        if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
-            move(agentDecision.getLocation());
-            return new AgentModelUpdate(this, new ArrayList<>());
-        }
-        if (agentDecision.getAgentAction().equals(AgentAction.CREATE)) {
-            return new AgentModelUpdate(this, create(agentDecision.getLocation(), environment));
-        }
-        if (agentDecision.getAgentAction().equals(AgentAction.GRAZE)) {
-            move(agentDecision.getLocation());
-            return new AgentModelUpdate(this, new ArrayList<>(), this.graze(environment.getTile(getLocation())));
-        }
-        if (agentDecision.getAgentAction().equals(AgentAction.PREDATE)) {
-            predate(environment.getTile(agentDecision.getLocation()).getOccupant().getAttributes());
-            move(agentDecision.getLocation());
-            return new AgentModelUpdate(this, new ArrayList<>());
-        }
-        return new AgentModelUpdate(this, new ArrayList<>());
+        hasBeenEaten = false;
     }
 
     @Override
@@ -80,20 +50,6 @@ public abstract class BaseAgent implements Agent {
     @Override
     public void move(Location newLocation) {
         this.setLocation(newLocation);
-    }
-
-    @Override
-    public ArrayList<Agent> create(Location parentBLocation, Environment environment) {
-        ArrayList<Location> childLocations = environment.emptyAdjacent(this.getLocation());
-        ArrayList<Agent> childAgents = new ArrayList<>();
-        if (!childLocations.isEmpty()) {
-            Collections.shuffle(childLocations);
-            for (Location childLocation : childLocations.subList(0, Math.min(childLocations.size(), this.getAttributes().getCreationAmount()))) {
-                Agent child = combine(environment.getTile(parentBLocation).getOccupant(), childLocation);
-                childAgents.add(child);
-            }
-        }
-        return childAgents;
     }
 
     @Override
@@ -126,6 +82,38 @@ public abstract class BaseAgent implements Agent {
         this.scores = scores;
     }
 
+    @Override
+    public int graze(EnvironmentTile environmentTile) {
+        if (environmentTile.getEnergyLevel() <= 0) {
+            return 0; // If there's no energy, environment loses nothing and agent gains no energy.
+        }
+        if (environmentTile.getEnergyLevel() >= getAttributes().getEatAmount()) {
+            getScores().setHunger(getScores().getHunger() + getAttributes().getEatAmount()); // If there's more food than the agents eat amount, environment loses agents eat amount and agent gets it
+            return getAttributes().getEatAmount();
+        }
+        getScores().setHunger(getScores().getHunger() + environmentTile.getEnergyLevel()); // If there's less food than the agents eat amount, environment loses all and agent gains it.
+        return environmentTile.getEnergyLevel();
+    }
+
+    @Override
+    public void predate(Attributes preyAttributes) {
+        getScores().setHunger(getScores().getHunger() + preyAttributes.getSize());
+    }
+
+    @Override
+    public ArrayList<Agent> create(Location parentBLocation, Environment environment) {
+        ArrayList<Location> childLocations = environment.emptyAdjacent(this.getLocation());
+        ArrayList<Agent> childAgents = new ArrayList<>();
+        if (!childLocations.isEmpty()) {
+            Collections.shuffle(childLocations);
+            for (Location childLocation : childLocations.subList(0, Math.min(childLocations.size(), this.getAttributes().getCreationAmount()))) {
+                Agent child = combine(environment.getTile(parentBLocation).getOccupant(), childLocation);
+                childAgents.add(child);
+            }
+        }
+        return childAgents;
+    }
+
     public Agent combine(Agent parentB, Location childLocation) {
         getScores().setCreationCounter(getScores().getCreationDelay());
         Agent newAgent = new BasicAgent(childLocation, this, parentB);
@@ -155,78 +143,16 @@ public abstract class BaseAgent implements Agent {
         return motivations;
     }
 
-    public ArrayList<AgentVision> lookAround(Environment environment) {
-        Location agentLocation = this.getLocation();
-        int visionRange = this.getAttributes().getVisionRange();
-        int agentRange = this.getAttributes().getMovementRange();
-        // Generate a new ArrayList of the AgentVision object, everything the agent sees will be stored here.
-        ArrayList<AgentVision> agentViews = new ArrayList<>();
-        // Retrieve the agents vision attribute, lets us know how far the agent can see.
-        // Now we iterate over all the surrounding tiles, adding their visible contents to the AgentVision ArrayList.
-        for (int i = -visionRange; i <= visionRange; i++) {
-            for (int j = -visionRange; j <= visionRange; j++) {
-                int x_coord = agentLocation.getX() + i;
-                int y_coord = agentLocation.getY() + j;
-                // Checks the agent isn't looking outside the grid and prevents a null pointer exception // TODO - there must be a better way to do this.
-                if (((x_coord < environment.getSize()) && (y_coord < environment.getSize())) && ((x_coord >= 0) && (y_coord >= 0)) && !(i == 0 && j == 0)) {
-                    AgentVision av = environment.getTileView(x_coord, y_coord);
-                    if (Math.abs(i) <= agentRange && Math.abs(j) <= agentRange) {
-                        av.setInRange(true);
-                    }
-                    else {
-                        av.setInRange(false);
-                    }
-                    agentViews.add(av);
-                }
-            }
-        }
-        Collections.shuffle(agentViews);
-        return agentViews;
+    @Override
+    public boolean isEaten() {
+        return hasBeenEaten;
     }
 
-    public AgentDecision reactToView(ArrayList<AgentVision> agentView) {
-        ArrayList<AgentDecision> possibleDecisions = new ArrayList<>();
-        for (AgentVision currentAV : agentView) {
-            if (currentAV.isInRange()) {
-                possibleDecisions.add(reactToTile(currentAV));
-            }
-        }
-        return getBestDecision(possibleDecisions);
+    @Override
+    public void setBeenEaten() {
+        hasBeenEaten = true;
     }
 
-    public AgentDecision reactToTile(AgentVision agentVision) {
-        ArrayList<AgentDecision> possibleDecisions = new ArrayList<>();
-        for (Motivation motivation : motivations) {
-            possibleDecisions.add(motivation.run(agentVision, attributes, scores));
-        }
-        return getBestDecision(possibleDecisions);
-    }
 
-    // A utility function which takes a collection of agent decisions, and returns the one with the highest decision score.
-    private static AgentDecision getBestDecision(ArrayList<AgentDecision> agentDecisions) {
-        AgentDecision finalDecision = new AgentDecision(null, AgentAction.NONE, 0);
-        for (AgentDecision agentDecision : agentDecisions) {
-            if (agentDecision.getDecisionScore() > finalDecision.getDecisionScore()) {
-                finalDecision = agentDecision;
-            }
-        }
-        return finalDecision;
-    }
-
-    public int graze(EnvironmentTile environmentTile) {
-        if (environmentTile.getFoodLevel() <= 0) {
-            return 0;
-        }
-        if (environmentTile.getFoodLevel() >= getAttributes().getEatAmount()) {
-            getScores().setHunger(getScores().getHunger() + getAttributes().getEatAmount());
-            return getAttributes().getEatAmount();
-        }
-        getScores().setHunger(getScores().getHunger() + environmentTile.getFoodLevel());
-        return environmentTile.getFoodLevel();
-    }
-
-    public void predate(Attributes preyAttributes) {
-        getScores().setHunger(getScores().getHunger() + preyAttributes.getSize());
-    }
 
 }

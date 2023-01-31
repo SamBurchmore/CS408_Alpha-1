@@ -164,7 +164,7 @@ public class Environment {
     }
 
     public int getTileEnergyLevel(Location location) {
-        return this.getTile(location).getFoodLevel();
+        return this.getTile(location).getEnergyLevel();
     }
 
     /**
@@ -175,11 +175,11 @@ public class Environment {
      * @param food_level_modifier the integer value the food level will be modified by.
      */
     public void modifyTileFoodLevel(Location location, int foodLevelModifier) {
-        this.getTile(location).setFoodLevel(this.getTile(location).getFoodLevel() + foodLevelModifier);
-        if (this.getTile(location).getFoodLevel() < this.minEnergyLevel) {
+        this.getTile(location).setFoodLevel(this.getTile(location).getEnergyLevel() + foodLevelModifier);
+        if (this.getTile(location).getEnergyLevel() < this.minEnergyLevel) {
             this.getTile(location).setFoodLevel(this.minEnergyLevel);
         }
-        else if (this.getTile(location).getFoodLevel() > this.maxEnergyLevel) {
+        else if (this.getTile(location).getEnergyLevel() > this.maxEnergyLevel) {
             this.getTile(location).setFoodLevel(this.maxEnergyLevel);
         }
     }
@@ -189,19 +189,19 @@ public class Environment {
         if (this.getTile(location).isOccupied()) {
             return this.getTile(location).getOccupant().getAttributes().getColor();
         }
-        if (this.getTile(location).getFoodLevel() >= this.maxEnergyLevel) {
+        if (this.getTile(location).getEnergyLevel() >= this.maxEnergyLevel) {
             return this.maxColor;
         }
-        if (this.getTile(location).getFoodLevel() >= this.maxEnergyLevel - this.maxEnergyLevel / 4 ) {
+        if (this.getTile(location).getEnergyLevel() >= this.maxEnergyLevel - this.maxEnergyLevel / 4 ) {
             return this.highColor;
         }
-        if (this.getTile(location).getFoodLevel() >= this.maxEnergyLevel / 2 ) {
+        if (this.getTile(location).getEnergyLevel() >= this.maxEnergyLevel / 2 ) {
             return this.mediumHighColor;
         }
-        if (this.getTile(location).getFoodLevel() >= this.maxEnergyLevel - ( (maxEnergyLevel / 4) * 3)) {
+        if (this.getTile(location).getEnergyLevel() >= this.maxEnergyLevel - ( (maxEnergyLevel / 4) * 3)) {
             return this.lowColor;
         }
-        if (this.getTile(location).getFoodLevel() > this.minEnergyLevel) {
+        if (this.getTile(location).getEnergyLevel() > this.minEnergyLevel) {
             return this.mediumLowColor;
         }
         return this.minColor;
@@ -209,17 +209,17 @@ public class Environment {
 
     public AgentVision getTileView(Location location) {
         if (this.getTile(location).isOccupied()) {
-            return new AgentVision(this.getTile(location).getFoodLevel(), this.getTile(location).isOccupied(), location, this.getTile(location).getOccupant().getAttributes());
+            return new AgentVision(this.getTile(location).getEnergyLevel(), this.getTile(location).isOccupied(), location, this.getTile(location).getOccupant().getAttributes());
         }
-        return new AgentVision(this.getTile(location).getFoodLevel(), false, location);
+        return new AgentVision(this.getTile(location).getEnergyLevel(), false, location);
     }
 
     public AgentVision getTileView(int x, int y) {
         Location location = new Location(x, y);
         if (this.getTile(location).isOccupied()) {
-            return new AgentVision(this.getTile(location).getFoodLevel(), this.getTile(location).isOccupied(), location, this.getTile(location).getOccupant().getAttributes());
+            return new AgentVision(this.getTile(location).getEnergyLevel(), this.getTile(location).isOccupied(), location, this.getTile(location).getOccupant().getAttributes());
         }
-        return new AgentVision(this.getTile(location).getFoodLevel(), false, location);
+        return new AgentVision(this.getTile(location).getEnergyLevel(), false, location);
     }
 
     public BufferedImage normalImage() {
