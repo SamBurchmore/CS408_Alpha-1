@@ -40,10 +40,10 @@ public class ModelController {
         this.agentEditor = new AgentEditor();
     }
 
-    public void populate(int density) {
+    public void populate(double density) {
         ArrayList<Agent> activeAgents = agentEditor.getActiveAgents();
         IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
-                if (this.randomGen.nextInt(100) < density && !environment.getGrid()[i].isOccupied()) {
+                if (this.randomGen.nextInt(10000) / 100.0 < density && !environment.getGrid()[i].isOccupied()) {
                     int agentIndex = randomGen.nextInt(activeAgents.size());
                     BasicAgent agent;
                     for (int j = 0; j < activeAgents.size(); j++) {
@@ -61,7 +61,7 @@ public class ModelController {
     }
 
     public void cycle() {
-        diagnostics.clearAgentStats();
+        diagnostics.clearStats();
         ArrayList<Agent> aliveAgents = new ArrayList<>();
         for (Agent currentAgent : agentList) {
             Location oldLocation = currentAgent.getLocation();

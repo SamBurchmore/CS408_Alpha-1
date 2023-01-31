@@ -1,17 +1,19 @@
 package Model;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Queue;
 
 public class Diagnostics {
 
     final private int activeAgentsNumber = 8;
 
+    long step; // The current step the simulation is on. Resets to 0 when the world is cleared.
+
     String[] agentNames; // The names of the agents
     Integer[] agentPopulations; // The size of each agent population
     Double[] averagePopulationsEnergy; // The average percent of max energy in each agent population
     Double[] averagePopulationsLifespan; // The average percent of max age in each agent population
+
+    Integer[] lastStepsAgentPopulations; // The size of each agent population from the last step, used to calculate new agents born each step.
 
     private ArrayDeque<String> logQueue;
 
@@ -38,6 +40,8 @@ public class Diagnostics {
         averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         logQueue = new ArrayDeque<>();
+        step = 0;
+        lastStepsAgentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
     }
 
     public void setAgentPopulation(int index, int population) {
@@ -81,7 +85,7 @@ public class Diagnostics {
     }
 
     public Object[][] getAgentStats() {
-        return new Object[][]{agentNames, agentPopulations, calculateAverages(averagePopulationsEnergy), calculateAverages(averagePopulationsLifespan)};
+        return new Object[][]{agentNames, agentPopulations, calculateAverages(averagePopulationsEnergy), calculateAverages(averagePopulationsLifespan), getAgentsBornLastStep()};
     }
 
     private Double[] calculateAverages(Double[] statistics) {
@@ -92,14 +96,25 @@ public class Diagnostics {
         return averages;
     }
 
-    public void clearAgentStats() {
+    public void clearStats() {
+        lastStepsAgentPopulations = agentPopulations;
         agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
         averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        step = 0;
     }
 
     public Integer[] getAgentPopulations() {
         return agentPopulations;
+    }
+
+
+    public Integer[] getAgentsBornLastStep() {
+        Integer[] agentsBornLastStep = new Integer[8];
+        for (int i = 0; i < lastStepsAgentPopulations.length; i++) {
+            agentsBornLastStep[i] = Math.max(agentPopulations[i] - lastStepsAgentPopulations[i], 0);
+        }
+        return agentsBornLastStep;
     }
 
 }

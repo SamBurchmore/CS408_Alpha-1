@@ -4,16 +4,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class DiagnosticsPanel extends JPanel {
 
     // The label where the current simulation step is displayed
     private JLabel currentStepLabel;
 
-    private Object[][] agentStatistics = {{"Agent 1", 0, 0.0, 0.0}, {"Agent 2", 0, 0.0, 0.0}, {"Agent 3", 0, 0.0, 0.0}, {"Agent 4", 0, 0.0, 0.0}, {"Agent 5", 0, 0.0, 0.0}, {"Agent 6", 0, 0.0, 0.0}, {"Agent 7", 0, 0.0, 0.0}, {"Agent 8", 0, 0.0, 0.0}};
-    private String[] agentStatNames = {"<html>Agent<br></html>" , "<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>"}; //{"<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>"};
+    private Object[][] agentStatistics = {{"Agent 1", 0, 0.0, 0.0, 0}, {"Agent 2", 0, 0.0, 0.0, 0}, {"Agent 3", 0, 0.0, 0.0, 0}, {"Agent 4", 0, 0.0, 0.0, 0}, {"Agent 5", 0, 0.0, 0.0, 0}, {"Agent 6", 0, 0.0, 0.0, 0}, {"Agent 7", 0, 0.0, 0.0, 0}, {"Agent 8", 0, 0.0, 0.0, 0}};
+    private String[] agentStatNames = {"<html>Agent<br></html>" , "<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>", "<html>Born Last<br>Step</html>"}; //{"<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>"};
     private JTable agentStatsTable;
     private JScrollPane agentStatsTableScrollPane;
 
@@ -103,13 +101,14 @@ public class DiagnosticsPanel extends JPanel {
             row[1] = agentStats[1][i];
             row[2] = agentStats[2][i];
             row[3] = agentStats[3][i];
+            row[4] = agentStats[4][i];
             model.removeRow(i);
             model.insertRow(i, row);
         }
         agentStatsTable.setModel(model);
     }
 
-    public void clearLogTextArea() {
+    public void clearLog() {
         logTextArea.setText("");
     }
 

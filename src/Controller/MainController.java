@@ -39,7 +39,7 @@ public class MainController {
     }
 
     public void populateWorld() {
-        this.modelController.populate( (int) view.getSimulationControlPanel().getPopulationDensitySpinner().getValue());
+        this.modelController.populate( (double) view.getSimulationControlPanel().getPopulationDensitySpinner().getValue());
         this.updateWorldImage();
         this.updateAgentStats();
     }
@@ -89,7 +89,9 @@ public class MainController {
         this.modelController.clear();
         this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), 0);
         this.counter = 0;
-        view.getDiagnosticsPanel().clearLogTextArea();
+        modelController.getDiagnostics().clearStats();
+        view.getDiagnosticsPanel().clearLog();
+        view.getDiagnosticsPanel().setAgentStats(modelController.getDiagnostics().getAgentStats());
     }
 
     public void initView() {
