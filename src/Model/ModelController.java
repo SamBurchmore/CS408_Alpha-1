@@ -8,13 +8,12 @@ import java.util.stream.IntStream;
 import Model.AgentEditor.AgentEditor;
 import Model.Agents.AgentConcreteComponents.BasicAgent;
 import Model.Agents.AgentInterfaces.Agent;
-import Model.Agents.AgentInterfaces.Attributes;
 import Model.Agents.AgentInterfaces.Motivation;
 import Model.Agents.AgentStructs.AgentAction;
 import Model.Agents.AgentStructs.AgentDecision;
-import Model.Agents.AgentStructs.AgentModelUpdate;
 import Model.Agents.AgentStructs.AgentVision;
 import Model.Environment.Environment;
+import Model.Environment.EnvironmentSettings;
 import Model.Environment.EnvironmentTile;
 import Model.Environment.Location;
 
@@ -35,56 +34,64 @@ public class ModelController {
     // This is where all diagnostic data on the simulation is stored.
     private Diagnostics diagnostics;
 
-    private final int environmentSize;
-
-    private Random randomGen;
+    private Random random;
 
     public ModelController(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount){
         this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel, energyRegenChance, energyRegenAmount);
-        this.randomGen = new Random();
+        this.random = new Random();
         this.agentList = new ArrayList<>();
         this.aliveAgentList = new ArrayList<>();
-        this.environmentSize = size;
         this.diagnostics = new Diagnostics();
         this.agentEditor = new AgentEditor();
     }
 
+    public void setEnvironment(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
+        this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel, energyRegenChance, energyRegenAmount);
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
     public void populate(double density) {
         ArrayList<Agent> activeAgents = agentEditor.getActiveAgents();
-        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
-                if (this.randomGen.nextInt(10000) / 100.0 < density && !environment.getGrid()[i].isOccupied()) {
-                    int agentIndex = randomGen.nextInt(activeAgents.size());
-                    BasicAgent agent;
-                    for (int j = 0; j < activeAgents.size(); j++) {
-                        if (j == agentIndex) {
-                            agent = (BasicAgent) agentEditor.getAgent(j).copy();
-                            EnvironmentTile wt = environment.getGrid()[i];
-                            agent.setLocation(wt.getLocation());
-                            wt.setOccupant(agent);
-                            agentList.add(agent);
-                            diagnostics.addToStats(j, 1, agent.getScores().getHunger(), agent.getScores().getAge());
-                        }
+        IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+            if (this.random.nextInt(10000) / 100.0 < density && !environment.getGrid()[i].isOccupied()) {
+                int agentIndex = random.nextInt(activeAgents.size());
+                BasicAgent agent;
+                for (int j = 0; j < activeAgents.size(); j++) {
+                    if (j == agentIndex) {
+                        agent = (BasicAgent) agentEditor.getAgent(j).copy();
+                        EnvironmentTile wt = environment.getGrid()[i];
+                        agent.setLocation(wt.getLocation());
+                        wt.setOccupant(agent);
+                        agentList.add(agent);
+                        diagnostics.addToStats(j, 1, agent.getScores().getHunger(), agent.getScores().getAge());
                     }
                 }
+            }
         });
     }
 
     public void cycle() {
-        diagnostics.clearStats();
+        diagnostics.clearAgentStats();
         for (Agent currentAgent : agentList) {
             runAgent(currentAgent); // Iterate and run over all agents in the simulation
+            if (!currentAgent.isDead() && !currentAgent.isEaten()) {
+                diagnostics.addToStats(currentAgent.getAttributes().getCode(), 1, currentAgent.getScores().getHunger(), currentAgent.getScores().getAge());
+            }
         }
         agentList = aliveAgentList;
         aliveAgentList = new ArrayList<>();
-        IntStream.range(0, environmentSize * environmentSize).parallel().forEach(i->{
-            if (randomGen.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {
+        IntStream.range(0, environment.getSize() * environment.getSize()).parallel().forEach(i->{
+            if (random.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {
                 environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
             }
         });
     }
 
     public void clear() {
-        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
+        IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
             EnvironmentTile current_wt = environment.getGrid()[i];
             current_wt.setOccupant(null);
         });
@@ -92,18 +99,26 @@ public class ModelController {
     }
 
     public void replenishEnvironmentEnergy() {
-        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
+        IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
             EnvironmentTile current_wt = environment.getGrid()[i];
             current_wt.setFoodLevel(environment.getMaxEnergyLevel());
         });
     }
 
-    public void updateEnvironmentSettings(int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
-        environment.setMinEnergyLevel(minEnergyLevel);
-        environment.setMaxEnergyLevel(maxEnergyLevel);
-        environment.setEnergyRegenChance(energyRegenChance);
-        environment.setEnergyRegenAmount(energyRegenAmount);
+    public void setEnvironmentSettings(EnvironmentSettings environmentSettings) {
+        if (environmentSettings.getSize() != environment.getSize()) {
+            clear();
+        }
+        environment.setEnvironmentSettings(environmentSettings);
+    }
 
+    public EnvironmentSettings getEnvironmentSettings() {
+        return new EnvironmentSettings(environment.getSize(),
+                                       environment.getMaxEnergyLevel(),
+                                       environment.getMinEnergyLevel(),
+                                       environment.getEnergyRegenChance(),
+                                       environment.getEnergyRegenAmount(),
+                                       environment.getColors());
     }
 
     public Diagnostics getDiagnostics() {
@@ -170,12 +185,8 @@ public class ModelController {
         environment.setMinEnergyLevel(minEnergy);
     }
 
-    public Environment getEnvironment() {
-        return environment;
-    }
-
     public int getEnvironmentSize() {
-        return environmentSize;
+        return environment.getSize();
     }
 
     public void runAgent(Agent agent) {
@@ -225,8 +236,8 @@ public class ModelController {
 
     public ArrayList<AgentVision> lookAround(Agent agent) {
         Location agentLocation = agent.getLocation();
-        int visionRange = agent.getAttributes().getVisionRange();
-        int agentRange = agent.getAttributes().getMovementRange();
+        int visionRange = agent.getAttributes().getRange();
+        int agentRange = agent.getAttributes().getRange();
         // Generate a new ArrayList of the AgentVision object, everything the agent sees will be stored here.
         ArrayList<AgentVision> agentViews = new ArrayList<>();
         // Retrieve the agents vision attribute, lets us know how far the agent can see.
@@ -273,6 +284,7 @@ public class ModelController {
     // A utility function which takes a collection of agent decisions, and returns the one with the highest decision score.
     private static AgentDecision getBestDecision(ArrayList<AgentDecision> agentDecisions) {
         AgentDecision finalDecision = new AgentDecision(null, AgentAction.NONE, 0);
+        Collections.shuffle(agentDecisions);
         for (AgentDecision agentDecision : agentDecisions) {
             if (agentDecision.getDecisionScore() > finalDecision.getDecisionScore()) {
                 finalDecision = agentDecision;

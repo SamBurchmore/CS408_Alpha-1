@@ -116,4 +116,12 @@ public class DiagnosticsPanel extends JPanel {
         logTextArea.append(logMessage + "\n");
     }
 
+    public void setStepLabel(long step) {
+        currentStepLabel.setText("Step: " + step);
+    }
+
+    public void clearStepLabel() {
+        currentStepLabel.setText("Step: 0");
+    }
+
 }

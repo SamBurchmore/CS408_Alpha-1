@@ -7,14 +7,18 @@ import Model.Agents.AgentStructs.AgentAction;
 import Model.Agents.AgentStructs.AgentDecision;
 import Model.Agents.AgentStructs.AgentVision;
 
-public class CreatorMotivation implements Motivation {
+import java.io.Serializable;
+
+public class CreatorMotivation implements Motivation, Serializable {
+
+    int motivationCode = 0;
 
     @Override
     public AgentDecision run(AgentVision tile, Attributes attributes, Scores scores) {
         if (tile.isOccupied()) {
-            if (tile.getAgentAttributes().getCode() == attributes.getCode() && scores.getHunger() > attributes.getEnergyCapacity() / 2 && scores.getAge() >= attributes.getCreationAge()) {
+            if (tile.getAgentAttributes().getCode() == attributes.getCode() && scores.getHunger() > attributes.getEnergyCapacity() / 2 && scores.getAge() >= attributes.getCreationAge() && scores.getCreationCounter() <= 0) {
                 // Tile is occupied, and it's occupant is the same species, set the decision to CREATE and the score 10
-                return new AgentDecision(tile.getLocation(), AgentAction.CREATE, 20);
+                return new AgentDecision(tile.getLocation(), AgentAction.CREATE, 10);
             }
             // Tile is occupied but its occupant is a different species, set decision to NONE and score to -10
             return new AgentDecision(null, AgentAction.NONE, -10);
@@ -26,6 +30,16 @@ public class CreatorMotivation implements Motivation {
     @Override
     public Motivation copy() {
         return new CreatorMotivation();
+    }
+
+    @Override
+    public boolean equals(Motivation motivation) {
+        return motivation.getCode() == this.getCode();
+    }
+
+    @Override
+    public int getCode() {
+        return motivationCode;
     }
 
 }

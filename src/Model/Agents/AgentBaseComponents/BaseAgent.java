@@ -26,11 +26,19 @@ public abstract class BaseAgent implements Agent {
         hasBeenEaten = false;
     }
 
+    public BaseAgent(Location location, Attributes attributes, ArrayList<Motivation> motivations) {
+        this.location = location;
+        this.attributes = attributes;
+        this.scores = new BasicScores(attributes.getEnergyCapacity(), 0, 0, attributes.getEnergyCapacity(), 0, attributes.getLifespan(), attributes.getCreationDelay());
+        this.motivations = motivations;
+        hasBeenEaten = false;
+    }
+
     public BaseAgent(Location location, Agent parentA, Agent parentB) {
         this.location = location;
         this.attributes = new BasicAttributes(parentA.getAttributes(), parentB.getAttributes());
         this.motivations = parentA.copyMotivations();
-        this.scores = new BasicScores(parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), 0, parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), parentA.getAttributes().getLifespan(), parentA.getAttributes().getCreationDelay());
+        this.scores = new BasicScores(parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), 0, parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), parentA.getAttributes().getLifespan(), parentA.getAttributes().getCreationAge());
         this.scores.setCreationCounter(parentA.getAttributes().getCreationAge());
         hasBeenEaten = false;
     }
@@ -97,7 +105,7 @@ public abstract class BaseAgent implements Agent {
 
     @Override
     public void predate(Attributes preyAttributes) {
-        getScores().setHunger(getScores().getHunger() + preyAttributes.getSize());
+        getScores().setHunger(getScores().getHunger() + preyAttributes.getSize()); // TODO change back to prey size
     }
 
     @Override
@@ -111,6 +119,7 @@ public abstract class BaseAgent implements Agent {
                 childAgents.add(child);
             }
         }
+        getScores().setCreationCounter(getAttributes().getCreationDelay());
         return childAgents;
     }
 
@@ -118,8 +127,8 @@ public abstract class BaseAgent implements Agent {
         getScores().setCreationCounter(getScores().getCreationDelay());
         Agent newAgent = new BasicAgent(childLocation, this, parentB);
 
-        getScores().setHunger(getScores().getHunger() - getScores().getMAX_HUNGER() / 8);
-        newAgent.getScores().setHunger(newAgent.getScores().getMAX_HUNGER() / 8);
+        getScores().setHunger(getScores().getHunger() - 1);
+        newAgent.getScores().setHunger(getScores().getHunger() / getAttributes().getCreationAmount());
 
         return newAgent;
     }

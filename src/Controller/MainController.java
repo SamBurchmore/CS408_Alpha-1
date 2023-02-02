@@ -1,32 +1,30 @@
 package Controller;
-
 import Model.AgentEditor.AgentSettings;
+import Model.AgentEditor.SavedAgents;
+import Model.Environment.EnvironmentSettings;
 import Model.ModelController;
 import View.MainView;
+import org.apache.commons.io.FilenameUtils;
+
+import javax.swing.*;
+import java.io.*;
 
 public class MainController {
 
-    // The Graphical User Interface
     private MainView view;
     // The world model
     private ModelController modelController;
 
-    private int counter = 0;
     private int scale = 0;
-    private int size;
 
-    private boolean runFlag = false;
-
-
-    public MainController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount) {
+    public MainController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount) throws IOException {
         this.modelController = new ModelController(size, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
         this.view = new MainView();
         this.initView();
         this.initController();
-        this.size = size;
     }
 
-    public MainController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount, int scale) {
+    public MainController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount, int scale) throws IOException {
         this.modelController = new ModelController(size, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
         this.scale = scale;
         this.view = new MainView();
@@ -35,19 +33,19 @@ public class MainController {
     }
 
     public void updateWorldImage() {
-        this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), this.counter);
+        this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale));
     }
 
     public void populateWorld() {
         this.modelController.populate( (double) view.getSimulationControlPanel().getPopulationDensitySpinner().getValue());
         this.updateWorldImage();
-        this.updateAgentStats();
+        this.updateDiagnostics();
     }
 
     public void runStep() {
-        this.counter += 1;
         this.modelController.cycle();
-        this.updateAgentStats();
+        modelController.getDiagnostics().update();
+        this.updateDiagnostics();
         this.updateWorldImage();
     }
 
@@ -64,42 +62,30 @@ public class MainController {
     }
 
     public void refreshEnvironment() {
-        if (size != (int) this.view.getEnvironmentSettingsPanel().getEnvironmentSizeSpinner().getValue()) {
-            size = (int) this.view.getEnvironmentSettingsPanel().getEnvironmentSizeSpinner().getValue();
-            this.modelController = new ModelController(size, (int) this.view.getEnvironmentSettingsPanel().getMaxEnergySpinner().getValue(),
-                                                             (int) this.view.getEnvironmentSettingsPanel().getMinEnergySpinner().getValue(),
-                                                             (int) this.view.getEnvironmentSettingsPanel().getMaxEnergySpinner().getValue(),
-                                                             (double) this.view.getEnvironmentSettingsPanel().getEnergyRegenChanceSpinner().getValue(),
-                                                             (int) this.view.getEnvironmentSettingsPanel().getEnergyRegenAmountSpinner().getValue());
-            modelController.setEnvironmentColors(this.view.getEnvironmentSettingsPanel().getColors());
-        }
-        else {
-            modelController.updateEnvironmentSettings((int) this.view.getEnvironmentSettingsPanel().getMinEnergySpinner().getValue(),
-                                                      (int) this.view.getEnvironmentSettingsPanel().getMaxEnergySpinner().getValue(),
-                                                      (double) this.view.getEnvironmentSettingsPanel().getEnergyRegenChanceSpinner().getValue(),
-                                                      (int) this.view.getEnvironmentSettingsPanel().getEnergyRegenAmountSpinner().getValue());
-            modelController.setEnvironmentColors(this.view.getEnvironmentSettingsPanel().getColors());
-        }
-        scale = (int) Math.ceil(600.0 / size);
+        this.modelController.setEnvironmentSettings(view.getEnvironmentSettingsPanel().getEnvironmentSettings());
+        scale = 600 / (int) view.getEnvironmentSettingsPanel().getEnvironmentSizeSpinner().getValue();
         updateWorldImage();
         view.getDiagnosticsPanel().addLogMessage(modelController.getEnvironment().toString());
     }
 
     public void clear() {
         this.modelController.clear();
-        this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale), 0);
-        this.counter = 0;
-        modelController.getDiagnostics().clearStats();
-        view.getDiagnosticsPanel().clearLog();
+        this.view.updateWorldPanel(this.modelController.getEnvironmentImage(this.scale));
+        modelController.getDiagnostics().clearAgentStats();
+        modelController.getDiagnostics().clearSteps();
         view.getDiagnosticsPanel().setAgentStats(modelController.getDiagnostics().getAgentStats());
+        view.getDiagnosticsPanel().clearLog();
+        view.getDiagnosticsPanel().clearStepLabel();
+
     }
 
     public void initView() {
         this.updateWorldImage();
     }
 
-    public void updateAgentStats() {
+    public void updateDiagnostics() {
         this.view.getDiagnosticsPanel().setAgentStats(modelController.getDiagnostics().getAgentStats());
+        this.view.getDiagnosticsPanel().setStepLabel(modelController.getDiagnostics().getStep());
     }
 
     public void setEditingAgent(int index) {
@@ -122,7 +108,6 @@ public class MainController {
 
     public void initController() {
         this.view.getSimulationControlPanel().getRunStepButton().addActionListener(e -> this.runStep());
-        //this.view.getSimulationControlPanel().getStopStartButton().addActionListener();
         this.view.getSimulationControlPanel().getPopulateButton().addActionListener(e -> this.populateWorld());
         this.view.getSimulationControlPanel().getClearButton().addActionListener(e -> this.clear());
         this.view.getSimulationControlPanel().getRunNStepsButton().addActionListener(e -> this.runNSteps());
@@ -137,20 +122,36 @@ public class MainController {
         this.view.getActiveAgentsPanel().getAgent7Button().addActionListener(e -> this.setEditingAgent(7));
         this.view.getAgentEditorPanel().getUpdateSettingsButton().addActionListener(e -> this.setEditingAgent(modelController.getAgentEditor().getEditingAgentIndex()));
         this.view.getSimulationControlPanel().getReplenishEnvironmentEnergyButton().addActionListener(e -> this.replenishEnvironment());
+        this.view.getSaveAgentsMenuButton().addActionListener(e -> this.saveAgents());
+        this.view.getLoadAgentsMenuButton().addActionListener(e -> this.loadAgents());
+        this.view.getSaveEnvironmentSettingsMenuButton().addActionListener(e -> this.saveEnvironment());
+        this.view.getLoadEnvironmentSettingsMenuButton().addActionListener(e -> this.loadEnvironment());
         initActiveAgentsPanel();
         initAgentEditorPanel();
         initEnvironmentSettingsPanel();
-        updateAgentStats();
+        updateDiagnostics();
     }
 
-    public void initActiveAgentsPanel() {
+    public void updateActiveAgentsPanel() {
         for (int i = 0; i < 8; i++) {
             view.getActiveAgentsPanel().setAgentSelector(i, modelController.getAgentEditor().getAgent(i).getAttributes().getColor(), modelController.getAgentEditor().getAgent(i).getAttributes().getName());
         }
     }
 
-    public void initAgentEditorPanel() {
+    public void updateAgentEditorPanel() {
         view.getAgentEditorPanel().setAgentSettings(modelController.getAgentEditor().getEditingAgentSettings());
+    }
+
+    public void logMsg(String logMsg) {
+        view.getDiagnosticsPanel().addLogMessage(logMsg);
+    }
+
+    public void initActiveAgentsPanel() {
+        updateActiveAgentsPanel();
+    }
+
+    public void initAgentEditorPanel() {
+        updateAgentEditorPanel();
     }
 
     public void initEnvironmentSettingsPanel() {
@@ -165,5 +166,116 @@ public class MainController {
 
     public MainView getView() {
         return view;
+    }
+
+    public void saveAgents() {
+        if (view.getFileChooser().showSaveDialog(view) == JFileChooser.APPROVE_OPTION) { // User has provided a path
+            File file = view.getFileChooser().getSelectedFile();
+            if (FilenameUtils.getExtension(file.getPath()).equals("dat")) {
+                try {
+                    FileOutputStream fileOutputStream = new FileOutputStream(file);
+                    BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(bufferedOutputStream);
+
+                    SavedAgents savedAgents = new SavedAgents(modelController.getAgentEditor().getActiveAgentsSettings());
+
+                    objectOutputStream.writeObject(savedAgents);
+                    objectOutputStream.close();
+
+                    logMsg("[SYSTEM]: Agents Saved.");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                logMsg("[SYSTEM]: File type must be .dat.");
+            }
+        }
+    }
+
+    public void loadAgents() {
+        if (view.getFileChooser().showSaveDialog(view) == JFileChooser.APPROVE_OPTION) { // User has provided a path
+            File file = view.getFileChooser().getSelectedFile();
+            if (FilenameUtils.getExtension(file.getPath()).equals("dat")) {
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(file);
+                    BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+                    ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
+
+                    SavedAgents savedAgents = (SavedAgents) objectInputStream.readObject();
+
+                    modelController.getAgentEditor().setActiveAgentsSettings(savedAgents);
+                    updateActiveAgentsPanel();
+                    updateAgentEditorPanel();
+
+                    objectInputStream.close();
+
+                    logMsg("[SYSTEM]: Agents Loaded.");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                logMsg("[SYSTEM]: File type must be .dat.");
+            }
+        }
+    }
+
+    public void saveEnvironment() {
+        if (view.getFileChooser().showSaveDialog(view) == JFileChooser.APPROVE_OPTION) { // User has provided a path
+            File file = view.getFileChooser().getSelectedFile();
+            if (FilenameUtils.getExtension(file.getPath()).equals("dat")) {
+                try {
+                    FileOutputStream fileOutputStream = new FileOutputStream(file);
+                    BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(bufferedOutputStream);
+
+                    EnvironmentSettings environmentSettings = modelController.getEnvironmentSettings();
+
+                    objectOutputStream.writeObject(environmentSettings);
+                    objectOutputStream.close();
+
+                    logMsg("[SYSTEM]: Environment Saved.");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                logMsg("[SYSTEM]: File type must be .dat.");
+            }
+        }
+    }
+
+    public void loadEnvironment() {
+        if (view.getFileChooser().showSaveDialog(view) == JFileChooser.APPROVE_OPTION) { // User has provided a path
+            File file = view.getFileChooser().getSelectedFile();
+            if (FilenameUtils.getExtension(file.getPath()).equals("dat")) {
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(file);
+                    BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+                    ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
+
+                    EnvironmentSettings environmentSettings = (EnvironmentSettings) objectInputStream.readObject();
+
+                    modelController.setEnvironmentSettings(environmentSettings);
+                    updateWorldImage();
+
+                    objectInputStream.close();
+
+                    logMsg("[SYSTEM]: Environment Loaded.");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                logMsg("[SYSTEM]: File type must be .dat.");
+            }
+        }
     }
 }

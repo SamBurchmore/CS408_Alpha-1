@@ -6,8 +6,7 @@ import java.awt.*;
 
 public interface Attributes {
 
-    int getVisionRange();
-    int getMovementRange();
+    int getRange();
     int getSize();
     int getEnergyCapacity();
     int getEatAmount();
@@ -18,8 +17,7 @@ public interface Attributes {
     String getName();
     int getCode();
     Color getColor();
-    void setVisionRange(int visionRange);
-    void setMovementRange(int movementRange);
+    void setRange(int range);
     void setSize(int size);
     void setEnergyCapacity(int energyCapacity);
     void setEatAmount(int eatAmount);

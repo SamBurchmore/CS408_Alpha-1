@@ -15,6 +15,8 @@ public class Diagnostics {
 
     Integer[] lastStepsAgentPopulations; // The size of each agent population from the last step, used to calculate new agents born each step.
 
+    Integer[] extinctFlags; // A register of which agents are extinct (true) and which are not (false)
+
     private ArrayDeque<String> logQueue;
 
     public void addToLogQueue(String logMsg) {
@@ -42,6 +44,13 @@ public class Diagnostics {
         logQueue = new ArrayDeque<>();
         step = 0;
         lastStepsAgentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
+        extinctFlags = new Integer[]{0, 0, 0, 0, 0, 0, 0, 0};
+    }
+
+    public void update() {
+        System.out.println(step);
+        step = step + 1;
+        System.out.println(step);
     }
 
     public void setAgentPopulation(int index, int population) {
@@ -96,18 +105,17 @@ public class Diagnostics {
         return averages;
     }
 
-    public void clearStats() {
+    public void clearAgentStats() {
         lastStepsAgentPopulations = agentPopulations;
         agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
         averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-        step = 0;
+        extinctFlags = new Integer[]{0, 0, 0, 0, 0, 0, 0, 0};
     }
 
     public Integer[] getAgentPopulations() {
         return agentPopulations;
     }
-
 
     public Integer[] getAgentsBornLastStep() {
         Integer[] agentsBornLastStep = new Integer[8];
@@ -117,4 +125,18 @@ public class Diagnostics {
         return agentsBornLastStep;
     }
 
+    private void createExtinctAgentMsgs() {
+        for (int i = 0; i < activeAgentsNumber; i++) {
+            if (extinctFlags[i] == 1) {
+                extinctFlags[i] = 2;
+                addToLogQueue("[AGENTS]: " + agentNames[i] + " has gone extinct at step " + step);
+            }
+        }
+    }
+
+    public long getStep() {
+        return step;
+    }
+
+    public void clearSteps() { step = 0; }
 }

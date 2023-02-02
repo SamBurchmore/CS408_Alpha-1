@@ -8,7 +8,11 @@ import Model.Agents.AgentStructs.AgentDecision;
 import Model.Agents.AgentStructs.AgentVision;
 import Model.Environment.EnvironmentTile;
 
-public class GrazerMotivation implements Motivation {
+import java.io.Serializable;
+
+public class GrazerMotivation implements Motivation, Serializable {
+
+    int motivationCode = 1;
 
     @Override
     public AgentDecision run(AgentVision tile, Attributes attributes, Scores scores) {
@@ -27,6 +31,16 @@ public class GrazerMotivation implements Motivation {
     @Override
     public Motivation copy() {
         return new GrazerMotivation();
+    }
+
+    @Override
+    public boolean equals(Motivation motivation) {
+        return motivation.getCode() == this.getCode();
+    }
+
+    @Override
+    public int getCode() {
+        return motivationCode;
     }
 
 }

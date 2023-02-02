@@ -9,4 +9,8 @@ public interface Motivation {
 
     Motivation copy();
 
+    boolean equals(Motivation motivation);
+
+    int getCode();
+
 }

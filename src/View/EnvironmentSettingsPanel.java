@@ -1,5 +1,7 @@
 package View;
 
+import Model.Environment.EnvironmentSettings;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -269,5 +271,24 @@ public class EnvironmentSettingsPanel extends JPanel implements ActionListener {
         mediumHighColorButton.setBackground(colors[3]);
         highColorButton.setBackground(colors[4]);
         maxColorButton.setBackground(colors[5]);
+    }
+
+    public EnvironmentSettings getEnvironmentSettings() {
+       return new EnvironmentSettings(
+                (int) getEnvironmentSizeSpinner().getValue(),
+                (int) getMaxEnergySpinner().getValue(),
+                (int) getMinEnergySpinner().getValue(),
+                (double) getEnergyRegenChanceSpinner().getValue(),
+                (int) getEnergyRegenAmountSpinner().getValue(),
+                getColors());
+    }
+
+    public void setEnvironmentSettings(EnvironmentSettings environmentSettings) {
+        this.environmentSizeSpinner.setValue(environmentSettings.getSize());
+        this.getMaxEnergySpinner().setValue(environmentSettings.getMaxEnergyLevel());
+        this.getMinEnergySpinner().setValue(environmentSettings.getMinEnergyLevel());
+        this.getEnergyRegenChanceSpinner().setValue(environmentSettings.getEnergyRegenAmount());
+        this.getEnergyRegenAmountSpinner().setValue(environmentSettings.getEnergyRegenAmount());
+        setColors(environmentSettings.getEnvironmentColors());
     }
 }

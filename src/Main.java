@@ -3,6 +3,7 @@ import View.MainView;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
+import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -11,11 +12,10 @@ public class Main {
     int Ae = 16;
     int Te = 8;
     int S = 1;
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         Random random = new Random();
-
         FlatIntelliJLaf.setup();
-        MainController mainController = new MainController(600, 8, 0, 8, 1, 8);
+        MainController mainController = new MainController(600, 8, 0, 8, 3, 8);
         //testMotivations();
     }
 

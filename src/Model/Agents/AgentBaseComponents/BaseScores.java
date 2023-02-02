@@ -2,7 +2,9 @@ package Model.Agents.AgentBaseComponents;
 
 import Model.Agents.AgentInterfaces.Scores;
 
-public abstract class BaseScores implements Scores {
+import java.io.Serializable;
+
+public abstract class BaseScores implements Scores, Serializable {
 
     private int hunger;
     private int health;

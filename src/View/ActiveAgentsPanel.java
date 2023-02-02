@@ -33,7 +33,7 @@ public class ActiveAgentsPanel extends JPanel {
     public ActiveAgentsPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(602, 65));
+        setPreferredSize(new Dimension(600, 65));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         // First all elements are defined and their attributes set
@@ -41,35 +41,35 @@ public class ActiveAgentsPanel extends JPanel {
         emptyColour = new Color(0, 0, 255);
 
         agent0NameLabel = new JLabel(emptyName);
-        agent0NameLabel.setPreferredSize(new Dimension(71, 15));
+        agent0NameLabel.setPreferredSize(new Dimension(70, 15));
         agent0NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         agent1NameLabel = new JLabel(emptyName);
-        agent1NameLabel.setPreferredSize(new Dimension(71, 15));
+        agent1NameLabel.setPreferredSize(new Dimension(70, 15));
         agent1NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         agent2NameLabel = new JLabel(emptyName);
-        agent2NameLabel.setPreferredSize(new Dimension(71, 15));
+        agent2NameLabel.setPreferredSize(new Dimension(70, 15));
         agent2NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         agent3NameLabel = new JLabel(emptyName);
-        agent3NameLabel.setPreferredSize(new Dimension(71, 15));
+        agent3NameLabel.setPreferredSize(new Dimension(70, 15));
         agent3NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         agent4NameLabel = new JLabel(emptyName);
-        agent4NameLabel.setPreferredSize(new Dimension(71, 15));
+        agent4NameLabel.setPreferredSize(new Dimension(70, 15));
         agent4NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         agent5NameLabel = new JLabel(emptyName);
-        agent5NameLabel.setPreferredSize(new Dimension(71, 15));
+        agent5NameLabel.setPreferredSize(new Dimension(70, 15));
         agent5NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         agent6NameLabel = new JLabel(emptyName);
-        agent6NameLabel.setPreferredSize(new Dimension(71, 15));
+        agent6NameLabel.setPreferredSize(new Dimension(70, 15));
         agent6NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         agent7NameLabel = new JLabel(emptyName);
-        agent7NameLabel.setPreferredSize(new Dimension(71, 15));
+        agent7NameLabel.setPreferredSize(new Dimension(70, 15));
         agent7NameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         agent0Button = new JButton();

@@ -5,6 +5,7 @@ import Model.Agents.AgentStructs.AgentVision;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,11 +17,11 @@ import java.util.Iterator;
  *
  * This class is a singlton, only one instance of it will ever exist.
   */
-public class Environment {
+public class Environment implements Serializable {
 
     private EnvironmentTile[] grid;
 
-    final int size;
+    private int size;
     private int maxEnergyLevel;
     private int minEnergyLevel;
     private double energyRegenChance;
@@ -172,7 +173,6 @@ public class Environment {
      * If the input makes the food level greater than the max food level then
      * food level will be set to the max food level. If its made less than the min,
      * then it will be set to the min food level.
-     * @param food_level_modifier the integer value the food level will be modified by.
      */
     public void modifyTileFoodLevel(Location location, int foodLevelModifier) {
         this.getTile(location).setFoodLevel(this.getTile(location).getEnergyLevel() + foodLevelModifier);
@@ -331,5 +331,48 @@ public class Environment {
 
     public void setEnergyRegenAmount(int energyRegenAmount) {
         this.energyRegenAmount = energyRegenAmount;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setColors(Color[] color) {
+        setMinColor(color[0]);
+        setLowColor(color[1]);
+        setMediumLowColor(color[2]);
+        setMediumHighColor(color[3]);
+        setHighColor(color[4]);
+        setMaxColor(color[5]);
+    }
+
+    public Color[] getColors() {
+        return new Color[]{minColor, lowColor, mediumLowColor, mediumHighColor, highColor, maxColor};
+    }
+
+    public void newEnvironmentGrid() {
+        this.grid = new EnvironmentTile[size*size];
+        // Populate the array with WorldTile objects. We also keep track of each array cells corresponding coordinate in order to initialise each WorldTile with it.
+        int x = 0; int y = 0;
+        for (int i = 0; i<size*size; i++){
+            this.grid[i] = new EnvironmentTile(getMaxEnergyLevel(), x, y);
+            x++;
+            if (x == size) {
+                x = 0;
+                y++;
+            }
+        }
+    }
+
+    public void setEnvironmentSettings(EnvironmentSettings environmentSettings) {
+        setMaxEnergyLevel(environmentSettings.getMaxEnergyLevel());
+        setMinEnergyLevel(environmentSettings.getMinEnergyLevel());
+        setEnergyRegenAmount(environmentSettings.getEnergyRegenAmount());
+        setEnergyRegenChance(environmentSettings.getEnergyRegenChance());
+        setColors(environmentSettings.getEnvironmentColors());
+        if (environmentSettings.getSize() != this.getSize()) {
+            setSize(environmentSettings.getSize());
+            newEnvironmentGrid();
+        }
     }
 }

@@ -2,8 +2,10 @@ package Model.Environment;
 
 import Model.Agents.AgentInterfaces.Agent;
 
+import java.io.Serializable;
+
 // This class represents the individual tiles that make up the world.
-public class EnvironmentTile {
+public class EnvironmentTile implements Serializable {
     // The current food level of this tile.
     private int food_level;
     // The tiles location on the WorldGrid
