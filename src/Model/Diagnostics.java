@@ -8,14 +8,17 @@ public class Diagnostics {
 
     long step; // The current step the simulation is on. Resets to 0 when the world is cleared.
 
-    String[] agentNames; // The names of the agents
-    Integer[] agentPopulations; // The size of each agent population
-    Double[] averagePopulationsEnergy; // The average percent of max energy in each agent population
-    Double[] averagePopulationsLifespan; // The average percent of max age in each agent population
+    private String[] agentNames; // The names of the agents
+    private Integer[] agentPopulations; // The size of each agent population
+    private Double[] averagePopulationsEnergy; // The average percent of max energy in each agent population
+    private Double[] averagePopulationsLifespan; // The average percent of max age in each agent population
 
-    Integer[] lastStepsAgentPopulations; // The size of each agent population from the last step, used to calculate new agents born each step.
+    private Integer[] lastStepsAgentPopulations; // The size of each agent population from the last step, used to calculate new agents born each step.
 
-    Integer[] extinctFlags; // A register of which agents are extinct (true) and which are not (false)
+    private Integer maxEnvironmentEnergy;
+    private Integer currentEnvironmentEnergy;
+
+    private Integer[] extinctFlags; // A register of which agents are extinct (true) and which are not (false)
 
     private ArrayDeque<String> logQueue;
 
@@ -45,6 +48,8 @@ public class Diagnostics {
         step = 0;
         lastStepsAgentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
         extinctFlags = new Integer[]{0, 0, 0, 0, 0, 0, 0, 0};
+        maxEnvironmentEnergy = 0;
+        currentEnvironmentEnergy = 0;
     }
 
     public void iterateStep() {
@@ -79,7 +84,34 @@ public class Diagnostics {
         averagePopulationsLifespan[index] += age;
     }
 
-    public void addToStats(int index, int population, double energy, double age) {
+    public void setMaxEnvironmentEnergy(int maxEnvironmentEnergy) {
+        this.maxEnvironmentEnergy = maxEnvironmentEnergy;
+    }
+
+    public void modifyCurrentEnvironmentEnergy(int modifyValue) {
+        currentEnvironmentEnergy += modifyValue;
+        if (currentEnvironmentEnergy < 0) {
+            currentEnvironmentEnergy = 0;
+        }
+        if (currentEnvironmentEnergy > maxEnvironmentEnergy) {
+            currentEnvironmentEnergy = maxEnvironmentEnergy;
+        }
+        //System.out.println(currentEnvironmentEnergy);
+    }
+
+    public void resetCurrentEnvironmentEnergy() {
+        currentEnvironmentEnergy = maxEnvironmentEnergy;
+    }
+
+    public Object[] getEnvironmentStats() {
+        Object[] stats = new Object[3];
+        stats[0] = maxEnvironmentEnergy;
+        stats[1] = currentEnvironmentEnergy;
+        stats[2] = Math.round((currentEnvironmentEnergy / (double) maxEnvironmentEnergy) * 10000) / 100.0;
+        return stats;
+    }
+
+    public void addToAgentStats(int index, int population, double energy, double age) {
         addToAgentPopulation(index, population);
         addToAveragePopulationEnergy(index, energy);
         addToAveragePopulationLifespan(index, age);

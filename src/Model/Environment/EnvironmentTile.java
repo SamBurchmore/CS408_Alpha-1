@@ -7,35 +7,35 @@ import java.io.Serializable;
 // This class represents the individual tiles that make up the world.
 public class EnvironmentTile implements Serializable {
     // The current food level of this tile.
-    private int food_level;
+    private int energyLevel;
     // The tiles location on the WorldGrid
     private Location location;
     // The agent currently occupying this tile.
-    private Agent current_agent = null;
+    private Agent currentAgent = null;
 
-    public EnvironmentTile(int food_level, int x_, int y_) {
-        this.food_level = food_level;
-        this.location = new Location(x_, y_);
+    public EnvironmentTile(int energyLevel, int x, int y) {
+        this.energyLevel = energyLevel;
+        this.location = new Location(x, y);
     }
 
     public Integer getEnergyLevel() {
-        return this.food_level;
+        return this.energyLevel;
     }
 
-    public void setFoodLevel(Integer new_food_level) {
-        this.food_level = new_food_level;
+    public void setFoodLevel(Integer energyLevel) {
+        this.energyLevel = energyLevel;
     }
 
     public boolean isOccupied() {
-        return this.current_agent != null;
+        return this.currentAgent != null;
     }
 
-    public void setOccupant(Agent new_agent) {
-        this.current_agent = new_agent;
+    public void setOccupant(Agent newAgent) {
+        this.currentAgent = newAgent;
     }
 
     public Agent getOccupant() {
-        return this.current_agent;
+        return this.currentAgent;
     }
 
     public Location getLocation() {

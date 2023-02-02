@@ -87,33 +87,6 @@ public class Environment implements Serializable {
         this.grid[newAgent.getLocation().getY() * this.size + newAgent.getLocation().getX()].setOccupant(newAgent);
     }
 
-    public Iterator<EnvironmentTile> iterator() {
-        return new EnvironmentIterator();
-    }
-
-    public class EnvironmentIterator implements Iterator<EnvironmentTile> {
-
-        private ArrayList<EnvironmentTile> wgIterator;
-
-        public EnvironmentIterator() {
-            wgIterator = new ArrayList<>(Arrays.asList(Environment.this.grid));
-            Collections.shuffle(wgIterator);
-        }
-
-        @Override
-        public boolean hasNext() {
-            return !this.wgIterator.isEmpty();
-        }
-
-        // TODO seeing as this will run every time the simulation runs one turn, we should optimise this if we can.
-        @Override
-        public EnvironmentTile next() {
-            EnvironmentTile nextTile = this.wgIterator.get(0);
-            this.wgIterator.remove(0);
-            return nextTile;
-        }
-    }
-
     public ArrayList<Location> emptyAdjacent(Location location) {
         ArrayList<Location> empties = new ArrayList<>();
         for (int i = -1; i < 2; i++) {
@@ -174,14 +147,21 @@ public class Environment implements Serializable {
      * food level will be set to the max food level. If its made less than the min,
      * then it will be set to the min food level.
      */
-    public void modifyTileFoodLevel(Location location, int foodLevelModifier) {
-        this.getTile(location).setFoodLevel(this.getTile(location).getEnergyLevel() + foodLevelModifier);
+    public int modifyTileFoodLevel(Location location, int foodLevelModifier) {
+        int energyLevel = this.getTile(location).getEnergyLevel() + foodLevelModifier;
+        this.getTile(location).setFoodLevel(energyLevel);
         if (this.getTile(location).getEnergyLevel() < this.minEnergyLevel) {
             this.getTile(location).setFoodLevel(this.minEnergyLevel);
+            //System.out.println(foodLevelModifier);
+            return foodLevelModifier + (energyLevel - this.minEnergyLevel);
         }
         else if (this.getTile(location).getEnergyLevel() > this.maxEnergyLevel) {
             this.getTile(location).setFoodLevel(this.maxEnergyLevel);
+            //System.out.println(foodLevelModifier);
+            return foodLevelModifier - (energyLevel - this.maxEnergyLevel);
         }
+        //System.out.println(foodLevelModifier);
+        return foodLevelModifier;
     }
 
     public Color getTileColor(int x, int y) {

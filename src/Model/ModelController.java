@@ -66,7 +66,7 @@ public class ModelController {
                         agent.setLocation(wt.getLocation());
                         wt.setOccupant(agent);
                         agentList.add(agent);
-                        diagnostics.addToStats(j, 1, agent.getScores().getHunger(), agent.getScores().getAge());
+                        diagnostics.addToAgentStats(j, 1, agent.getScores().getHunger(), agent.getScores().getAge());
                     }
                 }
             }
@@ -76,21 +76,24 @@ public class ModelController {
     public void cycle() {
         diagnostics.clearAgentStats();
         for (Agent currentAgent : agentList) {
-            runAgent(currentAgent); // Iterate and run over all agents in the simulation
-            if (!currentAgent.isDead() && !currentAgent.isEaten()) {
-                diagnostics.addToStats(currentAgent.getAttributes().getCode(), 1, currentAgent.getScores().getHunger(), currentAgent.getScores().getAge());
+            if (!currentAgent.isEaten()) {
+                runAgent(currentAgent); // Iterate and run over all agents in the simulation
+                if (!currentAgent.isDead()) {
+                    diagnostics.addToAgentStats(currentAgent.getAttributes().getCode(), 1, currentAgent.getScores().getHunger(), currentAgent.getScores().getAge());
+                }
             }
         }
         agentList = aliveAgentList;
         aliveAgentList = new ArrayList<>();
         IntStream.range(0, environment.getSize() * environment.getSize()).parallel().forEach(i->{
             if (random.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {
-                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
+                int modifyAmount = environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
+                diagnostics.modifyCurrentEnvironmentEnergy(modifyAmount);
             }
         });
     }
 
-    public void clear() {
+    public void clearAgents() {
         IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
             EnvironmentTile current_wt = environment.getGrid()[i];
             current_wt.setOccupant(null);
@@ -103,14 +106,25 @@ public class ModelController {
             EnvironmentTile current_wt = environment.getGrid()[i];
             current_wt.setFoodLevel(environment.getMaxEnergyLevel());
         });
+        diagnostics.resetCurrentEnvironmentEnergy();
     }
 
     public void setEnvironmentSettings(EnvironmentSettings environmentSettings) {
         if (environmentSettings.getSize() != environment.getSize()) {
-            clear();
+            clearAgents();
+            environment.setEnvironmentSettings(environmentSettings);
+            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize()*getEnvironmentSize());
+            diagnostics.resetCurrentEnvironmentEnergy();
         }
-        environment.setEnvironmentSettings(environmentSettings);
-    }
+        else if (environmentSettings.getMaxEnergyLevel() < environment.getMaxEnergyLevel()) {
+            environment.setEnvironmentSettings(environmentSettings);
+            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize()*getEnvironmentSize());
+            diagnostics.resetCurrentEnvironmentEnergy();
+        }
+            environment.setEnvironmentSettings(environmentSettings);
+            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize() * getEnvironmentSize());
+        }
+
 
     public EnvironmentSettings getEnvironmentSettings() {
         return new EnvironmentSettings(environment.getSize(),
@@ -169,19 +183,19 @@ public class ModelController {
         return environment.getEnergyRegenChance();
     }
 
-    public int getMaxEnergy() {
+    public int getMaxTileEnergy() {
         return environment.getMaxEnergyLevel();
     }
 
-    public int getMinEnergy() {
+    public int getMinTileEnergy() {
         return environment.getMinEnergyLevel();
     }
 
-    public void setMaxEnergy(int maxEnergy) {
+    public void setMaxTileEnergy(int maxEnergy) {
         environment.setMaxEnergyLevel(maxEnergy);
     }
 
-    public void setMinEnergy(int minEnergy) {
+    public void setMinTileEnergy(int minEnergy) {
         environment.setMinEnergyLevel(minEnergy);
     }
 
@@ -221,8 +235,10 @@ public class ModelController {
             environment.setTileAgent(agent.getLocation(), null);
             agent.move(agentDecision.getLocation()); // Move to chosen location
             environment.setTileAgent(agent);
-            environment.modifyTileFoodLevel(agent.getLocation(), -agent.graze(environment.getTile(agent.getLocation()))); // Consume energy at chosen location
+            int grazeAmount = -agent.graze(environment.getTile(agent.getLocation()));
+            environment.modifyTileFoodLevel(agent.getLocation(), grazeAmount); // Consume energy at chosen location
             aliveAgentList.add(agent); // Agent is still alive
+            diagnostics.modifyCurrentEnvironmentEnergy(grazeAmount);
         }
         else if (agentDecision.getAgentAction().equals(AgentAction.PREDATE)) {
             environment.getTile(agentDecision.getLocation()).getOccupant().setBeenEaten(); // We set the preys hasBeenEaten flag to true

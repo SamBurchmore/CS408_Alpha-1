@@ -118,6 +118,7 @@ public class MainController {
         modelController.replenishEnvironmentEnergy();
         updateWorldImage();
         view.getDiagnosticsPanel().addLogMessage("[ENVIRONMENT]: Energy Replenished.");
+        updateDiagnosticsPanel();
     }
 
     // Updates the environments settings to reflect those in the environment settings panel
@@ -126,11 +127,13 @@ public class MainController {
         scale = 600 / (int) view.getEnvironmentSettingsPanel().getEnvironmentSizeSpinner().getValue();
         updateWorldImage();
         logMsg("[ENVIRONMENT]: Settings updated to- \n" + modelController.getEnvironment().toString());
+        updateDiagnosticsPanel();
+        updateWorldImage();
     }
 
     // Removes all agents from the environment and clears the agents stats from the diagnostics panel
     public void clear() {
-        modelController.clear();
+        modelController.clearAgents();
         view.updateWorldPanel(modelController.getEnvironmentImage(scale));
         modelController.getDiagnostics().clearAgentStats();
         modelController.getDiagnostics().clearSteps();
@@ -142,6 +145,8 @@ public class MainController {
     // Updates the diagnostics class with the current agent names
     public void initDiagnostics() {
         modelController.getDiagnostics().setAgentNames(modelController.getAgentEditor().getAgentNames());
+        modelController.getDiagnostics().setMaxEnvironmentEnergy(modelController.getMaxTileEnergy() * modelController.getEnvironmentSize()*modelController.getEnvironmentSize());
+        modelController.getDiagnostics().resetCurrentEnvironmentEnergy();
     }
 
 
@@ -162,8 +167,8 @@ public class MainController {
     // Updates the values in the environment settings panel to match those of the current environment
     public void updateEnvironmentSettingsPanel() {
         view.getEnvironmentSettingsPanel().setColors(modelController.getEnvironmentColors());
-        view.getEnvironmentSettingsPanel().getMaxEnergySpinner().setValue(modelController.getMaxEnergy());
-        view.getEnvironmentSettingsPanel().getMinEnergySpinner().setValue(modelController.getMinEnergy());
+        view.getEnvironmentSettingsPanel().getMaxEnergySpinner().setValue(modelController.getMaxTileEnergy());
+        view.getEnvironmentSettingsPanel().getMinEnergySpinner().setValue(modelController.getMinTileEnergy());
         view.getEnvironmentSettingsPanel().getEnergyRegenChanceSpinner().setValue(modelController.getEnergyRegenChance());
         view.getEnvironmentSettingsPanel().getEnergyRegenAmountSpinner().setValue(modelController.getEnergyRegenAmount());
         view.getEnvironmentSettingsPanel().getEnvironmentSizeSpinner().setValue(modelController.getEnvironmentSize());
@@ -173,6 +178,7 @@ public class MainController {
     public void updateDiagnosticsPanel() {
         view.getDiagnosticsPanel().setAgentStats(modelController.getDiagnostics().getAgentStats());
         view.getDiagnosticsPanel().setStepLabel(modelController.getDiagnostics().getStep());
+        view.getDiagnosticsPanel().setEnvironmentStats(modelController.getDiagnostics().getEnvironmentStats());
     }
 
     // Updates the values in the agent editor panel to match those of the currently editing agent
