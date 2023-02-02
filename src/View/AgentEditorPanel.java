@@ -63,8 +63,8 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
     private JSpinner creationDelaySpinner;
     private JSpinner agentCodeSpinner;
 
-    private JToggleButton isGrazerToggle;
-    private JToggleButton isPredatorToggle;
+    private JCheckBox isGrazerToggle;
+    private JCheckBox isPredatorToggle;
 
     private JLabel spawningWeightLabel;
     private JSpinner spawningWeightSpinner; // The spinner which controls how many agents are created when the population button is clicked.
@@ -227,13 +227,11 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         motivationsPanel.setPreferredSize(new Dimension(450, 160));
         motivationsPanel.setName("Motivations");
 
-        isGrazerToggle = new JToggleButton("Grazer");
+        isGrazerToggle = new JCheckBox("Grazer");
         isGrazerToggle.setPreferredSize(new Dimension(225, 25));
-        isGrazerToggle.setBackground(new Color(210, 210, 210));
 
-        isPredatorToggle = new JToggleButton("Predator");
+        isPredatorToggle = new JCheckBox("Predator");
         isPredatorToggle.setPreferredSize(new Dimension(225, 25));
-        isPredatorToggle.setBackground(new Color(210, 210, 210));
 
         motivationsPanel.add(isGrazerToggle);
         motivationsPanel.add(isPredatorToggle);

@@ -31,14 +31,14 @@ public class AgentEditor {
         omniMotivations.add(new CreatorMotivation());
         omniMotivations.add(new GrazerMotivation());
         omniMotivations.add(new PredatorMotivation());
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Blue", 0,    Color.blue,                        1, 1, 24, 2, 16, 8, 3, 3), (ArrayList<Motivation>) grazerMotivations.clone()), 0);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Red", 1, Color.red,                             1, 1, 24, 2, 16, 8, 3, 3), (ArrayList<Motivation>) grazerMotivations.clone()), 1);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Green", 2, Color.green,                         1, 1, 24, 2, 16, 8, 3, 3), (ArrayList<Motivation>) grazerMotivations.clone()), 2);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Purple", 3,    new Color(180, 0, 190), 1, 1, 24, 2, 16, 8, 3, 3), (ArrayList<Motivation>) grazerMotivations.clone()), 3);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Orange", 4, new Color(255, 102, 0),    1, 1, 24, 2, 16, 8, 3, 3), (ArrayList<Motivation>) grazerMotivations.clone()), 4);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Yellow", 5, Color.yellow,                       1, 1, 24, 2, 16, 8, 3, 3), (ArrayList<Motivation>) grazerMotivations.clone()), 5);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new BasicAttributes(1, "Pink", 6, Color.pink,                                                1, 1, 24, 2, 16, 8, 3, 3), (ArrayList<Motivation>) grazerMotivations.clone()), 6);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new BasicAttributes(1, "Cyan", 7, Color.cyan,                                                1, 1, 24, 2, 16, 8, 3, 3), (ArrayList<Motivation>) grazerMotivations.clone()), 7);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Blue", 0,    Color.blue,                        1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 0);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Red", 1, Color.red,                             1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 1);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Green", 2, Color.green,                         1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 2);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Purple", 3,    new Color(180, 0, 190), 1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 3);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Orange", 4, new Color(255, 102, 0),    1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 4);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Yellow", 5, Color.yellow,                       1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 5);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new BasicAttributes(1, "Pink", 6, Color.pink,                                                1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 6);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new BasicAttributes(1, "Cyan", 7, Color.cyan,                                                1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 7);
 
         editingAgentIndex = 0;
     }

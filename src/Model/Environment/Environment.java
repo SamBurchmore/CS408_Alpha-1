@@ -309,11 +309,11 @@ public class Environment implements Serializable {
 
     @Override
     public String toString() {
-        return "[ENVIRONMENT]:" +
-                " Max Energy Level=" + maxEnergyLevel +
-                ", Min Energy Level=" + minEnergyLevel +
-                ", Energy Regen Chance=" + energyRegenChance +
-                ", Energy Regen Amount=" + energyRegenAmount +
+        return  "-Max Energy Level=" + maxEnergyLevel +
+                ",\n-Min Energy Level=" + minEnergyLevel +
+                ",\n-Energy Regen Chance=" + energyRegenChance +
+                ",\n-Energy Regen Amount=" + energyRegenAmount +
+                ",\n-Environment Size=" + size +
                 ".";
     }
 

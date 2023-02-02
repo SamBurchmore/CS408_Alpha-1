@@ -47,10 +47,8 @@ public class Diagnostics {
         extinctFlags = new Integer[]{0, 0, 0, 0, 0, 0, 0, 0};
     }
 
-    public void update() {
-        System.out.println(step);
+    public void iterateStep() {
         step = step + 1;
-        System.out.println(step);
     }
 
     public void setAgentPopulation(int index, int population) {
