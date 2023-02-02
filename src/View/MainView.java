@@ -1,10 +1,26 @@
 package View;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class MainView extends JFrame {
+
+    JFileChooser fileChooser;
+
+    private JMenu saveMenu;
+    private JMenu loadMenu;
+    private JMenu presetsMenu;
+    private JMenuBar menuBar;
+
+    private JButton saveAgentsMenuButton;
+    private JButton loadAgentsMenuButton;
+    private JButton saveEnvironmentSettingsMenuButton;
+    private JButton loadEnvironmentSettingsMenuButton;
 
     private EnvironmentSettingsPanel environmentSettingsPanel;
     private SimulationControlPanel simulationControlPanel;
@@ -17,12 +33,47 @@ public class MainView extends JFrame {
 
     private JPanel centerPanel;
 
-    public MainView() {
+    public MainView() throws IOException {
 
         getContentPane().setLayout(new GridBagLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
-        setTitle("MainView");
+
+        setIconImage(ImageIO.read(this.getClass().getResource("../images/tool-icon-v1.png")));
+
+        fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        File workingDirectory = new File(System.getProperty("user.dir"));
+        fileChooser.setCurrentDirectory(workingDirectory);
+
+        // Define the menu bar and its menus
+        menuBar = new JMenuBar();
+        saveMenu = new JMenu("Save");
+        saveMenu.setMnemonic(KeyEvent.VK_S);
+        loadMenu = new JMenu("Load");
+        loadMenu.setMnemonic(KeyEvent.VK_L);
+        presetsMenu = new JMenu("Presets");
+
+        // Build the save menu
+        saveAgentsMenuButton = new JButton("Save Agents");
+        saveEnvironmentSettingsMenuButton = new JButton("Save Environment");
+        saveMenu.add(saveAgentsMenuButton);
+        saveMenu.add(saveEnvironmentSettingsMenuButton);
+
+        // Build the load menu
+        loadAgentsMenuButton = new JButton("Load Agents");
+        loadEnvironmentSettingsMenuButton = new JButton("Load Environment");
+        loadMenu.add(loadAgentsMenuButton);
+        loadMenu.add(loadEnvironmentSettingsMenuButton);
+
+        menuBar.add(new JLabel("|"));
+        menuBar.add(saveMenu);
+        menuBar.add(new JLabel("|"));
+        menuBar.add(loadMenu);
+        menuBar.add(new JLabel("|"));
+        menuBar.add(presetsMenu);
+        menuBar.add(new JLabel("|"));
+        menuBar.setFont(new Font("Dialog", Font.BOLD, 12));
+        setJMenuBar(menuBar);
 
         // The GridBag constraints we'll be using to build the GUI
         GridBagConstraints c = new GridBagConstraints();
@@ -70,13 +121,13 @@ public class MainView extends JFrame {
         this.add(diagnosticsPanel, c);
 
         setResizable(false);
+        setVisible(true);
         pack();
     }
 
-    public void updateWorldPanel(BufferedImage worldImage, int i) {
+    public void updateWorldPanel(BufferedImage worldImage) {
         this.worldPanel.updateWorldImage(worldImage);
         this.repaint();
-        this.setTitle("Step: " + ((Integer) i));
     }
 
     public AgentEditorPanel getAgentEditorPanel() {
@@ -95,5 +146,25 @@ public class MainView extends JFrame {
 
     public EnvironmentSettingsPanel getEnvironmentSettingsPanel() {
         return environmentSettingsPanel;
+    }
+
+    public JButton getSaveAgentsMenuButton() {
+        return saveAgentsMenuButton;
+    }
+
+    public JButton getLoadAgentsMenuButton() {
+        return loadAgentsMenuButton;
+    }
+
+    public JButton getSaveEnvironmentSettingsMenuButton() {
+        return saveEnvironmentSettingsMenuButton;
+    }
+
+    public JButton getLoadEnvironmentSettingsMenuButton() {
+        return loadEnvironmentSettingsMenuButton;
+    }
+
+    public JFileChooser getFileChooser() {
+        return fileChooser;
     }
 }

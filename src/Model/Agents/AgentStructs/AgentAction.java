@@ -2,7 +2,8 @@ package Model.Agents.AgentStructs;
 
 public enum AgentAction {
     MOVE,
-    ATTACK,
     CREATE,
+    GRAZE,
+    PREDATE,
     NONE
 }

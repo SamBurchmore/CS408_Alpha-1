@@ -2,11 +2,9 @@ package Model.Agents.AgentBaseComponents;
 
 import Model.Agents.AgentConcreteComponents.*;
 import Model.Agents.AgentInterfaces.*;
-import Model.Agents.AgentStructs.AgentDecision;
-import Model.Agents.AgentStructs.AgentModelUpdate;
-import Model.Agents.AgentStructs.AgentVision;
-import Model.Environment.Location;
 import Model.Environment.Environment;
+import Model.Environment.EnvironmentTile;
+import Model.Environment.Location;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,41 +12,42 @@ import java.util.Collections;
 public abstract class BaseAgent implements Agent {
 
     private Location location;
-    private Reaction reaction;
-    private Vision vision;
     private Attributes attributes;
     private Scores scores;
+    private ArrayList<Motivation> motivations;
 
-    public BaseAgent(Location location, Reaction reaction, Vision vision, Attributes attributes, Scores scores) {
+    private boolean hasBeenEaten; // A flag which lets the model controller know this agents been eaten.
+
+    public BaseAgent(Location location, Attributes attributes, Scores scores, ArrayList<Motivation> motivations) {
         this.location = location;
-        this.reaction = reaction;
-        this.vision = vision;
         this.attributes = attributes;
         this.scores = scores;
+        this.motivations = motivations;
+        hasBeenEaten = false;
     }
 
-    public BaseAgent(Location location, Agent parent_a, Agent parent_b) {
+    public BaseAgent(Location location, Attributes attributes, ArrayList<Motivation> motivations) {
         this.location = location;
-        this.reaction = new PreyReaction(new PreyMotivations());
-        this.vision = new BasicVision();
-        this.attributes = new BasicAttributes(parent_a.getAttributes(), parent_b.getAttributes());
-        this.scores = new BasicScores(parent_a.getAttributes().getEnergyCapacity(), parent_a.getScores().getMAX_HEALTH(), 0, parent_a.getAttributes().getEnergyCapacity(), parent_a.getScores().getMAX_HEALTH(), parent_a.getAttributes().getLifespan(), parent_a.getAttributes().getCreationDelay());
-        this.scores.setCreationCounter(parent_a.getAttributes().getCreationAge());
+        this.attributes = attributes;
+        this.scores = new BasicScores(attributes.getEnergyCapacity(), 0, 0, attributes.getEnergyCapacity(), 0, attributes.getLifespan(), attributes.getCreationDelay());
+        this.motivations = motivations;
+        hasBeenEaten = false;
+    }
+
+    public BaseAgent(Location location, Agent parentA, Agent parentB) {
+        this.location = location;
+        this.attributes = new BasicAttributes(parentA.getAttributes(), parentB.getAttributes());
+        this.motivations = parentA.copyMotivations();
+        this.scores = new BasicScores(parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), 0, parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), parentA.getAttributes().getLifespan(), parentA.getAttributes().getCreationAge());
+        this.scores.setCreationCounter(parentA.getAttributes().getCreationAge());
+        hasBeenEaten = false;
     }
 
     @Override
-    public AgentModelUpdate run(Environment environment) {
-        return new AgentModelUpdate(this, null);
-    }
-
-    @Override
-    public AgentDecision liveDay(Environment environment) {
+    public void liveDay() {
         this.getScores().setHunger((this.getScores().getHunger() - this.getAttributes().getSize()));
         this.getScores().setAge(this.getScores().getAge()+1);
         this.getScores().setCreationCounter((this.getScores().getCreationCounter() - 1));
-
-        ArrayList<AgentVision> agentSight = this.getVision().lookAround(environment, this.getLocation(), this.getAttributes().getVisionRange(), this.getAttributes().getMovementRange());
-        return this.getReaction().react(agentSight, this.getAttributes(), this.getScores());
     }
 
     @Override
@@ -59,20 +58,6 @@ public abstract class BaseAgent implements Agent {
     @Override
     public void move(Location newLocation) {
         this.setLocation(newLocation);
-    }
-
-    @Override
-    public ArrayList<Agent> create(Location parentBLocation, Environment environment) {
-        ArrayList<Location> childLocations = environment.emptyAdjacent(this.getLocation());
-        ArrayList<Agent> childAgents = new ArrayList<>();
-        if (!childLocations.isEmpty()) {
-            Collections.shuffle(childLocations);
-            for (Location childLocation : childLocations.subList(0, Math.min(childLocations.size(), this.getAttributes().getCreationAmount()))) {
-                Agent child = this.combine(environment.getTile(parentBLocation).getOccupant(), childLocation);
-                childAgents.add(child);
-            }
-        }
-        return childAgents;
     }
 
     @Override
@@ -96,26 +81,6 @@ public abstract class BaseAgent implements Agent {
     }
 
     @Override
-    public Reaction getReaction() {
-        return this.reaction;
-    }
-
-    @Override
-    public void setReaction(Reaction reaction) {
-        this.reaction = reaction;
-    }
-
-    @Override
-    public Vision getVision() {
-        return this.vision;
-    }
-
-    @Override
-    public void setVision(Vision vision) {
-        this.vision = vision;
-    }
-
-    @Override
     public Scores getScores() {
         return this.scores;
     }
@@ -123,6 +88,78 @@ public abstract class BaseAgent implements Agent {
     @Override
     public void setScores(Scores scores) {
         this.scores = scores;
+    }
+
+    @Override
+    public int graze(EnvironmentTile environmentTile) {
+        if (environmentTile.getEnergyLevel() <= 0) {
+            return 0; // If there's no energy, environment loses nothing and agent gains no energy.
+        }
+        if (environmentTile.getEnergyLevel() >= getAttributes().getEatAmount()) {
+            getScores().setHunger(getScores().getHunger() + getAttributes().getEatAmount()); // If there's more food than the agents eat amount, environment loses agents eat amount and agent gets it
+            return getAttributes().getEatAmount();
+        }
+        getScores().setHunger(getScores().getHunger() + environmentTile.getEnergyLevel()); // If there's less food than the agents eat amount, environment loses all and agent gains it.
+        return environmentTile.getEnergyLevel();
+    }
+
+    @Override
+    public void predate(Attributes preyAttributes) {
+        getScores().setHunger(getScores().getHunger() + preyAttributes.getSize()); // TODO change back to prey size
+    }
+
+    @Override
+    public ArrayList<Agent> create(Location parentBLocation, Environment environment) {
+        ArrayList<Location> childLocations = environment.emptyAdjacent(this.getLocation());
+        ArrayList<Agent> childAgents = new ArrayList<>();
+        if (!childLocations.isEmpty()) {
+            Collections.shuffle(childLocations);
+            for (Location childLocation : childLocations.subList(0, Math.min(childLocations.size(), this.getAttributes().getCreationAmount()))) {
+                Agent child = combine(environment.getTile(parentBLocation).getOccupant(), childLocation);
+                childAgents.add(child);
+            }
+        }
+        getScores().setCreationCounter(getAttributes().getCreationDelay());
+        return childAgents;
+    }
+
+    public Agent combine(Agent parentB, Location childLocation) {
+        getScores().setCreationCounter(getScores().getCreationDelay());
+        Agent newAgent = new BasicAgent(childLocation, this, parentB);
+
+        getScores().setHunger(getScores().getHunger() - 1);
+        newAgent.getScores().setHunger(getScores().getHunger() / getAttributes().getCreationAmount());
+
+        return newAgent;
+    }
+
+    @Override
+    public ArrayList<Motivation> getMotivations() {
+        return motivations;
+    }
+
+    @Override
+    public void setMotivations(ArrayList<Motivation> motivations) {
+        this.motivations = motivations;
+    }
+
+    @Override
+    public ArrayList<Motivation> copyMotivations() {
+        ArrayList<Motivation> motivations = new ArrayList<>();
+        for (Motivation motivation : getMotivations()) {
+            motivations.add(motivation.copy());
+        }
+        return motivations;
+    }
+
+    @Override
+    public boolean isEaten() {
+        return hasBeenEaten;
+    }
+
+    @Override
+    public void setBeenEaten() {
+        hasBeenEaten = true;
     }
 
 

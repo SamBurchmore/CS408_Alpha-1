@@ -4,17 +4,17 @@ import Model.Agents.AgentInterfaces.Attributes;
 import Model.Agents.AgentStructs.AgentType;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Random;
 
-public abstract class BaseAttributes implements Attributes {
+public class BaseAttributes implements Attributes, Serializable {
 
     private int spawningWeight;
     private String name;
     private int code;
     private Color color;
 
-    private int visionRange;
-    private int movementRange;
+    private int range;
     private int size;
     private int energyCapacity;
     private int eatAmount;
@@ -23,13 +23,12 @@ public abstract class BaseAttributes implements Attributes {
     private int creationAmount;
     private int creationDelay;
 
-    public BaseAttributes(int spawningWeight, String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
+    public BaseAttributes(int spawningWeight, String name, int code, Color color, int range, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
         this.spawningWeight = spawningWeight;
         this.code = code;
         this.name = name;
         this.color = color;
-        this.visionRange = visionRange;
-        this.movementRange = movementRange;
+        this.range = range;
         this.size = size;
         this.energyCapacity = energyCapacity;
         this.eatAmount = eatAmount;
@@ -43,8 +42,7 @@ public abstract class BaseAttributes implements Attributes {
         this.code = attributesA.getCode();
         this.name = attributesA.getName();
         this.color = attributesA.getColor();
-        this.visionRange = attributesA.getVisionRange();
-        this.movementRange = attributesA.getMovementRange();
+        this.range = attributesA.getRange();
         this.size = attributesA.getSize();
         this.energyCapacity = attributesA.getEnergyCapacity();
         this.eatAmount = attributesA.getEatAmount();
@@ -78,26 +76,18 @@ public abstract class BaseAttributes implements Attributes {
         return color;
     }
 
+    @Override
+    public void setRange(int range) {
+        this.range = range;
+    }
+
     public void setColor(Color color) {
         this.color = color;
     }
 
     @Override
-    public int getVisionRange() {
-        return visionRange;
-    }
-
-    public void setVisionRange(int visionRange) {
-        this.visionRange = visionRange;
-    }
-
-    @Override
-    public int getMovementRange() {
-        return movementRange;
-    }
-
-    public void setMovementRange(int movementRange) {
-        this.movementRange = movementRange;
+    public int getRange() {
+        return range;
     }
 
     @Override
@@ -179,8 +169,7 @@ public abstract class BaseAttributes implements Attributes {
                 "name='" + name + '\'' +
                 ", code=" + code +
                 ", color=" + color +
-                ", visionRange=" + visionRange +
-                ", movementRange=" + movementRange +
+                ", range=" + range +
                 ", size=" + size +
                 ", energyCapacity=" + energyCapacity +
                 ", eatAmount=" + eatAmount +

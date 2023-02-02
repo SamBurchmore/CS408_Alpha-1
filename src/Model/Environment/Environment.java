@@ -5,6 +5,7 @@ import Model.Agents.AgentStructs.AgentVision;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,11 +17,11 @@ import java.util.Iterator;
  *
  * This class is a singlton, only one instance of it will ever exist.
   */
-public class Environment {
+public class Environment implements Serializable {
 
     private EnvironmentTile[] grid;
 
-    final int size;
+    private int size;
     private int maxEnergyLevel;
     private int minEnergyLevel;
     private double energyRegenChance;
@@ -86,33 +87,6 @@ public class Environment {
         this.grid[newAgent.getLocation().getY() * this.size + newAgent.getLocation().getX()].setOccupant(newAgent);
     }
 
-    public Iterator<EnvironmentTile> iterator() {
-        return new EnvironmentIterator();
-    }
-
-    public class EnvironmentIterator implements Iterator<EnvironmentTile> {
-
-        private ArrayList<EnvironmentTile> wgIterator;
-
-        public EnvironmentIterator() {
-            wgIterator = new ArrayList<>(Arrays.asList(Environment.this.grid));
-            Collections.shuffle(wgIterator);
-        }
-
-        @Override
-        public boolean hasNext() {
-            return !this.wgIterator.isEmpty();
-        }
-
-        // TODO seeing as this will run every time the simulation runs one turn, we should optimise this if we can.
-        @Override
-        public EnvironmentTile next() {
-            EnvironmentTile nextTile = this.wgIterator.get(0);
-            this.wgIterator.remove(0);
-            return nextTile;
-        }
-    }
-
     public ArrayList<Location> emptyAdjacent(Location location) {
         ArrayList<Location> empties = new ArrayList<>();
         for (int i = -1; i < 2; i++) {
@@ -164,7 +138,7 @@ public class Environment {
     }
 
     public int getTileEnergyLevel(Location location) {
-        return this.getTile(location).getFoodLevel();
+        return this.getTile(location).getEnergyLevel();
     }
 
     /**
@@ -172,16 +146,22 @@ public class Environment {
      * If the input makes the food level greater than the max food level then
      * food level will be set to the max food level. If its made less than the min,
      * then it will be set to the min food level.
-     * @param food_level_modifier the integer value the food level will be modified by.
      */
-    public void modifyTileFoodLevel(Location location, int foodLevelModifier) {
-        this.getTile(location).setFoodLevel(this.getTile(location).getFoodLevel() + foodLevelModifier);
-        if (this.getTile(location).getFoodLevel() < this.minEnergyLevel) {
+    public int modifyTileFoodLevel(Location location, int foodLevelModifier) {
+        int energyLevel = this.getTile(location).getEnergyLevel() + foodLevelModifier;
+        this.getTile(location).setFoodLevel(energyLevel);
+        if (this.getTile(location).getEnergyLevel() < this.minEnergyLevel) {
             this.getTile(location).setFoodLevel(this.minEnergyLevel);
+            //System.out.println(foodLevelModifier);
+            return foodLevelModifier + (energyLevel - this.minEnergyLevel);
         }
-        else if (this.getTile(location).getFoodLevel() > this.maxEnergyLevel) {
+        else if (this.getTile(location).getEnergyLevel() > this.maxEnergyLevel) {
             this.getTile(location).setFoodLevel(this.maxEnergyLevel);
+            //System.out.println(foodLevelModifier);
+            return foodLevelModifier - (energyLevel - this.maxEnergyLevel);
         }
+        //System.out.println(foodLevelModifier);
+        return foodLevelModifier;
     }
 
     public Color getTileColor(int x, int y) {
@@ -189,19 +169,19 @@ public class Environment {
         if (this.getTile(location).isOccupied()) {
             return this.getTile(location).getOccupant().getAttributes().getColor();
         }
-        if (this.getTile(location).getFoodLevel() >= this.maxEnergyLevel) {
+        if (this.getTile(location).getEnergyLevel() >= this.maxEnergyLevel) {
             return this.maxColor;
         }
-        if (this.getTile(location).getFoodLevel() >= this.maxEnergyLevel - this.maxEnergyLevel / 4 ) {
+        if (this.getTile(location).getEnergyLevel() >= this.maxEnergyLevel - this.maxEnergyLevel / 4 ) {
             return this.highColor;
         }
-        if (this.getTile(location).getFoodLevel() >= this.maxEnergyLevel / 2 ) {
+        if (this.getTile(location).getEnergyLevel() >= this.maxEnergyLevel / 2 ) {
             return this.mediumHighColor;
         }
-        if (this.getTile(location).getFoodLevel() >= this.maxEnergyLevel - ( (maxEnergyLevel / 4) * 3)) {
+        if (this.getTile(location).getEnergyLevel() >= this.maxEnergyLevel - ( (maxEnergyLevel / 4) * 3)) {
             return this.lowColor;
         }
-        if (this.getTile(location).getFoodLevel() > this.minEnergyLevel) {
+        if (this.getTile(location).getEnergyLevel() > this.minEnergyLevel) {
             return this.mediumLowColor;
         }
         return this.minColor;
@@ -209,17 +189,17 @@ public class Environment {
 
     public AgentVision getTileView(Location location) {
         if (this.getTile(location).isOccupied()) {
-            return new AgentVision(this.getTile(location).getFoodLevel(), this.getTile(location).isOccupied(), location, this.getTile(location).getOccupant().getAttributes());
+            return new AgentVision(this.getTile(location).getEnergyLevel(), this.getTile(location).isOccupied(), location, this.getTile(location).getOccupant().getAttributes());
         }
-        return new AgentVision(this.getTile(location).getFoodLevel(), false, location);
+        return new AgentVision(this.getTile(location).getEnergyLevel(), false, location);
     }
 
     public AgentVision getTileView(int x, int y) {
         Location location = new Location(x, y);
         if (this.getTile(location).isOccupied()) {
-            return new AgentVision(this.getTile(location).getFoodLevel(), this.getTile(location).isOccupied(), location, this.getTile(location).getOccupant().getAttributes());
+            return new AgentVision(this.getTile(location).getEnergyLevel(), this.getTile(location).isOccupied(), location, this.getTile(location).getOccupant().getAttributes());
         }
-        return new AgentVision(this.getTile(location).getFoodLevel(), false, location);
+        return new AgentVision(this.getTile(location).getEnergyLevel(), false, location);
     }
 
     public BufferedImage normalImage() {
@@ -309,11 +289,11 @@ public class Environment {
 
     @Override
     public String toString() {
-        return "[ENVIRONMENT]:" +
-                " Max Energy Level=" + maxEnergyLevel +
-                ", Min Energy Level=" + minEnergyLevel +
-                ", Energy Regen Chance=" + energyRegenChance +
-                ", Energy Regen Amount=" + energyRegenAmount +
+        return  "-Max Energy Level=" + maxEnergyLevel +
+                ",\n-Min Energy Level=" + minEnergyLevel +
+                ",\n-Energy Regen Chance=" + energyRegenChance +
+                ",\n-Energy Regen Amount=" + energyRegenAmount +
+                ",\n-Environment Size=" + size +
                 ".";
     }
 
@@ -331,5 +311,48 @@ public class Environment {
 
     public void setEnergyRegenAmount(int energyRegenAmount) {
         this.energyRegenAmount = energyRegenAmount;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setColors(Color[] color) {
+        setMinColor(color[0]);
+        setLowColor(color[1]);
+        setMediumLowColor(color[2]);
+        setMediumHighColor(color[3]);
+        setHighColor(color[4]);
+        setMaxColor(color[5]);
+    }
+
+    public Color[] getColors() {
+        return new Color[]{minColor, lowColor, mediumLowColor, mediumHighColor, highColor, maxColor};
+    }
+
+    public void newEnvironmentGrid() {
+        this.grid = new EnvironmentTile[size*size];
+        // Populate the array with WorldTile objects. We also keep track of each array cells corresponding coordinate in order to initialise each WorldTile with it.
+        int x = 0; int y = 0;
+        for (int i = 0; i<size*size; i++){
+            this.grid[i] = new EnvironmentTile(getMaxEnergyLevel(), x, y);
+            x++;
+            if (x == size) {
+                x = 0;
+                y++;
+            }
+        }
+    }
+
+    public void setEnvironmentSettings(EnvironmentSettings environmentSettings) {
+        setMaxEnergyLevel(environmentSettings.getMaxEnergyLevel());
+        setMinEnergyLevel(environmentSettings.getMinEnergyLevel());
+        setEnergyRegenAmount(environmentSettings.getEnergyRegenAmount());
+        setEnergyRegenChance(environmentSettings.getEnergyRegenChance());
+        setColors(environmentSettings.getEnvironmentColors());
+        if (environmentSettings.getSize() != this.getSize()) {
+            setSize(environmentSettings.getSize());
+            newEnvironmentGrid();
+        }
     }
 }

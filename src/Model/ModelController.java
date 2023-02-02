@@ -8,8 +8,12 @@ import java.util.stream.IntStream;
 import Model.AgentEditor.AgentEditor;
 import Model.Agents.AgentConcreteComponents.BasicAgent;
 import Model.Agents.AgentInterfaces.Agent;
-import Model.Agents.AgentStructs.AgentModelUpdate;
+import Model.Agents.AgentInterfaces.Motivation;
+import Model.Agents.AgentStructs.AgentAction;
+import Model.Agents.AgentStructs.AgentDecision;
+import Model.Agents.AgentStructs.AgentVision;
 import Model.Environment.Environment;
+import Model.Environment.EnvironmentSettings;
 import Model.Environment.EnvironmentTile;
 import Model.Environment.Location;
 
@@ -23,97 +27,112 @@ public class ModelController {
 
     private AgentEditor agentEditor;
 
-    private ArrayList<Agent> agentList;
+    private ArrayList<Agent> agentList; // Here we store all the agents currently in the simulation
+
+    private ArrayList<Agent> aliveAgentList; // When cycle() is called, all newly born and surviving agents are placed in here. At the end agentList is set to this
+
     // This is where all diagnostic data on the simulation is stored.
     private Diagnostics diagnostics;
 
-    private final int environmentSize;
-
-    private Random randomGen;
+    private Random random;
 
     public ModelController(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount){
         this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel, energyRegenChance, energyRegenAmount);
-        this.randomGen = new Random();
+        this.random = new Random();
         this.agentList = new ArrayList<>();
-        this.environmentSize = size;
+        this.aliveAgentList = new ArrayList<>();
         this.diagnostics = new Diagnostics();
         this.agentEditor = new AgentEditor();
     }
 
-    public void populate(int density) {
+    public void setEnvironment(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
+        this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel, energyRegenChance, energyRegenAmount);
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public void populate(double density) {
         ArrayList<Agent> activeAgents = agentEditor.getActiveAgents();
-        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
-                if (this.randomGen.nextInt(100) < density && !environment.getGrid()[i].isOccupied()) {
-                    int agentIndex = randomGen.nextInt(activeAgents.size());
-                    BasicAgent agent;
-                    for (int j = 0; j < activeAgents.size(); j++) {
-                        if (j == agentIndex) {
-                            agent = (BasicAgent) agentEditor.getAgent(j).copy();
-                            EnvironmentTile wt = environment.getGrid()[i];
-                            agent.setLocation(wt.getLocation());
-                            wt.setOccupant(agent);
-                            agentList.add(agent);
-                            diagnostics.addToStats(j, 1, agent.getScores().getHunger(), agent.getScores().getAge());
-                        }
+        IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+            if (this.random.nextInt(10000) / 100.0 < density && !environment.getGrid()[i].isOccupied()) {
+                int agentIndex = random.nextInt(activeAgents.size());
+                BasicAgent agent;
+                for (int j = 0; j < activeAgents.size(); j++) {
+                    if (j == agentIndex) {
+                        agent = (BasicAgent) agentEditor.getAgent(j).copy();
+                        EnvironmentTile wt = environment.getGrid()[i];
+                        agent.setLocation(wt.getLocation());
+                        wt.setOccupant(agent);
+                        agentList.add(agent);
+                        diagnostics.addToAgentStats(j, 1, agent.getScores().getHunger(), agent.getScores().getAge());
                     }
                 }
+            }
         });
     }
 
     public void cycle() {
         diagnostics.clearAgentStats();
-        ArrayList<Agent> aliveAgents = new ArrayList<>();
         for (Agent currentAgent : agentList) {
-            Location oldLocation = currentAgent.getLocation();
-            AgentModelUpdate agentModelUpdate = currentAgent.run(environment);
-            environment.setTileAgent(oldLocation, null);
-            if (agentModelUpdate.getAgent() != null) {
-                environment.setTileAgent(agentModelUpdate.getAgent());
-                environment.modifyTileFoodLevel(agentModelUpdate.getAgent().getLocation(), -agentModelUpdate.getEatAmount());
-                aliveAgents.add(agentModelUpdate.getAgent());
-                diagnostics.addToStats(agentModelUpdate.getAgent().getAttributes().getCode(), 1, agentModelUpdate.getAgent().getScores().getHunger(), agentModelUpdate.getAgent().getScores().getAge());
-            }
-            if (!agentModelUpdate.getChildAgents().isEmpty()) {
-                for (Agent childAgent : agentModelUpdate.getChildAgents()) {
-                    environment.setTileAgent(childAgent);
-                    aliveAgents.add(childAgent);
+            if (!currentAgent.isEaten()) {
+                runAgent(currentAgent); // Iterate and run over all agents in the simulation
+                if (!currentAgent.isDead()) {
+                    diagnostics.addToAgentStats(currentAgent.getAttributes().getCode(), 1, currentAgent.getScores().getHunger(), currentAgent.getScores().getAge());
                 }
             }
         }
-//        for (int i = 0; i < agentEditor.getActiveAgents().size(); i++) {
-//            if (diagnostics.getAgentPopulations()[i] <= 0) {
-//                diagnostics.addToLogQueue("[AGENT]: Agent " + agentEditor.getAgent(i).getAttributes().getCode() + " has gone extinct.");
-//            }
-//        }
-        IntStream.range(0, environmentSize * environmentSize).parallel().forEach(i->{
-            if (randomGen.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {
-                environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
+        agentList = aliveAgentList;
+        aliveAgentList = new ArrayList<>();
+        IntStream.range(0, environment.getSize() * environment.getSize()).parallel().forEach(i->{
+            if (random.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {
+                int modifyAmount = environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
+                diagnostics.modifyCurrentEnvironmentEnergy(modifyAmount);
             }
         });
-        agentList = aliveAgents;
     }
 
-    public void clear() {
-        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
+    public void clearAgents() {
+        IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
             EnvironmentTile current_wt = environment.getGrid()[i];
             current_wt.setOccupant(null);
         });
-        agentList = new ArrayList<Agent>();
+        agentList = new ArrayList<>();
     }
 
     public void replenishEnvironmentEnergy() {
-        IntStream.range(0, environmentSize * environmentSize).sequential().forEach(i->{
+        IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
             EnvironmentTile current_wt = environment.getGrid()[i];
             current_wt.setFoodLevel(environment.getMaxEnergyLevel());
         });
+        diagnostics.resetCurrentEnvironmentEnergy();
     }
 
-    public void updateEnvironmentSettings(int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
-        environment.setMinEnergyLevel(minEnergyLevel);
-        environment.setMaxEnergyLevel(maxEnergyLevel);
-        environment.setEnergyRegenChance(energyRegenChance);
-        environment.setEnergyRegenAmount(energyRegenAmount);
+    public void setEnvironmentSettings(EnvironmentSettings environmentSettings) {
+        if (environmentSettings.getSize() != environment.getSize()) {
+            clearAgents();
+            environment.setEnvironmentSettings(environmentSettings);
+            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize()*getEnvironmentSize());
+            diagnostics.resetCurrentEnvironmentEnergy();
+        }
+        else if (environmentSettings.getMaxEnergyLevel() < environment.getMaxEnergyLevel()) {
+            environment.setEnvironmentSettings(environmentSettings);
+            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize()*getEnvironmentSize());
+            diagnostics.resetCurrentEnvironmentEnergy();
+        }
+            environment.setEnvironmentSettings(environmentSettings);
+            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize() * getEnvironmentSize());
+        }
 
+
+    public EnvironmentSettings getEnvironmentSettings() {
+        return new EnvironmentSettings(environment.getSize(),
+                                       environment.getMaxEnergyLevel(),
+                                       environment.getMinEnergyLevel(),
+                                       environment.getEnergyRegenChance(),
+                                       environment.getEnergyRegenAmount(),
+                                       environment.getColors());
     }
 
     public Diagnostics getDiagnostics() {
@@ -164,29 +183,130 @@ public class ModelController {
         return environment.getEnergyRegenChance();
     }
 
-    public int getMaxEnergy() {
+    public int getMaxTileEnergy() {
         return environment.getMaxEnergyLevel();
     }
 
-    public int getMinEnergy() {
+    public int getMinTileEnergy() {
         return environment.getMinEnergyLevel();
     }
 
-    public void setMaxEnergy(int maxEnergy) {
+    public void setMaxTileEnergy(int maxEnergy) {
         environment.setMaxEnergyLevel(maxEnergy);
     }
 
-    public void setMinEnergy(int minEnergy) {
+    public void setMinTileEnergy(int minEnergy) {
         environment.setMinEnergyLevel(minEnergy);
     }
 
-    public Environment getEnvironment() {
-        return environment;
-    }
-
     public int getEnvironmentSize() {
-        return environmentSize;
+        return environment.getSize();
     }
 
+    public void runAgent(Agent agent) {
+        if (agent.isEaten()) {
+          return; // Agent has been eaten by another agent, therefor its already been removed from the environment, all we need to do is not add it to the aliveAgentList
+        }
+        agent.liveDay(); // Live a day, i.e. reduce hunger, increase age, reduce creation cooldown.
+        if (agent.isDead()) {
+            environment.setTileAgent(agent.getLocation(), null); // If the agent is now dead, remove it from the board and don't add it to aliveAgentList
+            return;
+        }
+        ArrayList<AgentVision> agentView = lookAround(agent);
+        AgentDecision agentDecision = reactToView(agent, agentView);
+        if (agentDecision.getAgentAction().equals(AgentAction.NONE)) { // Do nothing
+            aliveAgentList.add(agent); // Agent is still alive
+        }
+        else if (agentDecision.getAgentAction().equals(AgentAction.MOVE)) {
+            environment.setTileAgent(agent.getLocation(), null);
+            agent.move(agentDecision.getLocation()); // Move to the chosen location
+            environment.setTileAgent(agent);
+            aliveAgentList.add(agent); // Agent is still alive
+        }
+        else if (agentDecision.getAgentAction().equals(AgentAction.CREATE)) { // Create children
+            ArrayList<Agent> childAgents = agent.create(agentDecision.getLocation(), environment);
+            for (Agent child : childAgents) {
+                environment.setTileAgent(child);
+            }
+            aliveAgentList.addAll(childAgents); // Create new agents with found mate,
+            aliveAgentList.add(agent); // Agent is still alive
+        }
+        else if (agentDecision.getAgentAction().equals(AgentAction.GRAZE)) {
+            environment.setTileAgent(agent.getLocation(), null);
+            agent.move(agentDecision.getLocation()); // Move to chosen location
+            environment.setTileAgent(agent);
+            int grazeAmount = -agent.graze(environment.getTile(agent.getLocation()));
+            environment.modifyTileFoodLevel(agent.getLocation(), grazeAmount); // Consume energy at chosen location
+            aliveAgentList.add(agent); // Agent is still alive
+            diagnostics.modifyCurrentEnvironmentEnergy(grazeAmount);
+        }
+        else if (agentDecision.getAgentAction().equals(AgentAction.PREDATE)) {
+            environment.getTile(agentDecision.getLocation()).getOccupant().setBeenEaten(); // We set the preys hasBeenEaten flag to true
+            agent.predate(environment.getTile(agentDecision.getLocation()).getOccupant().getAttributes()); // Predator gains energy from the prey
+            environment.setTileAgent(agent.getLocation(), null);
+            agent.move(agentDecision.getLocation()); // Predator now occupies preys location
+            environment.setTileAgent(agent);
+            aliveAgentList.add(agent); // Agent is still alive
+        }
+    }
+
+    public ArrayList<AgentVision> lookAround(Agent agent) {
+        Location agentLocation = agent.getLocation();
+        int visionRange = agent.getAttributes().getRange();
+        int agentRange = agent.getAttributes().getRange();
+        // Generate a new ArrayList of the AgentVision object, everything the agent sees will be stored here.
+        ArrayList<AgentVision> agentViews = new ArrayList<>();
+        // Retrieve the agents vision attribute, lets us know how far the agent can see.
+        // Now we iterate over all the surrounding tiles, adding their visible contents to the AgentVision ArrayList.
+        for (int i = -visionRange; i <= visionRange; i++) {
+            for (int j = -visionRange; j <= visionRange; j++) {
+                int x_coord = agentLocation.getX() + i;
+                int y_coord = agentLocation.getY() + j;
+                // Checks the agent isn't looking outside the grid and prevents a null pointer exception // TODO - there must be a better way to do this.
+                if (((x_coord < environment.getSize()) && (y_coord < environment.getSize())) && ((x_coord >= 0) && (y_coord >= 0)) && !(i == 0 && j == 0)) {
+                    AgentVision av = environment.getTileView(x_coord, y_coord);
+                    if (Math.abs(i) <= agentRange && Math.abs(j) <= agentRange) {
+                        av.setInRange(true);
+                    }
+                    else {
+                        av.setInRange(false);
+                    }
+                    agentViews.add(av);
+                }
+            }
+        }
+        Collections.shuffle(agentViews);
+        return agentViews;
+    }
+
+    public AgentDecision reactToView(Agent agent, ArrayList<AgentVision> agentView) {
+        ArrayList<AgentDecision> possibleDecisions = new ArrayList<>();
+        for (AgentVision currentAV : agentView) {
+            if (currentAV.isInRange()) {
+                possibleDecisions.add(reactToTile(agent, currentAV));
+            }
+        }
+        return getBestDecision(possibleDecisions);
+    }
+
+    public AgentDecision reactToTile(Agent agent, AgentVision agentVision) {
+        ArrayList<AgentDecision> possibleDecisions = new ArrayList<>();
+        for (Motivation motivation : agent.getMotivations()) {
+            possibleDecisions.add(motivation.run(agentVision, agent.getAttributes(), agent.getScores()));
+        }
+        return getBestDecision(possibleDecisions);
+    }
+
+    // A utility function which takes a collection of agent decisions, and returns the one with the highest decision score.
+    private static AgentDecision getBestDecision(ArrayList<AgentDecision> agentDecisions) {
+        AgentDecision finalDecision = new AgentDecision(null, AgentAction.NONE, 0);
+        Collections.shuffle(agentDecisions);
+        for (AgentDecision agentDecision : agentDecisions) {
+            if (agentDecision.getDecisionScore() > finalDecision.getDecisionScore()) {
+                finalDecision = agentDecision;
+            }
+        }
+        return finalDecision;
+    }
 
 }

@@ -2,19 +2,25 @@ package Model.AgentEditor;
 
 import Model.Agents.AgentConcreteComponents.BasicAttributes;
 import Model.Agents.AgentInterfaces.Attributes;
+import Model.Agents.AgentInterfaces.Motivation;
 
 import java.awt.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-public class AgentSettings {
+public class AgentSettings implements Serializable {
 
     private Attributes attributes;
+    private ArrayList<Motivation> motivations;
 
-    public AgentSettings(int spawningWeight, String name, int code, Color color, int visionRange, int movementRange, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
-        this.attributes = new BasicAttributes(spawningWeight, name, code, color, visionRange, movementRange, size, energyCapacity, eatAmount, lifespan, creationAge, creationAmount, creationDelay);
+    public AgentSettings(int spawningWeight, String name, int code, Color color, int range, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay, ArrayList<Motivation> motivations) {
+        this.attributes = new BasicAttributes(spawningWeight, name, code, color, range, size, energyCapacity, eatAmount, lifespan, creationAge, creationAmount, creationDelay);
+        this.motivations = (ArrayList<Motivation>) motivations.clone();
     }
 
-    public AgentSettings(Attributes attributes) {
+    public AgentSettings(Attributes attributes, ArrayList<Motivation> motivations) {
         this.attributes = attributes;
+        this.motivations = (ArrayList<Motivation>) motivations.clone();
     }
 
     public Attributes getAgentAttributes() {
@@ -65,20 +71,12 @@ public class AgentSettings {
         attributes.setLifespan(lifespan);
     }
 
-    public int getVisionRange() {
-        return attributes.getVisionRange();
+    public int getRange() {
+        return attributes.getRange();
     }
 
-    public void setVisionRange(int visionRange) {
-        attributes.setVisionRange(visionRange);
-    }
-
-    public int getMovementRange() {
-        return attributes.getMovementRange();
-    }
-
-    public void setMovementRange(int movementRange) {
-        attributes.setMovementRange(movementRange);
+    public void setRange(int range) {
+        attributes.setRange(range);
     }
 
     public int getSize() {
@@ -128,4 +126,13 @@ public class AgentSettings {
     public void setSpawningWeight(int spawningWeight) {
         attributes.setSpawningWeight(spawningWeight);
     }
+
+    public ArrayList<Motivation> getMotivations() {
+        return motivations;
+    }
+
+    public void setMotivations(ArrayList<Motivation> motivations) {
+        this.motivations = motivations;
+    }
+
 }

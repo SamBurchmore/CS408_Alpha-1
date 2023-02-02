@@ -4,16 +4,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class DiagnosticsPanel extends JPanel {
 
     // The label where the current simulation step is displayed
     private JLabel currentStepLabel;
 
-    private Object[][] agentStatistics = {{"Agent 1", 0, 0.0, 0.0}, {"Agent 2", 0, 0.0, 0.0}, {"Agent 3", 0, 0.0, 0.0}, {"Agent 4", 0, 0.0, 0.0}, {"Agent 5", 0, 0.0, 0.0}, {"Agent 6", 0, 0.0, 0.0}, {"Agent 7", 0, 0.0, 0.0}, {"Agent 8", 0, 0.0, 0.0}};
-    private String[] agentStatNames = {"<html>Agent<br></html>" , "<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>"}; //{"<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>"};
+    private Object[][] agentStatistics = {{"Agent 1", 0, 0.0, 0.0, 0}, {"Agent 2", 0, 0.0, 0.0, 0}, {"Agent 3", 0, 0.0, 0.0, 0}, {"Agent 4", 0, 0.0, 0.0, 0}, {"Agent 5", 0, 0.0, 0.0, 0}, {"Agent 6", 0, 0.0, 0.0, 0}, {"Agent 7", 0, 0.0, 0.0, 0}, {"Agent 8", 0, 0.0, 0.0, 0}};
+    private String[] agentStatNames = {"<html>Agent<br></html>" , "<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>", "<html>Born Last<br>Step</html>"}; //{"<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>"};
     private JTable agentStatsTable;
     private JScrollPane agentStatsTableScrollPane;
 
@@ -24,6 +22,15 @@ public class DiagnosticsPanel extends JPanel {
 
     // This is where the environments statistics will be shown, stuff like total energy, available space, etc
     private JPanel environmentStatsPanel;
+
+    private JLabel maxEnvironmentEnergyLabel;
+    private JLabel maxEnvironmentEnergyValueLabel;
+
+    private JLabel currentEnvironmentEnergyLabel;
+    private JLabel currentEnvironmentEnergyValueLabel;
+
+    private JLabel currentEnvironmentEnergyPercentLabel;
+    private JLabel currentEnvironmentEnergyPercentValueLabel;
 
 
     public DiagnosticsPanel() {
@@ -44,7 +51,7 @@ public class DiagnosticsPanel extends JPanel {
         agentStatsTable = new JTable(tableModel);
         agentStatsTableScrollPane = new JScrollPane(agentStatsTable);
         agentStatsTableScrollPane.setBorder(null);
-        agentStatsTableScrollPane.setPreferredSize(new Dimension(400, 206));
+        agentStatsTableScrollPane.setPreferredSize(new Dimension(400, 202));
         agentStatsTable.setFillsViewportHeight(true);
         agentStatsTable.setDefaultEditor(Object.class, null);
         agentStatsTable.getTableHeader().setPreferredSize(new Dimension(400, 35));
@@ -60,9 +67,33 @@ public class DiagnosticsPanel extends JPanel {
         logTextAreaLabel.setFont(new Font("Dialog", Font.BOLD, 12));
 
         // Now we configure the environment statistics panel
-        environmentStatsPanel = new JPanel();
-        environmentStatsPanel.setBackground(Color.lightGray);
-        environmentStatsPanel.setPreferredSize(new Dimension(400, 100));
+        environmentStatsPanel = new JPanel(new GridLayout(3, 2));
+        environmentStatsPanel.setPreferredSize(new Dimension(396, 100));
+        environmentStatsPanel.setBorder(BorderFactory.createLineBorder(new Color(214, 214, 214), 2));
+
+        maxEnvironmentEnergyLabel = new JLabel("     Max Environment Energy: ");
+        maxEnvironmentEnergyLabel.setPreferredSize(new Dimension(130, 15));
+        currentEnvironmentEnergyLabel = new JLabel("     Current Environment Energy: ");
+        currentEnvironmentEnergyLabel.setPreferredSize(new Dimension(130, 15));
+        currentEnvironmentEnergyPercentLabel = new JLabel("     Available Energy Percent: ");
+        currentEnvironmentEnergyPercentLabel.setPreferredSize(new Dimension(130, 15));
+
+        maxEnvironmentEnergyValueLabel = new JLabel();
+        maxEnvironmentEnergyValueLabel.setPreferredSize(new Dimension(150, 15));
+        maxEnvironmentEnergyLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        currentEnvironmentEnergyValueLabel = new JLabel();
+        currentEnvironmentEnergyValueLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        currentEnvironmentEnergyValueLabel.setPreferredSize(new Dimension(150, 15));
+        currentEnvironmentEnergyPercentValueLabel = new JLabel();
+        currentEnvironmentEnergyPercentValueLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        currentEnvironmentEnergyPercentValueLabel.setPreferredSize(new Dimension(150, 15));
+
+        environmentStatsPanel.add(maxEnvironmentEnergyLabel);
+        environmentStatsPanel.add(maxEnvironmentEnergyValueLabel);
+        environmentStatsPanel.add(currentEnvironmentEnergyLabel);
+        environmentStatsPanel.add(currentEnvironmentEnergyValueLabel);
+        environmentStatsPanel.add(currentEnvironmentEnergyPercentLabel);
+        environmentStatsPanel.add(currentEnvironmentEnergyPercentValueLabel);
 
         // The GridBag constraints we'll be using to build this panel
         GridBagConstraints c = new GridBagConstraints();
@@ -103,18 +134,33 @@ public class DiagnosticsPanel extends JPanel {
             row[1] = agentStats[1][i];
             row[2] = agentStats[2][i];
             row[3] = agentStats[3][i];
+            row[4] = agentStats[4][i];
             model.removeRow(i);
             model.insertRow(i, row);
         }
         agentStatsTable.setModel(model);
     }
 
-    public void clearLogTextArea() {
+    public void setEnvironmentStats(Object[] environmentStats) {
+        maxEnvironmentEnergyValueLabel.setText(environmentStats[0].toString());
+        currentEnvironmentEnergyValueLabel.setText(environmentStats[1].toString());
+        currentEnvironmentEnergyPercentValueLabel.setText(environmentStats[2].toString() + "%");
+    }
+
+    public void clearLog() {
         logTextArea.setText("");
     }
 
     public void addLogMessage(String logMessage) {
         logTextArea.append(logMessage + "\n");
+    }
+
+    public void setStepLabel(long step) {
+        currentStepLabel.setText("Step: " + step);
+    }
+
+    public void clearStepLabel() {
+        currentStepLabel.setText("Step: 0");
     }
 
 }
