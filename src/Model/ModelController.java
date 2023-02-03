@@ -60,13 +60,13 @@ public class ModelController {
                 int agentIndex = random.nextInt(activeAgents.size());
                 BasicAgent agent;
                 for (int j = 0; j < activeAgents.size(); j++) {
-                    if (j == agentIndex) {
+                    if (j == agentIndex && agentEditor.getAgent(j).getAttributes().getSpawningWeight() * 100 > random.nextInt(100)) {
                         agent = (BasicAgent) agentEditor.getAgent(j).copy();
                         EnvironmentTile wt = environment.getGrid()[i];
                         agent.setLocation(wt.getLocation());
                         wt.setOccupant(agent);
                         agentList.add(agent);
-                        diagnostics.addToAgentStats(j, 1, agent.getScores().getHunger(), agent.getScores().getAge());
+                        diagnostics.addToAgentStats(j, 1, agent.getScores().getEnergy(), agent.getScores().getAge());
                     }
                 }
             }
@@ -79,7 +79,7 @@ public class ModelController {
             if (!currentAgent.isEaten()) {
                 runAgent(currentAgent); // Iterate and run over all agents in the simulation
                 if (!currentAgent.isDead()) {
-                    diagnostics.addToAgentStats(currentAgent.getAttributes().getCode(), 1, currentAgent.getScores().getHunger(), currentAgent.getScores().getAge());
+                    diagnostics.addToAgentStats(currentAgent.getAttributes().getCode(), 1, currentAgent.getScores().getEnergy(), currentAgent.getScores().getAge());
                 }
             }
         }

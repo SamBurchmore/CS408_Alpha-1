@@ -9,34 +9,34 @@ public abstract class BaseScores implements Scores, Serializable {
     private int hunger;
     private int health;
     private int age;
-    private int MAX_HUNGER;
-    private int MAX_HEALTH;
-    private int MAX_AGE;
+    private int maxHunger;
+    private int maxHealth;
+    private int maxAge;
     private int creationDelay;
     private int creationCounter;
 
-    public BaseScores(int hunger_, int health_, int age_, int MAX_HUNGER_, int MAX_HEALTH_, int MAX_AGE_, int creationDelay_) {
-        this.hunger = hunger_;
-        this.health = health_;
-        this.age = age_;
-        this.MAX_HUNGER = MAX_HUNGER_;
-        this.MAX_HEALTH = MAX_HEALTH_;
-        this.MAX_AGE = MAX_AGE_;
+    public BaseScores(int hunger, int health, int maxHunger, int maxHealth, int maxAge, int creationDelay_) {
+        this.hunger = hunger;
+        this.health = health;
+        this.maxHunger = maxHunger;
+        this.maxHealth = maxHealth;
+        this.maxAge = maxAge;
         this.creationDelay = creationDelay_;
         this.creationCounter = 0;
+        this.age = 0;
 
     }
 
     @Override
-    public void setHunger(int hunger_) {
-        this.hunger = hunger_;
-        if (this.hunger > this.MAX_HUNGER) {
-            this.hunger = this.MAX_HUNGER;
+    public void setEnergy(int hunger) {
+        this.hunger = hunger;
+        if (this.hunger > this.maxHunger) {
+            this.hunger = this.maxHunger;
         }
     }
 
     @Override
-    public int getHunger() {
+    public int getEnergy() {
         return this.hunger;
     }
 
@@ -46,8 +46,8 @@ public abstract class BaseScores implements Scores, Serializable {
     }
 
     @Override
-    public void setAge(int age_) {
-        this.age = age_;
+    public void setAge(int age) {
+        this.age = age;
     }
 
     @Override
@@ -56,41 +56,41 @@ public abstract class BaseScores implements Scores, Serializable {
     }
 
     @Override
-    public void setHealth(int health_) {
-        this.health = health_;
-        if (this.health > this.MAX_HEALTH) {
-            this.health = this.MAX_HEALTH;
+    public void setHealth(int health) {
+        this.health = health;
+        if (this.health > this.maxHealth) {
+            this.health = this.maxHealth;
         }
     }
 
     @Override
-    public int getMAX_HUNGER() {
-        return this.MAX_HUNGER;
+    public int getMaxEnergy() {
+        return this.maxHunger;
     }
 
     @Override
-    public int getMAX_AGE() {
-        return this.MAX_AGE;
+    public int getMaxAge() {
+        return this.maxAge;
     }
 
     @Override
-    public int getMAX_HEALTH() {
-        return this.MAX_HEALTH;
+    public int getMaxHealth() {
+        return this.maxHealth;
     }
 
     @Override
-    public void setMAX_HUNGER(int MAX_HUNGER_) {
-        this.MAX_HUNGER = MAX_HUNGER_;
+    public void setMaxEnergy(int maxHunger) {
+        this.maxHunger = maxHunger;
     }
 
     @Override
-    public void setMAX_AGE(int MAX_AGE_) {
-        this.MAX_AGE = MAX_AGE_;
+    public void setMaxAge(int maxAge) {
+        this.maxAge = maxAge;
     }
 
     @Override
-    public void setMAX_HEALTH(int MAX_HEALTH_) {
-        this.MAX_HEALTH = MAX_HEALTH_;
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
     }
 
     @Override

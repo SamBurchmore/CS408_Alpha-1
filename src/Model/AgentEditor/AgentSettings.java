@@ -13,7 +13,7 @@ public class AgentSettings implements Serializable {
     private Attributes attributes;
     private ArrayList<Motivation> motivations;
 
-    public AgentSettings(int spawningWeight, String name, int code, Color color, int range, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay, ArrayList<Motivation> motivations) {
+    public AgentSettings(double spawningWeight, String name, int code, Color color, int range, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay, ArrayList<Motivation> motivations) {
         this.attributes = new BasicAttributes(spawningWeight, name, code, color, range, size, energyCapacity, eatAmount, lifespan, creationAge, creationAmount, creationDelay);
         this.motivations = (ArrayList<Motivation>) motivations.clone();
     }
@@ -119,7 +119,7 @@ public class AgentSettings implements Serializable {
         return attributes.getCode();
     }
 
-    public int getSpawningWeight() {
+    public double getSpawningWeight() {
         return attributes.getSpawningWeight();
     }
 

@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class BaseAttributes implements Attributes, Serializable {
 
-    private int spawningWeight;
+    private double spawningWeight;
     private String name;
     private int code;
     private Color color;
@@ -23,7 +23,7 @@ public class BaseAttributes implements Attributes, Serializable {
     private int creationAmount;
     private int creationDelay;
 
-    public BaseAttributes(int spawningWeight, String name, int code, Color color, int range, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
+    public BaseAttributes(double spawningWeight, String name, int code, Color color, int range, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
         this.spawningWeight = spawningWeight;
         this.code = code;
         this.name = name;
@@ -154,12 +154,12 @@ public class BaseAttributes implements Attributes, Serializable {
     }
 
     @Override
-    public int getSpawningWeight() {
+    public double getSpawningWeight() {
         return spawningWeight;
     }
 
     @Override
-    public void setSpawningWeight(int spawningWeight) {
+    public void setSpawningWeight(double spawningWeight) {
         this.spawningWeight = spawningWeight;
     }
 

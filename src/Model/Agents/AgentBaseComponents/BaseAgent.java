@@ -29,7 +29,7 @@ public abstract class BaseAgent implements Agent {
     public BaseAgent(Location location, Attributes attributes, ArrayList<Motivation> motivations) {
         this.location = location;
         this.attributes = attributes;
-        this.scores = new BasicScores(attributes.getEnergyCapacity(), 0, 0, attributes.getEnergyCapacity(), 0, attributes.getLifespan(), attributes.getCreationDelay());
+        this.scores = new BasicScores(attributes.getEnergyCapacity(), 0, attributes.getEnergyCapacity(), 0, attributes.getLifespan(), attributes.getCreationDelay());
         this.motivations = motivations;
         hasBeenEaten = false;
     }
@@ -38,21 +38,21 @@ public abstract class BaseAgent implements Agent {
         this.location = location;
         this.attributes = new BasicAttributes(parentA.getAttributes(), parentB.getAttributes());
         this.motivations = parentA.copyMotivations();
-        this.scores = new BasicScores(parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), 0, parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMAX_HEALTH(), parentA.getAttributes().getLifespan(), parentA.getAttributes().getCreationAge());
+        this.scores = new BasicScores(parentA.getAttributes().getEnergyCapacity(), 0, parentA.getAttributes().getEnergyCapacity(), parentA.getScores().getMaxHealth(), parentA.getAttributes().getLifespan(), parentA.getAttributes().getCreationAge());
         this.scores.setCreationCounter(parentA.getAttributes().getCreationAge());
         hasBeenEaten = false;
     }
 
     @Override
     public void liveDay() {
-        this.getScores().setHunger((this.getScores().getHunger() - this.getAttributes().getSize()));
+        this.getScores().setEnergy((this.getScores().getEnergy() - this.getAttributes().getSize()));
         this.getScores().setAge(this.getScores().getAge()+1);
         this.getScores().setCreationCounter((this.getScores().getCreationCounter() - 1));
     }
 
     @Override
     public boolean isDead() {
-        return this.getScores().getHunger() <= 0 || this.getScores().getAge() >= this.getAttributes().getLifespan();
+        return this.getScores().getEnergy() <= 0 || this.getScores().getAge() >= this.getAttributes().getLifespan();
     }
 
     @Override
@@ -96,16 +96,16 @@ public abstract class BaseAgent implements Agent {
             return 0; // If there's no energy, environment loses nothing and agent gains no energy.
         }
         if (environmentTile.getEnergyLevel() >= getAttributes().getEatAmount()) {
-            getScores().setHunger(getScores().getHunger() + getAttributes().getEatAmount()); // If there's more food than the agents eat amount, environment loses agents eat amount and agent gets it
+            getScores().setEnergy(getScores().getEnergy() + getAttributes().getEatAmount()); // If there's more food than the agents eat amount, environment loses agents eat amount and agent gets it
             return getAttributes().getEatAmount();
         }
-        getScores().setHunger(getScores().getHunger() + environmentTile.getEnergyLevel()); // If there's less food than the agents eat amount, environment loses all and agent gains it.
+        getScores().setEnergy(getScores().getEnergy() + environmentTile.getEnergyLevel()); // If there's less food than the agents eat amount, environment loses all and agent gains it.
         return environmentTile.getEnergyLevel();
     }
 
     @Override
     public void predate(Attributes preyAttributes) {
-        getScores().setHunger(getScores().getHunger() + preyAttributes.getSize()); // TODO change back to prey size
+        getScores().setEnergy(getScores().getEnergy() + preyAttributes.getSize() + getAttributes().getEatAmount());
     }
 
     @Override
@@ -127,8 +127,8 @@ public abstract class BaseAgent implements Agent {
         getScores().setCreationCounter(getScores().getCreationDelay());
         Agent newAgent = new BasicAgent(childLocation, this, parentB);
 
-        getScores().setHunger(getScores().getHunger() - 1);
-        newAgent.getScores().setHunger(getScores().getHunger() / getAttributes().getCreationAmount());
+        getScores().setEnergy(getScores().getEnergy() - 1);
+        newAgent.getScores().setEnergy(getAttributes().getEnergyCapacity() / getAttributes().getCreationAmount());
 
         return newAgent;
     }

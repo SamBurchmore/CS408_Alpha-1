@@ -28,7 +28,7 @@ public interface Attributes {
     void setName(String name);
     void setCode(int code);
     void setColor(Color color);
-    int getSpawningWeight();
-    void setSpawningWeight(int spawningWeight);
+    double getSpawningWeight();
+    void setSpawningWeight(double spawningWeight);
 
 }

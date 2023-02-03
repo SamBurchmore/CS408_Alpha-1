@@ -16,9 +16,12 @@ public class CreatorMotivation implements Motivation, Serializable {
     @Override
     public AgentDecision run(AgentVision tile, Attributes attributes, Scores scores) {
         if (tile.isOccupied()) {
-            if (tile.getAgentAttributes().getCode() == attributes.getCode() && scores.getHunger() > attributes.getEnergyCapacity() / 2 && scores.getAge() >= attributes.getCreationAge() && scores.getCreationCounter() <= 0) {
+            if (tile.getAgentAttributes().getCode() == attributes.getCode()
+                    && scores.getEnergy() > (attributes.getEnergyCapacity()) / 2
+                    && scores.getAge() >= attributes.getCreationAge()
+                    && scores.getCreationCounter() <= 0) {
                 // Tile is occupied, and it's occupant is the same species, set the decision to CREATE and the score 10
-                return new AgentDecision(tile.getLocation(), AgentAction.CREATE, 10);
+                return new AgentDecision(tile.getLocation(), AgentAction.CREATE, 20);
             }
             // Tile is occupied but its occupant is a different species, set decision to NONE and score to -10
             return new AgentDecision(null, AgentAction.NONE, -10);

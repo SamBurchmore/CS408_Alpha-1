@@ -260,7 +260,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         spawningWeightLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         spawningWeightLabel.setPreferredSize(new Dimension(120, 20));
 
-        spawningWeightSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 100, 1));
+        spawningWeightSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 1, 0.01));
         spawningWeightSpinner.setPreferredSize(new Dimension(50, 20));
 
         spawningWeightPanel = new JPanel();
@@ -379,7 +379,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         if (isPredatorToggle.isSelected()) {
             motivations.add(new PredatorMotivation());
         }
-        return new AgentSettings((int) spawningWeightSpinner.getValue(),
+        return new AgentSettings((double) spawningWeightSpinner.getValue(),
                                        agentNameTextField.getText(),
                                  (int) agentCodeSpinner.getValue(),
                                        colourChooserButton.getBackground(),

@@ -2,6 +2,7 @@ package View;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -44,6 +45,7 @@ public class MainView extends JFrame {
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         File workingDirectory = new File(System.getProperty("user.dir"));
         fileChooser.setCurrentDirectory(workingDirectory);
+        fileChooser.setFileFilter(new FileNameExtensionFilter("DAT file", "dat"));
 
         // Define the menu bar and its menus
         menuBar = new JMenuBar();
@@ -166,5 +168,9 @@ public class MainView extends JFrame {
 
     public JFileChooser getFileChooser() {
         return fileChooser;
+    }
+
+    public WorldPanel getWorldPanel() {
+        return worldPanel;
     }
 }

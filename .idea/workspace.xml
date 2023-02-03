@@ -7,11 +7,19 @@
     <list default="true" id="b5c119b8-cf77-44b8-a83a-26bb30553e3a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Diagnostics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Diagnostics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Environment/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Environment/Environment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Environment/EnvironmentTile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Environment/EnvironmentTile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/AgentEditor/AgentSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/AgentEditor/AgentSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAttributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseScores.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseScores.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/BasicAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/BasicAttributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/BasicScores.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/BasicScores.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/CreatorMotivation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/CreatorMotivation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PredatorMotivation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PredatorMotivation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Attributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Attributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Scores.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Scores.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/ModelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/ModelController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/AgentEditorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/AgentEditorPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MainView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,21 +51,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/4th Year/CS408_Project/CS408_Beta/commons-io-2.11.0.jar&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Java&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "E:/4th Year/CS408_Project/CS408_Alpha-1",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.sourceCode.Java",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
       <recent name="WorldStructs" />
@@ -234,6 +243,7 @@
       <workItem from="1675182124796" duration="27975000" />
       <workItem from="1675260400355" duration="32129000" />
       <workItem from="1675348233681" duration="19503000" />
+      <workItem from="1675370669469" duration="7077000" />
     </task>
     <task id="LOCAL-00001" summary="added some methods">
       <created>1668354392375</created>

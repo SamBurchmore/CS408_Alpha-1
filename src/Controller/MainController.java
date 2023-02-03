@@ -4,6 +4,7 @@ import Model.AgentEditor.SavedAgents;
 import Model.Environment.EnvironmentSettings;
 import Model.ModelController;
 import View.MainView;
+import com.formdev.flatlaf.util.Graphics2DProxy;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;

@@ -16,10 +16,10 @@ public class PredatorMotivation implements Motivation, Serializable {
     @Override
     public AgentDecision run(AgentVision tile, Attributes attributes, Scores scores) {
         if (tile.isOccupied()) { // Predator motivation motivates agent to move to occupied tiles
-            if (tile.getAgentAttributes().getSize() <= tile.getAgentAttributes().getSize() && tile.getAgentAttributes().getCode() != attributes.getCode()) {
+            if (tile.getAgentAttributes().getSize() <= attributes.getSize() && tile.getAgentAttributes().getCode() != attributes.getCode()) {
                 // Tile is occupied, its occupant is smaller than the agent, and it's a different 'species' (code is different),
                 // set decision to PREDATE and its score to the occupants size multiplied by how much energy its missing
-                return new AgentDecision(tile.getLocation(), AgentAction.PREDATE, 10);
+                return new AgentDecision(tile.getLocation(), AgentAction.PREDATE, 10 + tile.getAgentAttributes().getSize());
             }
             // Tile is occupied but its occupant is either larger or the same species, set decision to NONE and its score to -10
             return new AgentDecision(null, AgentAction.NONE, -10);

@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class BasicAttributes extends BaseAttributes {
 
-    public BasicAttributes(int spawningWeight, String name, int code, Color color, int range, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
+    public BasicAttributes(double spawningWeight, String name, int code, Color color, int range, int size, int energyCapacity, int eatAmount, int lifespan, int creationAge, int creationAmount, int creationDelay) {
         super(spawningWeight, name, code, color, range, size, energyCapacity, eatAmount, lifespan, creationAge, creationAmount, creationDelay);
     }
 
