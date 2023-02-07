@@ -56,7 +56,7 @@ public class SimulationControlPanel extends JPanel {
         populateButton = new JButton("Populate");
         populateButton.setPreferredSize(new Dimension(225, 25));
 
-        populationDensitySpinner = new JSpinner(new SpinnerNumberModel(1.0, 0, 100.0, 1));
+        populationDensitySpinner = new JSpinner(new SpinnerNumberModel(15.0, 0, 100.0, 1));
         populationDensitySpinner.setPreferredSize(new Dimension(75, 25));
 
         populatePanel = new JPanel(new GridBagLayout());

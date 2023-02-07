@@ -13,4 +13,12 @@ public interface Motivation {
 
     int getCode();
 
+    int getBias();
+
+    int getWeight();
+
+    void setBias(int bias);
+
+    void setWeight(int weight);
+
 }

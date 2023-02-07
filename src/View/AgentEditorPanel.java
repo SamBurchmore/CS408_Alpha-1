@@ -63,8 +63,24 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
     private JSpinner creationDelaySpinner;
     private JSpinner agentCodeSpinner;
 
+    // The panels where the motivations and toggled and their weights and biases selected
+    private JPanel grazerPanel;
+    private JPanel predatorPanel;
+
     private JCheckBox isGrazerToggle;
     private JCheckBox isPredatorToggle;
+
+    private JLabel grazerBiasSpinnerLabel;
+    private JLabel predatorBiasSpinnerLabel;
+
+    private JLabel grazerWeightSpinnerLabel;
+    private JLabel predatorWeightSpinnerLabel;
+
+    private JSpinner grazerBiasSpinner;
+    private JSpinner predatorBiasSpinner;
+
+    private JSpinner grazerWeightSpinner;
+    private JSpinner predatorWeightSpinner;
 
     private JLabel spawningWeightLabel;
     private JSpinner spawningWeightSpinner; // The spinner which controls how many agents are created when the population button is clicked.
@@ -227,14 +243,56 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         motivationsPanel.setPreferredSize(new Dimension(450, 160));
         motivationsPanel.setName("Motivations");
 
+        grazerPanel = new JPanel();
+        grazerPanel.setPreferredSize(new Dimension(225, 50));
+
+        predatorPanel = new JPanel();
+        predatorPanel.setPreferredSize(new Dimension(225, 50));
+
+        grazerBiasSpinnerLabel = new JLabel("Bias: ");
+        grazerBiasSpinnerLabel.setPreferredSize(new Dimension(150, 25));
+
+        predatorBiasSpinnerLabel = new JLabel("Bias: ");
+        predatorBiasSpinnerLabel.setPreferredSize(new Dimension(150, 25));
+
+        grazerWeightSpinnerLabel = new JLabel("Weight: ");
+        grazerWeightSpinnerLabel.setPreferredSize(new Dimension(150, 25));
+
+        predatorWeightSpinnerLabel = new JLabel("Weight: ");
+        predatorWeightSpinnerLabel.setPreferredSize(new Dimension(150, 25));
+
+        grazerBiasSpinner = new JSpinner(new SpinnerNumberModel(10, 0, 10, 1));
+        grazerBiasSpinner.setPreferredSize(new Dimension(60, 25));
+
+        predatorBiasSpinner = new JSpinner(new SpinnerNumberModel(10, 0, 10, 1));
+        predatorBiasSpinner.setPreferredSize(new Dimension(60, 25));
+
+        grazerWeightSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 10, 1));
+        grazerWeightSpinner.setPreferredSize(new Dimension(60, 25));
+
+        predatorWeightSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 10, 1));
+        predatorWeightSpinner.setPreferredSize(new Dimension(60, 25));
+
         isGrazerToggle = new JCheckBox("Grazer");
         isGrazerToggle.setPreferredSize(new Dimension(225, 25));
 
         isPredatorToggle = new JCheckBox("Predator");
         isPredatorToggle.setPreferredSize(new Dimension(225, 25));
 
-        motivationsPanel.add(isGrazerToggle);
-        motivationsPanel.add(isPredatorToggle);
+        grazerPanel.add(isGrazerToggle);
+        grazerPanel.add(grazerBiasSpinnerLabel);
+        grazerPanel.add(grazerBiasSpinner);
+        grazerPanel.add(grazerWeightSpinnerLabel);
+        grazerPanel.add(grazerWeightSpinner);
+
+        predatorPanel.add(isPredatorToggle);
+        predatorPanel.add(predatorBiasSpinnerLabel);
+        predatorPanel.add(predatorBiasSpinner);
+        predatorPanel.add(predatorWeightSpinnerLabel);
+        predatorPanel.add(predatorWeightSpinner);
+
+        motivationsPanel.add(grazerPanel);
+        motivationsPanel.add(predatorPanel);
         //--------------------------------------------------------------------------Motivations Panel End
 
 
@@ -247,6 +305,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
 
         //--------------------------------------------------------------------------Main Pane Start
         mainPane = new JTabbedPane();
+        mainPane.setBackground(new Color(224, 224, 224));
         mainPane.add(attributesPanel);
         mainPane.add(motivationsPanel);
         mainPane.add(mutationsAndInheritancePanel);
@@ -261,7 +320,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         spawningWeightLabel.setPreferredSize(new Dimension(120, 20));
 
         spawningWeightSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 1, 0.01));
-        spawningWeightSpinner.setPreferredSize(new Dimension(50, 20));
+        spawningWeightSpinner.setPreferredSize(new Dimension(60, 20));
 
         spawningWeightPanel = new JPanel();
         spawningWeightPanel.setPreferredSize(new Dimension(220, 40));
@@ -363,21 +422,25 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         for (Motivation motivation : agentSettings.getMotivations()) {
             if (motivation.getCode() == 1) {
                 isGrazerToggle.setSelected(true);
+                grazerBiasSpinner.setValue(motivation.getBias());
+                grazerWeightSpinner.setValue(motivation.getWeight());
             }
             if (motivation.getCode() == 2) {
                 isPredatorToggle.setSelected(true);
+                predatorBiasSpinner.setValue(motivation.getBias());
+                predatorWeightSpinner.setValue(motivation.getWeight());
             }
         }
     }
 
     public AgentSettings getAgentSettings() {
         ArrayList<Motivation> motivations = new ArrayList<>();
-        motivations.add(new CreatorMotivation());
+        motivations.add(new CreatorMotivation(20, 1));
         if (isGrazerToggle.isSelected()) {
-            motivations.add(new GrazerMotivation());
+            motivations.add(new GrazerMotivation((int) grazerBiasSpinner.getValue(), (int) grazerWeightSpinner.getValue()));
         }
         if (isPredatorToggle.isSelected()) {
-            motivations.add(new PredatorMotivation());
+            motivations.add(new PredatorMotivation((int) predatorBiasSpinner.getValue(), (int) predatorWeightSpinner.getValue()));
         }
         return new AgentSettings((double) spawningWeightSpinner.getValue(),
                                        agentNameTextField.getText(),

@@ -38,7 +38,6 @@ public class DiagnosticsPanel extends JPanel {
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(410, 765));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
-        setBackground(new Color(224, 224, 224));
 
         // First all elements are defined and their attributes set
         currentStepLabel = new JLabel("Day 0");
@@ -69,7 +68,7 @@ public class DiagnosticsPanel extends JPanel {
         // Now we configure the environment statistics panel
         environmentStatsPanel = new JPanel(new GridLayout(3, 2));
         environmentStatsPanel.setPreferredSize(new Dimension(396, 100));
-        environmentStatsPanel.setBorder(BorderFactory.createLineBorder(new Color(214, 214, 214), 2));
+        //environmentStatsPanel.setBorder(BorderFactory.createLineBorder(new Color(214, 214, 214), 2));
 
         maxEnvironmentEnergyLabel = new JLabel("     Max Environment Energy: ");
         maxEnvironmentEnergyLabel.setPreferredSize(new Dimension(130, 15));

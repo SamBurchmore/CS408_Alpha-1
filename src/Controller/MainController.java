@@ -9,6 +9,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.Arrays;
 
 public class MainController {
 
@@ -303,5 +304,9 @@ public class MainController {
                 logMsg("[SYSTEM]: File type must be .dat.");
             }
         }
+    }
+
+    public ModelController getModelController() {
+        return modelController;
     }
 }

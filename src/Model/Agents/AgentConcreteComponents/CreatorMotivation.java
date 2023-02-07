@@ -11,20 +11,27 @@ import java.io.Serializable;
 
 public class CreatorMotivation implements Motivation, Serializable {
 
+    int bias;
+    int weight;
+
     int motivationCode = 0;
+
+    public CreatorMotivation(int bias, int weight) {
+        this.bias = 20;
+        this.weight = weight;
+    }
 
     @Override
     public AgentDecision run(AgentVision tile, Attributes attributes, Scores scores) {
         if (tile.isOccupied()) {
             if (tile.getAgentAttributes().getCode() == attributes.getCode()
-                    && scores.getEnergy() > (attributes.getEnergyCapacity()) / 2
                     && scores.getAge() >= attributes.getCreationAge()
                     && scores.getCreationCounter() <= 0) {
                 // Tile is occupied, and it's occupant is the same species, set the decision to CREATE and the score 10
-                return new AgentDecision(tile.getLocation(), AgentAction.CREATE, 20);
+                return new AgentDecision(tile.getLocation(), AgentAction.CREATE, bias * weight);
             }
             // Tile is occupied but its occupant is a different species, set decision to NONE and score to -10
-            return new AgentDecision(null, AgentAction.NONE, -10);
+            return new AgentDecision(null, AgentAction.NONE, -1);
         }
         // Tile is not occupied, set decision to MOVE and score to 1
         return new AgentDecision(tile.getLocation(), AgentAction.MOVE, 1);
@@ -32,7 +39,7 @@ public class CreatorMotivation implements Motivation, Serializable {
 
     @Override
     public Motivation copy() {
-        return new CreatorMotivation();
+        return new CreatorMotivation(this.bias, this.weight);
     }
 
     @Override
@@ -45,4 +52,26 @@ public class CreatorMotivation implements Motivation, Serializable {
         return motivationCode;
     }
 
+    @Override
+    public int getBias() {
+        return bias;
+    }
+
+    @Override
+    public int getWeight() {
+        return weight;
+    }
+
+    @Override
+    public void setBias(int bias) {
+        this.bias = bias;
+    }
+
+    @Override
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
 }
+
+//&& scores.getEnergy() > (attributes.getEnergyCapacity()) / 3

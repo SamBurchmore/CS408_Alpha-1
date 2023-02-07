@@ -1,9 +1,15 @@
 import Controller.MainController;
+import Model.AgentEditor.AgentEditor;
+import Model.ModelController;
 import View.MainView;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatPropertiesLaf;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -13,10 +19,47 @@ public class Main {
     int Te = 8;
     int S = 1;
     public static void main(String[] args) throws InterruptedException, IOException {
-        Random random = new Random();
         FlatIntelliJLaf.setup();
-        MainController mainController = new MainController(600, 8, 0, 8, 3, 8);
-        //testMotivations();
+        UIManager.put("Panel.background", new Color(224, 224, 224));
+        MainController mainController = new MainController(300, 8, 0, 8, 8, 4, 2);
+//        mainController.getModelController().populate(15);
+//        for (int i = 0; i < 100000; i++) {
+//            mainController.runStep();
+//        }
+//        test();
+//        int counter;
+//        for (int i = 0; i < 1000; i++) {
+//            mainController.getModelController().populate(25);
+//            counter = 0;
+//            while (mainController.getModelController().getDiagnostics().getAgentPopulations()[1] > 0) {
+//                mainController.runStep();
+//                counter++;
+//            }
+//            System.out.println("Red lasted: " + counter + " steps. " + mainController.getModelController().getAgentEditor().getAgent(1).getAttributes());
+//            mainController.clear();
+//            mainController.replenishEnvironment();
+//            counter = 0;
+    }
+
+    public static void test() {
+        int counter;
+        for (int i = 0; i < 1000; i++) {
+            ModelController modelController = new ModelController(600, 8, 0, 8, 10, 4);
+            modelController.getDiagnostics().setAgentNames(modelController.getAgentEditor().getAgentNames());
+            modelController.getDiagnostics().setMaxEnvironmentEnergy(modelController.getMaxTileEnergy() * modelController.getEnvironmentSize()*modelController.getEnvironmentSize());
+            modelController.getDiagnostics().resetCurrentEnvironmentEnergy();
+            modelController.populate(25);
+            counter = 0;
+            while (modelController.getDiagnostics().getAgentPopulations()[1] > 0) {
+                for (int j = 0; j < 100; j++) {
+                    modelController.cycle();
+                    counter++;
+                }
+                System.out.println(counter);
+            }
+            System.out.println("Red lasted: " + counter + " steps. " + modelController.getAgentEditor().getAgent(1).getAttributes());
+            counter = 0;
+        }
     }
 
     public static void testMotivations(){

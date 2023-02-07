@@ -19,26 +19,35 @@ public class AgentEditor {
     public AgentEditor() {
         activeAgents = new ActiveAgents();
         ArrayList<Motivation> motivations = new ArrayList<>();
-        motivations.add(new CreatorMotivation());
-        motivations.add(new GrazerMotivation());
+        motivations.add(new CreatorMotivation(20, 1));
+        motivations.add(new GrazerMotivation(10, 1));
         ArrayList<Motivation> grazerMotivations = new ArrayList<>();
-        grazerMotivations.add(new CreatorMotivation());
-        grazerMotivations.add(new GrazerMotivation());
+        grazerMotivations.add(new CreatorMotivation(20, 1));
+        grazerMotivations.add(new GrazerMotivation(10, 1));
         ArrayList<Motivation> predMotivations = new ArrayList<>();
-        predMotivations.add(new CreatorMotivation());
-        predMotivations.add(new PredatorMotivation());
+        predMotivations.add(new CreatorMotivation(20, 1));
+        predMotivations.add(new PredatorMotivation(10, 1));
         ArrayList<Motivation> omniMotivations = new ArrayList<>();
-        omniMotivations.add(new CreatorMotivation());
-        omniMotivations.add(new GrazerMotivation());
-        omniMotivations.add(new PredatorMotivation());
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Blue", 0,    Color.blue,                        1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 0);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Red", 1, Color.red,                             1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 1);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Green", 2, Color.green,                         1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 2);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Purple", 3,    new Color(180, 0, 190), 1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 3);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Orange", 4, new Color(255, 102, 0),    1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 4);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Yellow", 5, Color.yellow,                       1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 5);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new BasicAttributes(1, "Pink", 6, Color.pink,                                                1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 6);
-        activeAgents.addAgent(new BasicAgent(new Location(-1, -1), new BasicAttributes(1, "Cyan", 7, Color.cyan,                                                1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 7);
+        omniMotivations.add(new CreatorMotivation(20, 1));
+        omniMotivations.add(new GrazerMotivation(10, 1));
+        omniMotivations.add(new PredatorMotivation(10, 1));
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Blue", 0,    Color.blue,                        1, 3, 80, 4, 60, 8, 8, 2), (ArrayList<Motivation>) grazerMotivations.clone()), 0);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(0.05, "Red", 1, Color.red,                             1, 3, 60, 20, 160, 20, 2, 1), (ArrayList<Motivation>) predMotivations.clone()), 1);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(0, "Green", 2, Color.green,                         1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 2);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(0, "Purple", 3,    new Color(180, 0, 190), 1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 3);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(0, "Orange", 4, new Color(255, 102, 0),    1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 4);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(0, "Yellow", 5, Color.yellow,                       1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 5);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(0, "Pink", 6, Color.pink,                           1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 6);
+        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(0, "Cyan", 7, Color.cyan,                           1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 7);
+
+//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Blue", 0,    Color.blue,                        1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 0);
+//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Red", 1, Color.red,                             1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 1);
+//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Green", 2, Color.green,                         1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 2);
+//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Purple", 3,    new Color(180, 0, 190), 1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 3);
+//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Orange", 4, new Color(255, 102, 0),    1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 4);
+//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Yellow", 5, Color.yellow,                       1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 5);
+//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Pink", 6, Color.pink,                           1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 6);
+//        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Cyan", 7, Color.cyan,                           1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 7);
 
         editingAgentIndex = 0;
     }
