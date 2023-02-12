@@ -6,29 +6,24 @@ import java.awt.*;
 public class ActiveAgentsPanel extends JPanel {
 
     // The labels which display the agents names
-    private JLabel agent0NameLabel;
-    private JLabel agent1NameLabel;
-    private JLabel agent2NameLabel;
-    private JLabel agent3NameLabel;
-    private JLabel agent4NameLabel;
-    private JLabel agent5NameLabel;
-    private JLabel agent6NameLabel;
-    private JLabel agent7NameLabel;
+    final private JLabel agent0NameLabel;
+    final private JLabel agent1NameLabel;
+    final private JLabel agent2NameLabel;
+    final private JLabel agent3NameLabel;
+    final private JLabel agent4NameLabel;
+    final private JLabel agent5NameLabel;
+    final private JLabel agent6NameLabel;
+    final private JLabel agent7NameLabel;
 
     // The labels which display the agents colours
-    private JButton agent0Button;
-    private JButton agent1Button;
-    private JButton agent2Button;
-    private JButton agent3Button;
-    private JButton agent4Button;
-    private JButton agent5Button;
-    private JButton agent6Button;
-    private JButton agent7Button;
-
-    private String emptyName;
-    private Color emptyColour;
-
-    private int lastClicked;
+    final private JButton agent0Button;
+    final private JButton agent1Button;
+    final private JButton agent2Button;
+    final private JButton agent3Button;
+    final private JButton agent4Button;
+    final private JButton agent5Button;
+    final private JButton agent6Button;
+    final private JButton agent7Button;
 
     public ActiveAgentsPanel() {
         super();
@@ -36,9 +31,8 @@ public class ActiveAgentsPanel extends JPanel {
         setPreferredSize(new Dimension(600, 65));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
-        // First all elements are defined and their attributes set
-        emptyName = "Blank Agent";
-        emptyColour = new Color(0, 0, 255);
+        final String emptyName = "Blank Agent";
+        final Color emptyColour = new Color(0, 0, 255);
 
         agent0NameLabel = new JLabel(emptyName);
         agent0NameLabel.setPreferredSize(new Dimension(70, 15));
@@ -173,112 +167,72 @@ public class ActiveAgentsPanel extends JPanel {
     }
 
     public JButton getAgent0Button() {
-        lastClicked = 0;
         return agent0Button;
     }
 
     public JButton getAgent1Button() {
-        lastClicked = 1;
         return agent1Button;
     }
 
     public JButton getAgent2Button() {
-        lastClicked = 2;
         return agent2Button;
     }
 
     public JButton getAgent3Button() {
-        lastClicked = 3;
         return agent3Button;
     }
 
     public JButton getAgent4Button() {
-        lastClicked = 4;
         return agent4Button;
     }
 
     public JButton getAgent5Button() {
-        lastClicked = 5;
         return agent5Button;
     }
 
     public JButton getAgent6Button() {
-        lastClicked = 6;
         return agent6Button;
     }
 
     public JButton getAgent7Button() {
-        lastClicked = 7;
         return agent7Button;
     }
 
     public void setAgentSelector(int index, Color color, String name) {
         switch (index) {
-            case 0:
+            case 0 -> {
                 this.agent0Button.setBackground(color);
                 this.agent0NameLabel.setText(name);
-                break;
-            case 1:
+            }
+            case 1 -> {
                 this.agent1Button.setBackground(color);
                 this.agent1NameLabel.setText(name);
-                break;
-            case 2:
+            }
+            case 2 -> {
                 this.agent2Button.setBackground(color);
                 this.agent2NameLabel.setText(name);
-                break;
-            case 3:
+            }
+            case 3 -> {
                 this.agent3Button.setBackground(color);
                 this.agent3NameLabel.setText(name);
-                break;
-            case 4:
+            }
+            case 4 -> {
                 this.agent4Button.setBackground(color);
                 this.agent4NameLabel.setText(name);
-                break;
-            case 5:
+            }
+            case 5 -> {
                 this.agent5Button.setBackground(color);
                 this.agent5NameLabel.setText(name);
-                break;
-            case 6:
+            }
+            case 6 -> {
                 this.agent6Button.setBackground(color);
                 this.agent6NameLabel.setText(name);
-                break;
-            case 7:
+            }
+            case 7 -> {
                 this.agent7Button.setBackground(color);
                 this.agent7NameLabel.setText(name);
-                break;
+            }
         }
     }
 
-
-    public void setAgent0ButtonColour(Color color){
-        this.agent0Button.setBackground(color);
-    }
-
-    public void setAgent1ButtonColour(Color color){
-        this.agent1Button.setBackground(color);
-    }
-
-    public void setAgent2ButtonColour(Color color){
-        this.agent2Button.setBackground(color);
-    }
-
-    public void setAgent3ButtonColour(Color color){
-        this.agent3Button.setBackground(color);
-    }
-
-    public void setAgent4ButtonColour(Color color){
-        this.agent4Button.setBackground(color);
-    }
-
-    public void setAgent5ButtonColour(Color color){
-        this.agent5Button.setBackground(color);
-    }
-
-    public void setAgent6ButtonColour(Color color){
-        this.agent6Button.setBackground(color);
-    }
-
-    public void setAgent7ButtonColour(Color color){
-        this.agent7Button.setBackground(color);
-    }
 }

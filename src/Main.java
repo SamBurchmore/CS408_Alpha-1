@@ -1,16 +1,10 @@
 import Controller.MainController;
-import Model.AgentEditor.AgentEditor;
-import Model.ModelController;
-import View.MainView;
+import Simulation.Simulation;
 import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.FlatPropertiesLaf;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -21,11 +15,12 @@ public class Main {
     public static void main(String[] args) throws InterruptedException, IOException {
         FlatIntelliJLaf.setup();
         UIManager.put("Panel.background", new Color(224, 224, 224));
-        MainController mainController = new MainController(300, 8, 0, 8, 8, 4, 2);
-//        mainController.getModelController().populate(15);
-//        for (int i = 0; i < 100000; i++) {
-//            mainController.runStep();
-//        }
+        MainController mainController = new MainController(300, 16, 0, 16, 8, 8, 2);
+        mainController.getModelController().populate(50);
+//        TimeUnit.SECONDS.sleep(4);
+        for (int i = 0; i < 1000000; i++) {
+            mainController.runStep();
+        }
 //        test();
 //        int counter;
 //        for (int i = 0; i < 1000; i++) {
@@ -44,20 +39,20 @@ public class Main {
     public static void test() {
         int counter;
         for (int i = 0; i < 1000; i++) {
-            ModelController modelController = new ModelController(600, 8, 0, 8, 10, 4);
-            modelController.getDiagnostics().setAgentNames(modelController.getAgentEditor().getAgentNames());
-            modelController.getDiagnostics().setMaxEnvironmentEnergy(modelController.getMaxTileEnergy() * modelController.getEnvironmentSize()*modelController.getEnvironmentSize());
-            modelController.getDiagnostics().resetCurrentEnvironmentEnergy();
-            modelController.populate(25);
+            Simulation simulation = new Simulation(600, 8, 0, 8, 10, 4);
+            simulation.getDiagnostics().setAgentNames(simulation.getAgentEditor().getAgentNames());
+            simulation.getDiagnostics().setMaxEnvironmentEnergy(simulation.getMaxTileEnergy() * simulation.getEnvironmentSize()* simulation.getEnvironmentSize());
+            simulation.getDiagnostics().resetCurrentEnvironmentEnergy();
+            simulation.populate(25);
             counter = 0;
-            while (modelController.getDiagnostics().getAgentPopulations()[1] > 0) {
+            while (simulation.getDiagnostics().getAgentPopulations()[1] > 0) {
                 for (int j = 0; j < 100; j++) {
-                    modelController.cycle();
+                    simulation.cycle();
                     counter++;
                 }
                 System.out.println(counter);
             }
-            System.out.println("Red lasted: " + counter + " steps. " + modelController.getAgentEditor().getAgent(1).getAttributes());
+            System.out.println("Red lasted: " + counter + " steps. " + simulation.getAgentEditor().getAgent(1).getAttributes());
             counter = 0;
         }
     }

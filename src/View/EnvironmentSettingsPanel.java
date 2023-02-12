@@ -1,6 +1,6 @@
 package View;
 
-import Model.Environment.EnvironmentSettings;
+import Simulation.Environment.EnvironmentSettings;
 
 import javax.swing.*;
 import java.awt.*;
