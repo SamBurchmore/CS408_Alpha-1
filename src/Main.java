@@ -1,95 +1,128 @@
 import Controller.MainController;
+import Simulation.Agent.AgentConcreteComponents.BasicAttributes;
+import Simulation.Agent.AgentInterfaces.Agent;
+import Simulation.Agent.AgentInterfaces.Attributes;
 import Simulation.Simulation;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-    int C = 10;
-    int Ae = 16;
-    int Te = 8;
-    int S = 1;
     public static void main(String[] args) throws InterruptedException, IOException {
         FlatIntelliJLaf.setup();
         UIManager.put("Panel.background", new Color(224, 224, 224));
-        MainController mainController = new MainController(300, 16, 0, 16, 8, 8, 2);
-        mainController.getModelController().populate(50);
-//        TimeUnit.SECONDS.sleep(4);
-        for (int i = 0; i < 1000000; i++) {
-            mainController.runStep();
-        }
-//        test();
-//        int counter;
-//        for (int i = 0; i < 1000; i++) {
-//            mainController.getModelController().populate(25);
-//            counter = 0;
-//            while (mainController.getModelController().getDiagnostics().getAgentPopulations()[1] > 0) {
-//                mainController.runStep();
-//                counter++;
-//            }
-//            System.out.println("Red lasted: " + counter + " steps. " + mainController.getModelController().getAgentEditor().getAgent(1).getAttributes());
-//            mainController.clear();
-//            mainController.replenishEnvironment();
-//            counter = 0;
+        MainController mainController = new MainController(600, 8, 0, 8, 2, 8);
     }
 
-    public static void test() {
-        int counter;
-        for (int i = 0; i < 1000; i++) {
-            Simulation simulation = new Simulation(600, 8, 0, 8, 10, 4);
-            simulation.getDiagnostics().setAgentNames(simulation.getAgentEditor().getAgentNames());
-            simulation.getDiagnostics().setMaxEnvironmentEnergy(simulation.getMaxTileEnergy() * simulation.getEnvironmentSize()* simulation.getEnvironmentSize());
-            simulation.getDiagnostics().resetCurrentEnvironmentEnergy();
-            simulation.populate(25);
-            counter = 0;
-            while (simulation.getDiagnostics().getAgentPopulations()[1] > 0) {
-                for (int j = 0; j < 100; j++) {
-                    simulation.cycle();
-                    counter++;
+    private static void testColors() {
+        JFrame frame = new JFrame();
+        JLabel label = new JLabel();
+        frame.setUndecorated(true);
+        frame.setVisible(true);
+        Random random = new Random();
+        int imageSize = 400;
+        int imageScale = 2;
+        Attributes attributes = new BasicAttributes(
+                1,
+                "Agent 1",
+                0,
+                new Color(100, 100, 100),
+                1,
+                1,
+                1,
+                1);
+        Color[] agentColors = new Color[]{new Color(0, 0, 255), new Color(255, 0, 0), new Color(0, 255, 0), new Color(180, 0, 190), new Color(255, 102, 0), Color.cyan, Color.pink, Color.yellow};
+        BufferedImage worldImage = new BufferedImage(imageSize * imageScale, imageSize * imageScale, BufferedImage.TYPE_INT_RGB);
+        for (int x = 0; x <= imageScale * imageSize; x += imageScale) {
+            for (int y = 0; y <= imageScale * imageSize; y += imageScale) {
+
+                //attributes = processAttributes(attributes, random); // Mutate attributes and update color
+                Color color = agentColors[random.nextInt(8)];
+
+                for (int i = 0; i < imageScale; i++) {
+                    for (int j = 0; j < imageScale; j++) {
+                        if (((x + i < imageScale * imageSize) && (y + j < imageScale * imageSize)) && ((x + i >= 0) && (y + j >= 0))) {
+                            worldImage.setRGB(x + i, y + j, color.getRGB());
+                        }
+                    }
                 }
-                System.out.println(counter);
+
             }
-            System.out.println("Red lasted: " + counter + " steps. " + simulation.getAgentEditor().getAgent(1).getAttributes());
-            counter = 0;
         }
+        label.setIcon(new ImageIcon(worldImage));
+        frame.getContentPane().add(label,BorderLayout.CENTER);
+        //frame.setLocationRelativeTo(null);
+        frame.pack();
     }
 
-    public static void testMotivations(){
-        int C = 10;
-        int maxEnergy = 16;
-        int maxTileEnergy = 8;
-        int S = 3;
-        for (int i = 16; i > 0; i--) {
-            for (int j = 0; j < maxTileEnergy; j++) {
-                getMotivation(i, j, 1);
-                }
-            }
-        }
-
-        public static void getMotivation(int neededEnergy, int tileEnergy, int size) {
-        int constant = 10;
-            if (constant * (neededEnergy / size) > (neededEnergy * tileEnergy)) {
-                System.out.println("Main{" +
-                        "C=" + constant +
-                        ", neededEnergy=" + neededEnergy +
-                        ", tileEnergy=" + tileEnergy +
-                        ", S=" + size +
-                        '}'+ " CREATE=" + (constant * (neededEnergy / size)) + " graze=" + (neededEnergy * tileEnergy));
-            }
-            else {
-                System.out.println("Main{" +
-                        "C=" + constant +
-                        ", neededEnergy=" + neededEnergy +
-                        ", tileEnergy=" + tileEnergy +
-                        ", S=" + size +
-                        '}'+ " create=" + (constant * (neededEnergy / size)) + " GRAZE=" + (neededEnergy * tileEnergy));
-            }
-        }
-
+    private static Attributes processAttributes(Attributes attributes, Random random) {
+        double[] oldStats = new double[]{attributes.getSize(), attributes.getCreationSize(), attributes.getRange()};
+            attributes = mutate(attributes, random);
+            double[] newStats = new double[]{attributes.getSize(), attributes.getCreationSize(), attributes.getRange()};
+            System.out.println("---\n" + attributes.getMutatingColor().toString());
+            attributes.generateColor(
+                        (newStats[0] / 100) - (oldStats[0] / 100),
+                        (newStats[1] / 8) - (oldStats[1] / 8),
+                        (newStats[2] / 5) - (oldStats[2] / 5),
+                        125
+                );
+                System.out.println(attributes.getMutatingColor().toString());
+        return attributes;
     }
+
+    private static Attributes mutate(Attributes attributes, Random random) {
+        // We've decided the agent is going to mutate, now we need to randomly decide what attribute to mutate.
+        int ran = random.nextInt(9);
+        if (ran < 0) {
+            // Mutate size
+            //int oldSize = attributes.getSize();
+            attributes.setSize(Math.min(Math.max(attributes.getSize() + mutationMagnitude(random), 2), 10));
+            //System.out.println("Size mutated by: " + (attributes.getSize() - oldSize));
+            return attributes;
+        }
+        if (ran < 0) {
+            // Mutate range
+            //int oldRange = attributes.getRange();
+            attributes.setRange(Math.min(Math.max(attributes.getRange() + mutationMagnitude(random), 0), 5));
+            //System.out.println("Range mutated by: " + (attributes.getRange() - oldRange));
+            return attributes;
+        }
+        if (ran < 9) {
+            // Mutate creationAmount
+            //int oldCreationAmount = attributes.getCreationSize();
+            attributes.setCreationSize(Math.min(Math.max(attributes.getCreationSize() + mutationMagnitude(random), 1), 8));
+            //System.out.println("Creation Amount mutated by: " + (attributes.getCreationSize() - oldCreationAmount));
+            return attributes;
+        }
+        return attributes;
+    }
+
+    private static int mutationMagnitude(Random random) {
+        int r = random.nextInt(100);
+//        int modifier = random.nextInt(2);
+//        if (modifier == 0) {
+//            modifier -= 1;
+//        }
+        int modifier = 1;
+//        if (r < 75) {
+//            return modifier;
+//        }
+//        if (r < 98) {
+//            return 2*modifier;
+//        }
+//        return 3*modifier;
+        return modifier;
+    }
+
+}
+
 
 
 // Useful diagnostics print

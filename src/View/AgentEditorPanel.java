@@ -1,6 +1,6 @@
 package View;
 
-import Simulation.AgentUtility.AgentSettings;
+import Simulation.Agent.AgentUtility.AgentSettings;
 import Simulation.Agent.AgentConcreteComponents.CreatorMotivation;
 import Simulation.Agent.AgentConcreteComponents.GrazerMotivation;
 import Simulation.Agent.AgentConcreteComponents.PredatorMotivation;
@@ -18,97 +18,85 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
 
     // The panels we'll use to group settings
     final private JPanel nameColorPanel;
-    final private JPanel attributesPanel;
     final private JPanel motivationsPanel;
-    final private JPanel mutationsAndInheritancePanel;
-    final private JPanel spawningWeightPanel;
+    final private JPanel attributesPanel;
+    final private JPanel mutationChanceAndSpawningPanel;
 
-    // The text field where the agents name is set
+    // The components where the agents name and seed color are set-----------------------------</
     final private JTextField agentNameTextField;
-
-    // The button the agents color is chosen through
-    final private JButton colourChooserButton;
-    private Color currentColour;
-
+    final private JButton seedColourChooserButton;
+    private Color currentSeedColour;
     final private JSpinner agentCodeSpinner;
     final private JPanel agentCodePanel;
     final private JLabel agentCodeLabel;
+    //-----------------------------------------------------------------------------------------/>
 
     // The components where the mutable attributes are set-----------------------------</
+    final private JPanel mutatingAttributesPanel;
     final private JPanel rangePanel;
     final private JPanel sizePanel;
-    final private JPanel creationAgePanel;
     final private JPanel creationAmountPanel;
-
     final private JSpinner rangeSpinner;
     final private JSpinner sizeSpinner;
-    final private JSpinner creationAgeSpinner;
     final private JSpinner creationAmountSpinner;
-
     final private JLabel rangeLabel;
     final private JLabel sizeLabel;
-    final private JLabel creationAgeLabel;
     final private JLabel creationAmountLabel;
-    //----------------------------------------------------------------------------------/>
-
-    // The components where the constant attributes are set-----------------------------</
-    final private JPanel creationDelayPanel;
-
-    final private JSpinner creationDelaySpinner;
-
-    final private JLabel creationDelayLabel;
     //----------------------------------------------------------------------------------/>
 
     // The components where the calculated attributes are displayed---------------------</
     final private JPanel calculatedAttributesPanel;
-
     final private JPanel energyCapacityPanel;
     final private JPanel eatAmountPanel;
     final private JPanel energyLostPerTurnPanel;
     final private JPanel lifespanPanel;
-
+    final private JPanel creationAgePanel;
+    final private JPanel creationDelayPanel;
+    final private JPanel creationCostPanel;
+    final private JPanel generatedColorPanel;
     final private JLabel energyCapacityValue;
     final private JLabel eatAmountValue;
     final private JLabel energyLostPerTurnValue;
     final private JLabel lifespanValue;
-
+    final private JLabel creationAgeValue;
+    final private JLabel creationDelayValue;
+    final private JLabel creationCostValue;
+    final private JLabel generatedColorValue;
     final private JLabel energyCapacityLabel;
     final private JLabel eatAmountLabel;
     final private JLabel energyLostPerTurnLabel;
     final private JLabel lifespanLabel;
+    final private JLabel creationAgeLabel;
+    final private JLabel creationDelayLabel;
+    final private JLabel creationCostLabel;
+    final private JLabel generatedColorLabel;
     //----------------------------------------------------------------------------------/>
 
+    // The components where the motivations are toggled and their weights and biases selected---------------------</
+    final private JPanel grazerPanel;
+    final private JPanel predatorPanel;
+    final private JCheckBox isGrazerToggle;
+    final private JCheckBox isPredatorToggle;
+    final private JLabel grazerBiasSpinnerLabel;
+    final private JLabel predatorBiasSpinnerLabel;
+    final private JLabel grazerWeightSpinnerLabel;
+    final private JLabel predatorWeightSpinnerLabel;
+    final private JSpinner grazerBiasSpinner;
+    final private JSpinner predatorBiasSpinner;
+    final private JSpinner grazerWeightSpinner;
+    final private JSpinner predatorWeightSpinner;
+    //------------------------------------------------------------------------------------------------------------/>
 
-    // The panels where the motivations and toggled and their weights and biases selected
-    private JPanel grazerPanel;
-    private JPanel predatorPanel;
+    // The components where the spawning weight and mutation chance are selected---------------------</
+    final private JPanel spawningWeightPanel;
+    final private JPanel mutationMagnitudePanel;
+    final private JLabel mutationMagnitudeLabel;
+    final private JSpinner mutationMagnitudeSpinner;
+    final private JLabel spawningWeightLabel;
+    final private JSpinner spawningWeightSpinner;
+    //-----------------------------------------------------------------------------------------------/>
 
-    private JCheckBox isGrazerToggle;
-    private JCheckBox isPredatorToggle;
-
-    private JLabel grazerBiasSpinnerLabel;
-    private JLabel predatorBiasSpinnerLabel;
-
-    private JLabel grazerWeightSpinnerLabel;
-    private JLabel predatorWeightSpinnerLabel;
-
-    private JSpinner grazerBiasSpinner;
-    private JSpinner predatorBiasSpinner;
-
-    private JSpinner grazerWeightSpinner;
-    private JSpinner predatorWeightSpinner;
-
-    // The panel where the mutation flag is toggled and the mutationMagnitude is selected
-    private JPanel mutationMagnitudePanel;
-
-    private JCheckBox mutatesCheckBox;
-    private JLabel mutationMagnitudeLabel;
-    private JSpinner mutationMagnitudeSpinner;
-
-    private JLabel spawningWeightLabel;
-    private JSpinner spawningWeightSpinner; // The spinner which controls how many agents are created when the population button is clicked.
-
-    private JButton updateSettingsButton;
+    final private JButton updateSettingsButton;
 
     public AgentEditorPanel() {
         super();
@@ -117,17 +105,18 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         //--------------------------------------------------------------------------Name and Color Panel Start
-        colourChooserButton = new JButton();
-        colourChooserButton.setPreferredSize(new Dimension(75, 75));
-        colourChooserButton.addActionListener(this);
-        currentColour = new Color(255, 255, 255);
-        colourChooserButton.setBackground(currentColour);
+        seedColourChooserButton = new JButton();
+        seedColourChooserButton.setPreferredSize(new Dimension(75, 75));
+        seedColourChooserButton.addActionListener(this);
+        currentSeedColour = new Color(255, 255, 255);
+        seedColourChooserButton.setBackground(currentSeedColour);
 
         agentNameTextField = new JTextField("Agent Name");
         agentNameTextField.setPreferredSize(new Dimension(150, 25));
 
         agentCodePanel = new JPanel();
         agentCodePanel.setPreferredSize(new Dimension(180, 30));
+        agentCodePanel.setVisible(false);
 
         agentCodeLabel = new JLabel("Agent Code: ");
         agentCodeLabel.setPreferredSize(new Dimension(75, 25));
@@ -143,160 +132,196 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         nameColorPanel.setPreferredSize(new Dimension(450, 85));
 
         nameColorPanel.add(agentNameTextField);
-        nameColorPanel.add(colourChooserButton);
+        nameColorPanel.add(seedColourChooserButton);
         nameColorPanel.add(agentCodePanel);
         //--------------------------------------------------------------------------Name and Color Panel End
 
 
         //--------------------------------------------------------------------------Attributes Panel Start
         attributesPanel = new JPanel();
-        attributesPanel.setPreferredSize(new Dimension(450, 160));
+        attributesPanel.setPreferredSize(new Dimension(450, 130));
         attributesPanel.setName("Attributes");
 
         // Mutable attributes first
-        rangePanel = new JPanel();
-        rangePanel.setPreferredSize(new Dimension(220, 28));
+        mutatingAttributesPanel= new JPanel();
+        mutatingAttributesPanel.setPreferredSize(new Dimension(450,  30));
 
         sizePanel = new JPanel();
-        sizePanel.setPreferredSize(new Dimension(220, 28));
-
-        creationAgePanel = new JPanel();
-        creationAgePanel.setPreferredSize(new Dimension(220, 28));
+        sizePanel.setPreferredSize(new Dimension(150, 25));
+        sizeLabel = new JLabel("Size: ");
+        sizeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+        sizeSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 
         creationAmountPanel = new JPanel();
-        creationAmountPanel.setPreferredSize(new Dimension(220, 28));
-
-        rangeLabel = new JLabel("Range: ");
-        rangeLabel.setPreferredSize(new Dimension(120, 20));
-
-        sizeLabel = new JLabel("Size: ");
-        sizeLabel.setPreferredSize(new Dimension(120, 20));
-
-        creationAgeLabel = new JLabel("Creation Age: ");
-        creationAgeLabel.setPreferredSize(new Dimension(120, 20));
-
+        creationAmountPanel.setPreferredSize(new Dimension(150, 25));
         creationAmountLabel = new JLabel("Creation Size: ");
-        creationAmountLabel.setPreferredSize(new Dimension(120, 20));
-
-        rangeSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 25, 1));
-        rangeSpinner.setPreferredSize(new Dimension(85, 24));
-
-        sizeSpinner = new JSpinner(new SpinnerNumberModel(2, 2, 10, 1));
-        sizeSpinner.setPreferredSize(new Dimension(85, 24));
-
-        creationAgeSpinner = new JSpinner(new SpinnerNumberModel(5, 1, 250, 1));
-        creationAgeSpinner.setPreferredSize(new Dimension(85, 24));
-
+        creationAmountLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
         creationAmountSpinner = new JSpinner(new SpinnerNumberModel(4, 1, 8, 1));
-        creationAmountSpinner.setPreferredSize(new Dimension(85, 24));
 
-        rangePanel.add(rangeLabel);
-        rangePanel.add(rangeSpinner);
+        rangePanel = new JPanel();
+        rangePanel.setPreferredSize(new Dimension(150, 25));
+        rangeLabel = new JLabel("Range: ");
+        rangeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+        rangeSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
 
-        sizePanel.add(sizeLabel);
-        sizePanel.add(sizeSpinner);
+        mutatingAttributesPanel.add(sizeLabel);
+        mutatingAttributesPanel.add(sizeSpinner);
+        mutatingAttributesPanel.add(creationAmountLabel);
+        mutatingAttributesPanel.add(creationAmountSpinner);
+        mutatingAttributesPanel.add(rangeLabel);
+        mutatingAttributesPanel.add(rangeSpinner);
 
-        creationAgePanel.add(creationAgeLabel);
-        creationAgePanel.add(creationAgeSpinner);
-
-        creationAmountPanel.add(creationAmountLabel);
-        creationAmountPanel.add(creationAmountSpinner);
-
-        // Calculated attributes
+        // Calculated attributes panel
         calculatedAttributesPanel = new JPanel();
         calculatedAttributesPanel.setPreferredSize(new Dimension(450, 100));
+        calculatedAttributesPanel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
 
+        // Energy cap panel
         energyCapacityPanel = new JPanel();
-        energyCapacityPanel.setPreferredSize(new Dimension(220, 25));
-
-        eatAmountPanel = new JPanel();
-        eatAmountPanel.setPreferredSize(new Dimension(220, 25));
-
-        lifespanPanel = new JPanel();
-        lifespanPanel.setPreferredSize(new Dimension(220, 25));
-
-        energyLostPerTurnPanel = new JPanel();
-        energyLostPerTurnPanel.setPreferredSize(new Dimension(220, 25));
+        energyCapacityPanel.setPreferredSize(new Dimension(140, 25));
 
         energyCapacityLabel = new JLabel("Max Energy: ");
-        energyCapacityLabel.setPreferredSize(new Dimension(90, 20));
-        energyCapacityLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
-
-        eatAmountLabel = new JLabel("Eat Amount: ");
-        eatAmountLabel.setPreferredSize(new Dimension(90, 20));
-        eatAmountLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
-
-        lifespanLabel = new JLabel("Lifespan: ");
-        lifespanLabel.setPreferredSize(new Dimension(90, 20));
-        lifespanLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
-
-        energyLostPerTurnLabel = new JLabel("Energy Burned: ");
-        energyLostPerTurnLabel.setPreferredSize(new Dimension(90, 20));
-        energyLostPerTurnLabel.setFont(new Font("Dialog", Font.PLAIN, 11));
+        energyCapacityLabel.setPreferredSize(new Dimension(100, 25));
+        energyCapacityLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
 
         energyCapacityValue = new JLabel("0");
-        energyCapacityValue.setPreferredSize(new Dimension(30, 20));
+        energyCapacityValue.setPreferredSize(new Dimension(30, 25));
         energyCapacityValue.setHorizontalAlignment(SwingConstants.RIGHT);
         energyCapacityValue.setFont(new Font("Dialog", Font.BOLD, 12));
-
-        eatAmountValue = new JLabel("");
-        eatAmountValue.setPreferredSize(new Dimension(30, 20));
-        eatAmountValue.setHorizontalAlignment(SwingConstants.RIGHT);
-        eatAmountValue.setFont(new Font("Dialog", Font.BOLD, 12));
-
-        energyLostPerTurnValue = new JLabel("0");
-        energyLostPerTurnValue.setPreferredSize(new Dimension(30, 20));
-        energyLostPerTurnValue.setHorizontalAlignment(SwingConstants.RIGHT);
-        energyLostPerTurnValue.setFont(new Font("Dialog", Font.BOLD, 12));
-
-        lifespanValue = new JLabel("");
-        lifespanValue.setPreferredSize(new Dimension(30, 20));
-        lifespanValue.setHorizontalAlignment(SwingConstants.RIGHT);
-        lifespanValue.setFont(new Font("Dialog", Font.BOLD, 12));
 
         energyCapacityPanel.add(energyCapacityLabel);
         energyCapacityPanel.add(energyCapacityValue);
 
+        // Eat amount panel
+        eatAmountPanel = new JPanel();
+        eatAmountPanel.setPreferredSize(new Dimension(140, 25));
+
+        eatAmountLabel = new JLabel("| Eat Amount: ");
+        eatAmountLabel.setPreferredSize(new Dimension(100, 25));
+        eatAmountLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+
+        eatAmountValue = new JLabel("0");
+        eatAmountValue.setPreferredSize(new Dimension(30, 25));
+        eatAmountValue.setHorizontalAlignment(SwingConstants.RIGHT);
+        eatAmountValue.setFont(new Font("Dialog", Font.BOLD, 12));
+
         eatAmountPanel.add(eatAmountLabel);
         eatAmountPanel.add(eatAmountValue);
+
+        // Energy lost per turn panel
+        energyLostPerTurnPanel = new JPanel();
+        energyLostPerTurnPanel.setPreferredSize(new Dimension(140, 25));
+
+        energyLostPerTurnLabel = new JLabel("| Energy Burned: ");
+        energyLostPerTurnLabel.setPreferredSize(new Dimension(100, 25));
+        energyLostPerTurnLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+
+        energyLostPerTurnValue = new JLabel("0");
+        energyLostPerTurnValue.setPreferredSize(new Dimension(30, 25));
+        energyLostPerTurnValue.setHorizontalAlignment(SwingConstants.RIGHT);
+        energyLostPerTurnValue.setFont(new Font("Dialog", Font.BOLD, 12));
 
         energyLostPerTurnPanel.add(energyLostPerTurnLabel);
         energyLostPerTurnPanel.add(energyLostPerTurnValue);
 
+        // Lifespan panel
+        lifespanPanel = new JPanel();
+        lifespanPanel.setPreferredSize(new Dimension(140, 25));
+
+        lifespanLabel = new JLabel("Lifespan: ");
+        lifespanLabel.setPreferredSize(new Dimension(100, 25));
+        lifespanLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+
+        lifespanValue = new JLabel("0");
+        lifespanValue.setPreferredSize(new Dimension(30, 25));
+        lifespanValue.setHorizontalAlignment(SwingConstants.RIGHT);
+        lifespanValue.setFont(new Font("Dialog", Font.BOLD, 12));
+
         lifespanPanel.add(lifespanLabel);
         lifespanPanel.add(lifespanValue);
 
+        // Creation age panel
+        creationAgePanel = new JPanel();
+        creationAgePanel.setPreferredSize(new Dimension(140, 25));
+
+        creationAgeLabel = new JLabel("| Creation Age: ");
+        creationAgeLabel.setPreferredSize(new Dimension(100, 25));
+        creationAgeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+
+        creationAgeValue = new JLabel("0");
+        creationAgeValue.setPreferredSize(new Dimension(30, 25));
+        creationAgeValue.setHorizontalAlignment(SwingConstants.RIGHT);
+        creationAgeValue.setFont(new Font("Dialog", Font.BOLD, 12));
+
+        creationAgePanel.add(creationAgeLabel);
+        creationAgePanel.add(creationAgeValue);
+
+        // Creation cost panel
+        creationCostPanel = new JPanel();
+        creationCostPanel.setPreferredSize(new Dimension(140, 25));
+
+        creationCostLabel = new JLabel("| Creation Cost: ");
+        creationCostLabel.setPreferredSize(new Dimension(100, 25));
+        creationCostLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+
+        creationCostValue = new JLabel("0");
+        creationCostValue.setPreferredSize(new Dimension(30, 25));
+        creationCostValue.setHorizontalAlignment(SwingConstants.RIGHT);
+        creationCostValue.setFont(new Font("Dialog", Font.BOLD, 12));
+
+        creationCostPanel.add(creationCostLabel);
+        creationCostPanel.add(creationCostValue);
+
+        // Creation delay panel
+        creationDelayPanel = new JPanel();
+        creationDelayPanel.setPreferredSize(new Dimension(140, 25));
+
+        creationDelayLabel = new JLabel("Creation Delay: ");
+        creationDelayLabel.setPreferredSize(new Dimension(100, 25));
+        creationDelayLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+
+        creationDelayValue = new JLabel("0");
+        creationDelayValue.setPreferredSize(new Dimension(30, 25));
+        creationDelayValue.setHorizontalAlignment(SwingConstants.RIGHT);
+        creationDelayValue.setFont(new Font("Dialog", Font.BOLD, 12));
+
+        creationDelayPanel.add(creationDelayLabel);
+        creationDelayPanel.add(creationDelayValue);
+
+        // Generated color panel
+        generatedColorPanel = new JPanel();
+        generatedColorPanel.setPreferredSize(new Dimension(140, 25));
+
+        generatedColorLabel = new JLabel("| Color: ");
+        generatedColorLabel.setPreferredSize(new Dimension(100, 25));
+        generatedColorLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+
+        generatedColorValue = new JLabel();
+        generatedColorValue.setPreferredSize(new Dimension(30, 25));
+        generatedColorValue.setHorizontalAlignment(SwingConstants.RIGHT);
+        generatedColorValue.setFont(new Font("Dialog", Font.PLAIN, 12));
+        generatedColorValue.setOpaque(true);
+
+        generatedColorPanel.add(generatedColorLabel);
+        generatedColorPanel.add(generatedColorValue);
+
+        JLabel blankLabel = new JLabel(" |");
+        blankLabel.setPreferredSize(new Dimension(140, 25));
+
+        // Add all the panels
         calculatedAttributesPanel.add(energyCapacityPanel);
         calculatedAttributesPanel.add(eatAmountPanel);
         calculatedAttributesPanel.add(energyLostPerTurnPanel);
         calculatedAttributesPanel.add(lifespanPanel);
-
-        // Constant attributes
-        creationDelayPanel = new JPanel();
-        creationDelayPanel.setPreferredSize(new Dimension(220, 28));
-
-        creationDelayLabel = new JLabel("Creation Delay: ");
-        creationDelayLabel.setPreferredSize(new Dimension(120, 20));
-
-        creationDelaySpinner = new JSpinner(new SpinnerNumberModel(1, 0, 999999, 1));
-        creationDelaySpinner.setPreferredSize(new Dimension(85, 24));
-
-        creationDelayPanel.add(creationDelayLabel);
-        creationDelayPanel.add(creationDelaySpinner);
-
+        calculatedAttributesPanel.add(creationAgePanel);
+        calculatedAttributesPanel.add(creationCostPanel);
+        calculatedAttributesPanel.add(creationDelayPanel);
+        calculatedAttributesPanel.add(generatedColorPanel);
+        calculatedAttributesPanel.add(blankLabel);
 
         // Now we add the panels to the attributes panel in the order they'll be displayed in
-        attributesPanel.add(rangePanel);
-        attributesPanel.add(sizePanel);
-        attributesPanel.add(creationAgePanel);
-        attributesPanel.add(creationAmountPanel);
-
-        attributesPanel.add(creationDelayPanel);
-
+        attributesPanel.add(mutatingAttributesPanel);
         attributesPanel.add(calculatedAttributesPanel);
-
-        //attributesPanel.add(eatAmountPanel);
-        //attributesPanel.add(lifespanPanel);
 
         //--------------------------------------------------------------------------Attributes Panel End
 
@@ -360,125 +385,73 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
 
 
         //--------------------------------------------------------------------------Mutations and Inheritance Panel Start
-        mutationsAndInheritancePanel = new JPanel();
-        mutationsAndInheritancePanel.setPreferredSize(new Dimension(450, 50));
-        mutationsAndInheritancePanel.setName("Mutation and Inheritance");
+        mutationChanceAndSpawningPanel = new JPanel(new GridLayout(1, 2));
+        mutationChanceAndSpawningPanel.setPreferredSize(new Dimension(400, 30));
+        mutationChanceAndSpawningPanel.setName("Mutation and Inheritance");
 
-        mutatesCheckBox = new JCheckBox("Mutates");
-        mutatesCheckBox.setPreferredSize(new Dimension(400, 25));
+        mutationMagnitudePanel = new JPanel();
+        mutationMagnitudePanel.setPreferredSize(new Dimension(100, 25));
 
-        mutationMagnitudePanel = new JPanel(new GridLayout(1, 2));
-        mutationMagnitudePanel.setPreferredSize(new Dimension(400, 25));
+        mutationMagnitudeLabel = new JLabel("Mutation Chance: ");
+        //mutationMagnitudeLabel.setPreferredSize(new Dimension(360, 25));
 
-        mutationMagnitudeLabel = new JLabel("Mutation Magnitude: ");
-        mutationMagnitudeLabel.setPreferredSize(new Dimension(360, 25));
-
-        mutationMagnitudeSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 100, 1));
-        mutationMagnitudeSpinner.setPreferredSize(new Dimension(40, 25));
+        mutationMagnitudeSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
+        mutationMagnitudeSpinner.setPreferredSize(new Dimension(60, 25));
 
         mutationMagnitudePanel.add(mutationMagnitudeLabel);
         mutationMagnitudePanel.add(mutationMagnitudeSpinner);
 
-        mutationsAndInheritancePanel.add(mutatesCheckBox);
-        mutationsAndInheritancePanel.add(mutationMagnitudePanel);
+        mutationChanceAndSpawningPanel.add(mutationMagnitudePanel);
         //--------------------------------------------------------------------------Mutations and Inheritance Panel End
 
 
         //--------------------------------------------------------------------------Main Pane Start
         mainPane = new JTabbedPane();
         mainPane.setBackground(new Color(224, 224, 224));
+        mainPane.setPreferredSize(new Dimension(450, 180));
         mainPane.add(attributesPanel);
         mainPane.add(motivationsPanel);
-        mainPane.add(mutationsAndInheritancePanel);
+        //mainPane.add(mutationsAndInheritancePanel);
         //--------------------------------------------------------------------------Main Pane End
 
-        updateSettingsButton = new JButton("Update Settings");
-        updateSettingsButton.setPreferredSize(new Dimension(450, 40));
+        spawningWeightPanel = new JPanel();
+        spawningWeightPanel.setPreferredSize(new Dimension(200, 30));
 
-        spawningWeightLabel = new JLabel("Spawning Weight: ");
+        spawningWeightLabel = new JLabel("Spawn Weight: ");
         spawningWeightLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
         spawningWeightLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        spawningWeightLabel.setPreferredSize(new Dimension(120, 20));
+        spawningWeightLabel.setPreferredSize(new Dimension(90, 25));
 
         spawningWeightSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 1, 0.01));
-        spawningWeightSpinner.setPreferredSize(new Dimension(60, 20));
+        spawningWeightSpinner.setPreferredSize(new Dimension(60, 25));
 
-        spawningWeightPanel = new JPanel();
-        spawningWeightPanel.setPreferredSize(new Dimension(220, 25));
         spawningWeightPanel.add(spawningWeightLabel);
         spawningWeightPanel.add(spawningWeightSpinner);
 
+        mutationChanceAndSpawningPanel.add(spawningWeightPanel);
+
+        updateSettingsButton = new JButton("Update Settings");
+        updateSettingsButton.setPreferredSize(new Dimension(450, 50));
+
         add(nameColorPanel);
         add(mainPane);
-        add(spawningWeightPanel);
+        add(mutationChanceAndSpawningPanel);
         add(updateSettingsButton);
 
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(colourChooserButton)) {
-            setCurrentColour();
+        if (actionEvent.getSource().equals(seedColourChooserButton)) {
+            setCurrentSeedColour();
         }
     }
 
-    private void setCurrentColour() {
-        currentColour = JColorChooser.showDialog(null, "Select Agent Colour", Color.white);
-        if (currentColour != null) {
-            colourChooserButton.setBackground(currentColour);
+    private void setCurrentSeedColour() {
+        currentSeedColour = JColorChooser.showDialog(null, "Select Agent Colour", Color.white);
+        if (currentSeedColour != null) {
+            seedColourChooserButton.setBackground(currentSeedColour);
         }
-    }
-
-    public Color getCurrentColour() {
-        return currentColour;
-    }
-
-    public JTextField getAgentNameTextField() {
-        return agentNameTextField;
-    }
-
-    public JLabel getEnergyCapacityValue() {
-        return energyCapacityValue;
-    }
-
-    public JLabel getEatAmountValue() {
-        return eatAmountValue;
-    }
-
-    public JLabel getLifespanValue() {
-        return lifespanValue;
-    }
-
-    public JSpinner getRangeSpinner() {
-        return rangeSpinner;
-    }
-
-    public JSpinner getSizeSpinner() {
-        return sizeSpinner;
-    }
-
-    public JSpinner getCreationAgeSpinner() {
-        return creationAgeSpinner;
-    }
-
-    public JSpinner getCreationAmountSpinner() {
-        return creationAmountSpinner;
-    }
-
-    public JSpinner getCreationDelaySpinner() {
-        return creationDelaySpinner;
-    }
-
-    public JToggleButton getIsGrazerToggle() {
-        return isGrazerToggle;
-    }
-
-    public JToggleButton getIsPredatorToggle() {
-        return isPredatorToggle;
-    }
-
-    public JButton getColourChooserButton() {
-        return colourChooserButton;
     }
 
     public JButton getUpdateSettingsButton() {
@@ -488,20 +461,20 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
     public void setAgentSettings(AgentSettings agentSettings) {
         spawningWeightSpinner.setValue(agentSettings.getSpawningWeight());
         agentNameTextField.setText(agentSettings.getName());
-        colourChooserButton.setBackground(agentSettings.getColor());
+        seedColourChooserButton.setBackground(agentSettings.getColor());
         agentCodeSpinner.setValue(agentSettings.getCode());
 
         rangeSpinner.setValue(agentSettings.getRange());
         sizeSpinner.setValue(agentSettings.getSize());
-        creationAgeSpinner.setValue(agentSettings.getCreationAge());
         creationAmountSpinner.setValue(agentSettings.getCreationAmount());
 
         energyCapacityValue.setText(agentSettings.getEnergyCapacity().toString());
         eatAmountValue.setText(agentSettings.getEatAmount().toString());
         energyLostPerTurnValue.setText(agentSettings.getEnergyLostPerTurn().toString());
         lifespanValue.setText(agentSettings.getLifespan().toString());
-
-        creationDelaySpinner.setValue(agentSettings.getCreationDelay());
+        creationAgeValue.setText(agentSettings.getCreationAge().toString());
+        creationDelayValue.setText(agentSettings.getCreationDelay().toString());
+        creationCostValue.setText(agentSettings.getCreationCost().toString());
 
         isGrazerToggle.setSelected(false);
         isPredatorToggle.setSelected(false);
@@ -517,8 +490,13 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
                 predatorWeightSpinner.setValue(motivation.getWeight());
             }
         }
-        mutatesCheckBox.setSelected(agentSettings.getAttributes().getMutates());
         mutationMagnitudeSpinner.setValue(agentSettings.getAttributes().getMutationMagnitude());
+        if (agentSettings.getAttributes().getMutationMagnitude() > 0) {
+            generatedColorValue.setBackground(agentSettings.getAttributes().getMutatingColor());
+        }
+        else {
+            generatedColorValue.setBackground(agentSettings.getAttributes().getSeedColor());
+        }
     }
 
     public AgentSettings getAgentSettings() {
@@ -534,16 +512,11 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
                               (double) spawningWeightSpinner.getValue(),
                                        agentNameTextField.getText(),
                                  (int) agentCodeSpinner.getValue(),
-                                       colourChooserButton.getBackground(),
-                                       mutatesCheckBox.isSelected(),
+                                       seedColourChooserButton.getBackground(),
                                  (int) mutationMagnitudeSpinner.getValue(),
-
                                  (int) rangeSpinner.getValue(),
                                  (int) sizeSpinner.getValue(),
-                                 (int) creationAgeSpinner.getValue(),
                                  (int) creationAmountSpinner.getValue(),
-
-                                 (int) creationDelaySpinner.getValue(),
                                        motivations);
     }
 }

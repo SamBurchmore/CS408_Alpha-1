@@ -1,13 +1,13 @@
-package Simulation.AgentUtility;
+package Simulation.Agent.AgentUtility;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SavedAgents implements Serializable {
+public class ActiveAgentsSettings implements Serializable {
 
     ArrayList<AgentSettings> savedAgentSettings;
 
-    public SavedAgents(ArrayList<AgentSettings> savedAgentSettings) {
+    public ActiveAgentsSettings(ArrayList<AgentSettings> savedAgentSettings) {
         this.savedAgentSettings = savedAgentSettings;
     }
 

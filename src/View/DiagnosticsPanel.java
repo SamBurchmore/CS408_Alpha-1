@@ -8,30 +8,36 @@ import java.awt.*;
 public class DiagnosticsPanel extends JPanel {
 
     // The label where the current simulation step is displayed
-    private JLabel currentStepLabel;
+    final private JLabel currentStepLabel;
 
+    // The components where the agent statistics are displayed---------------------</
     private Object[][] agentStatistics = {{"Agent 1", 0, 0.0, 0.0, 0}, {"Agent 2", 0, 0.0, 0.0, 0}, {"Agent 3", 0, 0.0, 0.0, 0}, {"Agent 4", 0, 0.0, 0.0, 0}, {"Agent 5", 0, 0.0, 0.0, 0}, {"Agent 6", 0, 0.0, 0.0, 0}, {"Agent 7", 0, 0.0, 0.0, 0}, {"Agent 8", 0, 0.0, 0.0, 0}};
     private String[] agentStatNames = {"<html>Agent<br></html>" , "<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>", "<html>Born Last<br>Step</html>"}; //{"<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>"};
-    private JTable agentStatsTable;
+    final private JTable agentStatsTable;
     private JScrollPane agentStatsTableScrollPane;
+    //-----------------------------------------------------------------------------</
 
-    // This is where log messages will be output, stuff like "[AGENT] step 5343: blue agent has gone extinct", or [ENVIRONMENT] step 1000: year 4
-    private JTextArea logTextArea;
-    private JScrollPane logScrollPane;
-    private JLabel logTextAreaLabel;
+    // The components where the environments statistics are displayed---------------------</
+    final private JPanel environmentStatsPanel;
+    final private JLabel maxEnvironmentEnergyLabel;
+    final private JLabel maxEnvironmentEnergyValueLabel;
+    final private JLabel currentEnvironmentEnergyLabel;
+    final private JLabel currentEnvironmentEnergyValueLabel;
+    final private JLabel currentEnvironmentEnergyPercentLabel;
+    final private JLabel currentEnvironmentEnergyPercentValueLabel;
+    //------------------------------------------------------------------------------------</
 
-    // This is where the environments statistics will be shown, stuff like total energy, available space, etc
-    private JPanel environmentStatsPanel;
-
-    private JLabel maxEnvironmentEnergyLabel;
-    private JLabel maxEnvironmentEnergyValueLabel;
-
-    private JLabel currentEnvironmentEnergyLabel;
-    private JLabel currentEnvironmentEnergyValueLabel;
-
-    private JLabel currentEnvironmentEnergyPercentLabel;
-    private JLabel currentEnvironmentEnergyPercentValueLabel;
-
+    // The components that make up the info log---------------------</
+    final private JTextArea logTextArea;
+    final private JScrollPane logScrollPane;
+    final private JLabel logTextAreaLabel;
+    final private JRadioButton lowDiagnosticsRadioButton;
+    final private JRadioButton highDiagnosticsRadioButton;
+    final private ButtonGroup diagnosticsVerbosityButtonGroup;
+    final private JPanel diagnosticsVerbosityPanel;
+    final private JLabel diagnosticsVerbosityLabel;
+    final private JButton clearLogButton;
+    //--------------------------------------------------------------</
 
     public DiagnosticsPanel() {
         super();
@@ -39,13 +45,14 @@ public class DiagnosticsPanel extends JPanel {
         setPreferredSize(new Dimension(410, 765));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
-        // First all elements are defined and their attributes set
+        //--------------------------------------------------------------------------Current Step Label Start
         currentStepLabel = new JLabel("Day 0");
         currentStepLabel.setHorizontalAlignment(SwingConstants.CENTER);
         currentStepLabel.setPreferredSize(new Dimension(400, 35));
         currentStepLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+        //--------------------------------------------------------------------------Current Step Label End
 
-        // Here we build the agent stats table
+        //--------------------------------------------------------------------------Agent Stats Table Start
         TableModel tableModel = new DefaultTableModel(agentStatistics, agentStatNames);
         agentStatsTable = new JTable(tableModel);
         agentStatsTableScrollPane = new JScrollPane(agentStatsTable);
@@ -55,28 +62,17 @@ public class DiagnosticsPanel extends JPanel {
         agentStatsTable.setDefaultEditor(Object.class, null);
         agentStatsTable.getTableHeader().setPreferredSize(new Dimension(400, 35));
         agentStatsTable.getTableHeader().setFont(new Font("Dialog", Font.BOLD, 12));
+        //--------------------------------------------------------------------------Agent Stats Table End
 
-        // Now we configure the log output text area and its label
-        logTextArea = new JTextArea(18, 8);
-        logScrollPane = new JScrollPane(logTextArea);
-        logScrollPane.setPreferredSize(new Dimension(400, 300));
-        logTextAreaLabel = new JLabel("Info Log:");
-        logTextAreaLabel.setOpaque(true);
-        logTextAreaLabel.setPreferredSize(new Dimension(400, 15));
-        logTextAreaLabel.setFont(new Font("Dialog", Font.BOLD, 12));
-
-        // Now we configure the environment statistics panel
+        //--------------------------------------------------------------------------Environment Stats Panel Start
         environmentStatsPanel = new JPanel(new GridLayout(3, 2));
         environmentStatsPanel.setPreferredSize(new Dimension(396, 100));
-        //environmentStatsPanel.setBorder(BorderFactory.createLineBorder(new Color(214, 214, 214), 2));
-
         maxEnvironmentEnergyLabel = new JLabel("     Max Environment Energy: ");
         maxEnvironmentEnergyLabel.setPreferredSize(new Dimension(130, 15));
         currentEnvironmentEnergyLabel = new JLabel("     Current Environment Energy: ");
         currentEnvironmentEnergyLabel.setPreferredSize(new Dimension(130, 15));
         currentEnvironmentEnergyPercentLabel = new JLabel("     Available Energy Percent: ");
         currentEnvironmentEnergyPercentLabel.setPreferredSize(new Dimension(130, 15));
-
         maxEnvironmentEnergyValueLabel = new JLabel();
         maxEnvironmentEnergyValueLabel.setPreferredSize(new Dimension(150, 15));
         maxEnvironmentEnergyLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -86,13 +82,38 @@ public class DiagnosticsPanel extends JPanel {
         currentEnvironmentEnergyPercentValueLabel = new JLabel();
         currentEnvironmentEnergyPercentValueLabel.setHorizontalAlignment(SwingConstants.LEFT);
         currentEnvironmentEnergyPercentValueLabel.setPreferredSize(new Dimension(150, 15));
-
         environmentStatsPanel.add(maxEnvironmentEnergyLabel);
         environmentStatsPanel.add(maxEnvironmentEnergyValueLabel);
         environmentStatsPanel.add(currentEnvironmentEnergyLabel);
         environmentStatsPanel.add(currentEnvironmentEnergyValueLabel);
         environmentStatsPanel.add(currentEnvironmentEnergyPercentLabel);
         environmentStatsPanel.add(currentEnvironmentEnergyPercentValueLabel);
+        //--------------------------------------------------------------------------Environment Stats Panel End
+
+        //--------------------------------------------------------------------------Info Log Start
+        logTextArea = new JTextArea(18, 8);
+        logScrollPane = new JScrollPane(logTextArea);
+        logScrollPane.setPreferredSize(new Dimension(400, 300));
+        logTextAreaLabel = new JLabel("Info Log:");
+        logTextAreaLabel.setPreferredSize(new Dimension(400, 15));
+        logTextAreaLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+        lowDiagnosticsRadioButton = new JRadioButton("Low");
+        //medDiagnosticsRadioButton = new JRadioButton("Standard");
+        highDiagnosticsRadioButton = new JRadioButton("High");
+        diagnosticsVerbosityButtonGroup = new ButtonGroup();
+        diagnosticsVerbosityButtonGroup.add(lowDiagnosticsRadioButton);
+        //diagnosticsVerbosityButtonGroup.add(medDiagnosticsRadioButton);
+        diagnosticsVerbosityButtonGroup.add(highDiagnosticsRadioButton);
+        diagnosticsVerbosityButtonGroup.setSelected(lowDiagnosticsRadioButton.getModel(), true);
+        diagnosticsVerbosityPanel = new JPanel(new GridLayout(1, 4));
+        diagnosticsVerbosityLabel = new JLabel("Info Log Verbosity:");
+        clearLogButton = new JButton("Clear");
+        diagnosticsVerbosityPanel.add(diagnosticsVerbosityLabel);
+        diagnosticsVerbosityPanel.add(lowDiagnosticsRadioButton);
+        diagnosticsVerbosityPanel.add(highDiagnosticsRadioButton);
+        diagnosticsVerbosityPanel.add(clearLogButton);
+        //--------------------------------------------------------------------------Info Log End
+
 
         // The GridBag constraints we'll be using to build this panel
         GridBagConstraints c = new GridBagConstraints();
@@ -123,6 +144,11 @@ public class DiagnosticsPanel extends JPanel {
         c.insets = new Insets(0, 1, 0, 1);
         add(logScrollPane, c);
 
+        // Now we add the sixth row components
+        c.gridy = 5;
+        c.insets = new Insets(0, 1, 0, 1);
+        add(diagnosticsVerbosityPanel, c);
+
     }
 
     public void setAgentStats(Object[][] agentStats) {
@@ -146,6 +172,10 @@ public class DiagnosticsPanel extends JPanel {
         currentEnvironmentEnergyPercentValueLabel.setText(environmentStats[2].toString() + "%");
     }
 
+    public JButton getClearLogButton() {
+        return clearLogButton;
+    }
+
     public void clearLog() {
         logTextArea.setText("");
     }
@@ -162,4 +192,10 @@ public class DiagnosticsPanel extends JPanel {
         currentStepLabel.setText("Step: 0");
     }
 
+    public int getDiagnosticsVerbosity() {
+        if (diagnosticsVerbosityButtonGroup.getSelection().equals(lowDiagnosticsRadioButton.getModel())) {
+            return 0;
+        }
+        return 1;
+    }
 }

@@ -1,4 +1,4 @@
-package Simulation.AgentUtility;
+package Simulation.Agent.AgentUtility;
 
 import Simulation.Agent.AgentConcreteComponents.BasicAttributes;
 import Simulation.Agent.AgentInterfaces.Attributes;
@@ -13,8 +13,8 @@ public class AgentSettings implements Serializable {
     private Attributes attributes;
     private ArrayList<Motivation> motivations;
 
-    public AgentSettings(double spawningWeight, String name, int code, Color color, boolean mutates, int mutationMagnitude, int range, int size, int creationAge, int creationAmount, int creationDelay, ArrayList<Motivation> motivations) {
-        this.attributes = new BasicAttributes(spawningWeight, name, code, color, mutates, mutationMagnitude, range, size, creationAge, creationAmount ,creationDelay);
+    public AgentSettings(double spawningWeight, String name, int code, Color seedColor, int mutationMagnitude, int range, int size, int creationAmount, ArrayList<Motivation> motivations) {
+        this.attributes = new BasicAttributes(spawningWeight, name, code, seedColor, mutationMagnitude, range, size, creationAmount);
         this.motivations = (ArrayList<Motivation>) motivations.clone();
     }
 
@@ -40,11 +40,11 @@ public class AgentSettings implements Serializable {
     }
 
     public Color getColor() {
-        return attributes.getColor();
+        return attributes.getSeedColor();
     }
 
     public void setColor(Color color) {
-        attributes.setColor(color);
+        attributes.setSeedColor(color);
     }
 
     public Integer getEnergyCapacity() {
@@ -79,7 +79,7 @@ public class AgentSettings implements Serializable {
         attributes.setSize(size);
     }
 
-    public int getCreationAge() {
+    public Integer getCreationAge() {
         return attributes.getCreationAge();
     }
 
@@ -92,14 +92,14 @@ public class AgentSettings implements Serializable {
     }
 
     public int getCreationAmount() {
-        return attributes.getCreationAmount();
+        return attributes.getCreationSize();
     }
 
     public void setCreationAmount(int creationAmount) {
-        attributes.setCreationAmount(creationAmount);
+        attributes.setCreationSize(creationAmount);
     }
 
-    public int getCreationDelay() {
+    public Integer getCreationDelay() {
         return attributes.getCreationDelay();
     }
 
@@ -131,4 +131,11 @@ public class AgentSettings implements Serializable {
         this.motivations = motivations;
     }
 
+    public int getCreationSize() {
+        return attributes.getCreationSize();
+    }
+
+    public Integer getCreationCost() {
+        return attributes.getCreationCost();
+    }
 }

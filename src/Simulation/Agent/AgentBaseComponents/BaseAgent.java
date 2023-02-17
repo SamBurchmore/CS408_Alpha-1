@@ -121,7 +121,7 @@ public abstract class BaseAgent implements Agent {
         if (!childLocations.isEmpty()) {
             Collections.shuffle(childLocations);
             //System.out.println("---\n" + getScores().getEnergy());
-            for (Location childLocation : childLocations.subList(0, Math.min(childLocations.size(), this.getAttributes().getCreationAmount()))) {
+            for (Location childLocation : childLocations.subList(0, Math.min(childLocations.size(), this.getAttributes().getCreationSize()))) {
                 if (getAttributes().getCreationCost() <= getScores().getEnergy())
                 {
                     Agent child = combine(environment.getTile(parentBLocation).getOccupant(), childLocation);
@@ -146,7 +146,7 @@ public abstract class BaseAgent implements Agent {
         Agent newAgent = new BasicAgent(childLocation, this, parentB);
 
         getScores().setEnergy(getScores().getEnergy() - 1);
-        newAgent.getScores().setEnergy(getAttributes().getEnergyCapacity() / getAttributes().getCreationAmount());
+        newAgent.getScores().setEnergy(getAttributes().getEnergyCapacity() / getAttributes().getCreationSize());
 
         return newAgent;
     }

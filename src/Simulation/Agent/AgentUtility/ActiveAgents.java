@@ -1,4 +1,4 @@
-package Simulation.AgentUtility;
+package Simulation.Agent.AgentUtility;
 
 import Simulation.Agent.AgentInterfaces.Agent;
 

@@ -8,7 +8,7 @@ public interface Attributes {
     int getSize();
     int getLifespan();
     int getCreationAge();
-    int getCreationAmount();
+    int getCreationSize();
     int getCreationDelay();
     int getEnergyCapacity();
     int getEnergyLostPerTurn();
@@ -16,22 +16,21 @@ public interface Attributes {
     int getCreationCost();
     String getName();
     int getCode();
-    Color getColor();
+    Color getSeedColor();
     double getSpawningWeight();
-    boolean getMutates();
     int getMutationMagnitude();
     void setRange(int range);
     void setSize(int size);
     void setLifespan(int lifespan);
     void setCreationAge(int creationAge);
-    void setCreationAmount(int creationAmount);
+    void setCreationSize(int creationSize);
     void setCreationDelay(int creationDelay);
     void setName(String name);
     void setCode(int code);
-    void setColor(Color color);
+    void setSeedColor(Color seedColor);
     void setSpawningWeight(double spawningWeight);
-    void setMutates(boolean mutates);
     void setMutationMagnitude(int mutationMagnitude);
     Attributes copy();
-
+    void generateColor(double a, double b, double c, int constant);
+    Color getMutatingColor();
 }

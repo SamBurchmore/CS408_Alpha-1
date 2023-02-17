@@ -9,52 +9,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5c119b8-cf77-44b8-a83a-26bb30553e3a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentBaseComponents/BaseMotivation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/CreatorMotivation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentStructs/AgentDecision.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentStructs/AgentVision.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/images/tool-icon-v2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gs-core-2.0.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gs-ui-swing-2.0.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Controller/SimCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Simulation/SimulationUtility/SimulationSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/flatlaf_3_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/flatlaf_3_0.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blueRed/blueRed.dat" beforeDir="false" afterPath="$PROJECT_DIR$/blueRed/blueRed.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blueRed/blueRedEnv.dat" beforeDir="false" afterPath="$PROJECT_DIR$/blueRed/blueRedEnv.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MainController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/AgentEditor/ActiveAgents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/AgentUtility/ActiveAgents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/AgentEditor/AgentEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/AgentUtility/AgentEditor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/AgentEditor/AgentSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/AgentUtility/AgentSettings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/AgentEditor/SavedAgents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/AgentUtility/SavedAgents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentBaseComponents/BaseAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/BasicAttributes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentBaseComponents/BaseScores.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/BasicScores.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/BasicAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/BasicAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/BasicAttributes.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/BasicScores.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/CreatorMotivation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/GrazerMotivation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/GrazerMotivation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentConcreteComponents/PredatorMotivation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/PredatorMotivation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentInterfaces/Agent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Attributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentInterfaces/Attributes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Motivation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentInterfaces/Motivation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Reaction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Scores.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentInterfaces/Scores.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentInterfaces/Vision.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentStructs/AgentAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentStructs/AgentAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentStructs/AgentDecision.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentStructs/AgentModelUpdate.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentStructs/AgentResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentStructs/AgentType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentStructs/AgentUpdate.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Agents/AgentStructs/AgentVision.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Diagnostics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Diagnostics/Diagnostics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Environment/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Environment/Environment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Environment/EnvironmentSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Environment/EnvironmentSettings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Environment/EnvironmentTile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Environment/EnvironmentTile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Environment/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Environment/Location.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/ModelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/ActiveAgentsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/ActiveAgentsPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Agent/AgentBaseComponents/BaseAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentBaseComponents/BaseAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/BasicAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/BasicAttributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/CreatorMotivation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/CreatorMotivation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Agent/AgentInterfaces/Attributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentInterfaces/Attributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/AgentUtility/ActiveAgents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentUtility/ActiveAgents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/AgentUtility/AgentEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentUtility/AgentEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/AgentUtility/AgentSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentUtility/AgentSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/AgentUtility/SavedAgents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentUtility/ActiveAgentsSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Diagnostics/Diagnostics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Diagnostics/Diagnostics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Environment/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Environment/Environment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/View/AgentEditorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/AgentEditorPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/EnvironmentSettingsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/EnvironmentSettingsPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MainView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/SimulationControlPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/SimulationControlPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/WorldPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/SimulationPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,8 +46,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JUnit5 Test Class" />
-        <option value="Enum" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -89,24 +67,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/4th Year/CS408_Project/CS408_Alpha-1&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "E:/4th Year/CS408_Project/CS408_Alpha-1/gs-ui-swing-2.0.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\4th Year\CS408_Project\CS408_GUI\src\Controller" />
@@ -115,11 +93,11 @@
       <recent name="" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="Simulation.Agent" />
       <recent name="Simulation.Agent.AgentConcreteComponents" />
       <recent name="Model.Agents.AgentConcreteComponents" />
       <recent name="Simulation.Agent.AgentBaseComponents" />
       <recent name="Model.Diagnostics" />
-      <recent name="Model" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
       <recent name="WorldStructs" />
@@ -286,7 +264,12 @@
       <workItem from="1675989564571" duration="330000" />
       <workItem from="1676032473451" duration="4126000" />
       <workItem from="1676114206246" duration="6757000" />
-      <workItem from="1676206352889" duration="3108000" />
+      <workItem from="1676206352889" duration="3167000" />
+      <workItem from="1676298416782" duration="31206000" />
+      <workItem from="1676380903031" duration="54000" />
+      <workItem from="1676388661446" duration="12496000" />
+      <workItem from="1676481750064" duration="24400000" />
+      <workItem from="1676553026498" duration="26569000" />
     </task>
     <task id="LOCAL-00001" summary="added some methods">
       <created>1668354392375</created>

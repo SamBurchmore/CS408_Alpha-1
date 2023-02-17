@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import Simulation.Agent.AgentInterfaces.Attributes;
-import Simulation.AgentUtility.AgentEditor;
+import Simulation.Agent.AgentUtility.AgentEditor;
 import Simulation.Agent.AgentConcreteComponents.BasicAgent;
 import Simulation.Agent.AgentInterfaces.Agent;
 import Simulation.Agent.AgentInterfaces.Motivation;
@@ -18,11 +18,14 @@ import Simulation.Environment.Environment;
 import Simulation.Environment.EnvironmentSettings;
 import Simulation.Environment.EnvironmentTile;
 import Simulation.Environment.Location;
+import Simulation.SimulationUtility.SimulationSettings;
+import View.SimulationPanel;
 
 /**
  * This class will be the main controller for the simulation. It will handle running the agents, moving them, removing, and adding them to the grid when needed.
  */
 public class Simulation {
+
 
     private Environment environment; // The instance of the environment class
 
@@ -34,18 +37,23 @@ public class Simulation {
 
     private Diagnostics diagnostics; // The instance of the diagnostics class
 
-    private final AgentLogic agentLogic;
+    private final AgentLogic agentLogic; // The instance of the agent logic inner class
 
     private Random random;
 
-    public Simulation(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount){
+    private int diagnosticsVerbosity = 1; // How much info is logged by the diagnostics class = (0=low, 1=standard, 2=high)
+
+    private SimulationPanel simulationPanel;
+
+    public Simulation(SimulationPanel simulationPanel, int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount){
         this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel, energyRegenChance, energyRegenAmount);
         this.random = new Random();
         this.agentList = new ArrayList<>();
         this.aliveAgentList = new ArrayList<>();
-        this.diagnostics = new Diagnostics();
+        this.diagnostics = new Diagnostics(maxEnergyLevel * size);
         this.agentEditor = new AgentEditor();
         this.agentLogic = new AgentLogic();
+        this.simulationPanel = simulationPanel;
     }
 
     public void setEnvironment(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
@@ -64,7 +72,7 @@ public class Simulation {
                 BasicAgent agent;
                 for (int j = 0; j < activeAgents.size(); j++) {
                     if (j == agentIndex && agentEditor.getAgent(j).getAttributes().getSpawningWeight() * 100 > random.nextInt(100)) {
-                        agent = (BasicAgent) agentEditor.getAgent(j).copy();
+                        agent = agentLogic.getAgent(j);
                         EnvironmentTile wt = environment.getGrid()[i];
                         agent.setLocation(wt.getLocation());
                         wt.setOccupant(agent);
@@ -88,7 +96,7 @@ public class Simulation {
         }
         agentList = aliveAgentList;
         aliveAgentList = new ArrayList<>();
-        IntStream.range(0, environment.getSize() * environment.getSize()).parallel().forEach(i->{
+        IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
             if (random.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {
                 int modifyAmount = environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
                 diagnostics.modifyCurrentEnvironmentEnergy(modifyAmount);
@@ -125,24 +133,26 @@ public class Simulation {
             diagnostics.resetCurrentEnvironmentEnergy();
         }
             environment.setEnvironmentSettings(environmentSettings);
-            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize() * getEnvironmentSize());
+            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize()*getEnvironmentSize());
         }
 
+    public SimulationSettings getSimulationSettings(String name) {
+        return new SimulationSettings(
+                name,
+                agentEditor.getActiveAgentsSettings(),
+                environment.getEnvironmentSettings());
+    }
 
-    public EnvironmentSettings getEnvironmentSettings() {
-        return new EnvironmentSettings(environment.getSize(),
-                                       environment.getMaxEnergyLevel(),
-                                       environment.getMinEnergyLevel(),
-                                       environment.getEnergyRegenChance(),
-                                       environment.getEnergyRegenAmount(),
-                                       environment.getColors());
+    public void setSimulationSettings(SimulationSettings simulationSettings) {
+        environment.setEnvironmentSettings(simulationSettings.getEnvironmentSettings());
+        agentEditor.setActiveAgentsSettings(simulationSettings.getAgentSettings());
     }
 
     public Diagnostics getDiagnostics() {
         return this.diagnostics;
     }
 
-    public BufferedImage getEnvironmentImage(int scale) {
+    public BufferedImage getSimulationImage(int scale) {
         return this.environment.toBufferedImage(scale);
     }
 
@@ -152,6 +162,14 @@ public class Simulation {
 
     public void updateAgentNames() {
         diagnostics.setAgentNames(agentEditor.getAgentNames());
+    }
+
+    public int getDiagnosticsVerbosity() {
+        return diagnosticsVerbosity;
+    }
+
+    public void setDiagnosticsVerbosity(int diagnosticsVerbosity) {
+        this.diagnosticsVerbosity = diagnosticsVerbosity;
     }
 
     public void setAgentEditor(AgentEditor agentEditor) {
@@ -206,9 +224,7 @@ public class Simulation {
         return environment.getSize();
     }
 
-
     private class AgentLogic {
-
         public void runAgent(Agent agent) {
             if (agent.isEaten()) {
                 return; // Agent has been eaten by another agent, therefor its already been removed from the environment, all we need to do is not add it to the aliveAgentList
@@ -230,18 +246,7 @@ public class Simulation {
                 aliveAgentList.add(agent); // Agent is still alive
             }
             else if (agentDecision.agentAction().equals(AgentAction.CREATE)) { // Create children
-                ArrayList<Agent> childAgents = agent.create(agentDecision.location(), (agent.getAttributes().getEnergyCapacity() / agent.getAttributes().getCreationAmount()) / 2, environment);
-                if (agent.getAttributes().getMutates()) { // Check if the parent agent mutates, if so then mutate all its children before adding them to the board
-                    for (Agent child : childAgents) {
-                        child.setAttributes(mutate(child.getAttributes()));
-                        environment.setTileAgent(child);
-                    }
-                }
-                else {
-                    for (Agent child : childAgents) { // Otherwise just add the agents straight to the board
-                        environment.setTileAgent(child);
-                    }
-                }
+                ArrayList<Agent> childAgents = processAgents(agent.create(agentDecision.location(), (agent.getAttributes().getEnergyCapacity() / agent.getAttributes().getCreationSize()) / 2, environment), agent.getAttributes().getMutationMagnitude());
                 aliveAgentList.addAll(childAgents); // Create new agents with found mate,
                 aliveAgentList.add(agent); // Agent is still alive
             }
@@ -267,41 +272,76 @@ public class Simulation {
             }
         }
 
-        public Attributes mutate(Attributes attributes) {
-            // We've decided the agent is going to mutate, now we need to randomly decide what attribute to mutate.
-            switch (random.nextInt(4)) {
-                case 0 -> {
-                    // Mutate size
-                    int oldSize = attributes.getSize();
-                    attributes.setSize(Math.min(Math.max(attributes.getSize() + mutationMagnitude(random), 2), 10));
-                    System.out.println("Size mutated by: " + (attributes.getSize() - oldSize));
-                }
-                case 1 -> {
-                    // Mutate range
-                    int oldRange = attributes.getRange();
-                    attributes.setRange(Math.min(Math.max(attributes.getRange() + mutationMagnitude(random), 0), 5));
-                    System.out.println("Range mutated by: " + (attributes.getRange() - oldRange));
-                }
-                case 2 -> {
-                    // Mutate creationAmount
-                    int oldCreationAmount = attributes.getCreationAmount();
-                    attributes.setCreationAmount(Math.min(Math.max(attributes.getCreationAmount() + mutationMagnitude(random), 1), 8));
-                    System.out.println("Creation Amount mutated by: " + (attributes.getCreationAmount() - oldCreationAmount));
-                }
-                case 3 -> {
-                    // Mutate creationAge
-                    int oldCreationAge = attributes.getCreationAge();
-                    attributes.setCreationAge(Math.min(Math.max(attributes.getCreationAge() + mutationMagnitude(random), 1), 100 + attributes.getSize() * attributes.getSize()));
-                    System.out.println("Creation Age mutated by: " + (attributes.getCreationAge() - oldCreationAge));
+        private ArrayList<Agent> processAgents(ArrayList<Agent> childAgents, int mutationChance) {
+            if (mutationChance > random.nextInt(100)) { // Check if the parent agent mutates, if so then mutate all its children before adding them to the board
+                for (Agent child : childAgents) {
+                    double[] oldStats = new double[]{child.getAttributes().getSize(), child.getAttributes().getCreationSize(), child.getAttributes().getRange()};
+                    child.setAttributes(agentLogic.mutate(child.getAttributes()));
+                    double[] newStats = new double[]{child.getAttributes().getSize(), child.getAttributes().getCreationSize(), child.getAttributes().getRange()};
+                    child.getAttributes().generateColor(
+                            (newStats[0] / 100) - (oldStats[0] / 100),
+                            (newStats[1] / 8) - (oldStats[1] / 8),
+                            (newStats[2] / 5) - (oldStats[2] / 5),
+                            125
+                    );
+                    environment.setTileAgent(child);
                 }
             }
-            return attributes;
+            else {
+                for (Agent child : childAgents) { // Otherwise just add the agents straight to the board
+                    environment.setTileAgent(child);
+                }
+            }
+            return childAgents;
+        }
+
+        public BasicAgent getAgent(int index) {
+            BasicAgent basicAgent = (BasicAgent) agentEditor.getAgent(index).copy();
+            basicAgent.getAttributes().generateColor(
+                    basicAgent.getAttributes().getSize() / 100.0,
+                    basicAgent.getAttributes().getCreationSize() / 8.0,
+                    basicAgent.getAttributes().getRange() / 5.0,
+                    125
+                    );
+            return basicAgent;
+        }
+
+        private Attributes mutate(Attributes attributes) {
+            // We've decided the agent is going to mutate, now we need to randomly decide what attribute to mutate.
+            int ran = random.nextInt(11);
+            if (ran < 5) {
+                // Mutate size
+                int oldSize = attributes.getSize();
+                attributes.setSize(Math.min(Math.max(attributes.getSize() + mutationMagnitude(random), 2), 10));
+                if (diagnosticsVerbosity >= 1) {
+                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ": Size mutated by: " + (attributes.getSize() - oldSize) + ".");
+                }
+                return attributes;
+            }
+            if (ran < 8) {
+                // Mutate range
+                int oldRange = attributes.getRange();
+                attributes.setRange(Math.min(Math.max(attributes.getRange() + mutationMagnitude(random), 0), 5));
+                if (diagnosticsVerbosity >= 1) {
+                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ": Range mutated by: " + (attributes.getRange() - oldRange) + ".");
+                }
+                return attributes;
+            }
+            else {
+                // Mutate creationAmount
+                int oldCreationSize = attributes.getCreationSize();
+                attributes.setCreationSize(Math.min(Math.max(attributes.getCreationSize() + mutationMagnitude(random), 1), 8));
+                if (diagnosticsVerbosity >= 1) {
+                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ": Litter Size mutated by: " + (attributes.getCreationSize() - oldCreationSize) + ".");
+                }
+                System.out.println();
+                return attributes;
+            }
         }
 
         private ArrayList<AgentVision> lookAround(Agent agent) {
             Location agentLocation = agent.getLocation();
             int visionRange = agent.getAttributes().getRange();
-            int agentRange = agent.getAttributes().getRange();
             // Generate a new ArrayList of the AgentVision object, everything the agent sees will be stored here.
             ArrayList<AgentVision> agentViews = new ArrayList<>();
             // Retrieve the agents vision attribute, lets us know how far the agent can see.
@@ -359,21 +399,16 @@ public class Simulation {
             if (modifier == 0) {
                 modifier -= 1;
             }
-            if (r < 45) {
+            if (r < 75) {
                 return modifier;
             }
-            else if (r < 70) {
+            if (r < 98) {
                 return 2*modifier;
             }
-            else if (r < 85) {
-                return 3*modifier;
-            }
-            else if (r < 95) {
-                return 4*modifier;
-            }
-            else {
-                return 5*modifier;
-            }
+            return 3*modifier;
         }
+
     }
+
+
 }

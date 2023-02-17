@@ -19,12 +19,14 @@ public class CreatorMotivation extends BaseMotivation {
     @Override
     public AgentDecision run(AgentVision tile, Attributes attributes, Scores scores) {
         if (tile.isOccupied()) {
-            if (tile.getOccupantAttributes().getCode() == attributes.getCode()
+            if (
+                    tile.getOccupantAttributes().getCode() == attributes.getCode()
                     && scores.getAge() >= attributes.getCreationAge()
                     && scores.getCreationCounter() <= 0
                     && scores.getEnergy() > attributes.getEnergyCapacity() / 2
                     && tile.getOccupantScores().getAge() > tile.getOccupantAttributes().getCreationAge()
-                    && tile.getOccupantScores().getCreationCounter() <= 0)
+                    && tile.getOccupantScores().getCreationCounter() <= 0
+                    && compareAttributes(attributes, tile.getOccupantAttributes()) )
             {
                 // Tile is occupied, and it's occupant is the same species, set the decision to CREATE and the score 10
                 return new AgentDecision(tile.getLocation(), AgentAction.CREATE, super.getBias() * super.getWeight());
@@ -44,6 +46,19 @@ public class CreatorMotivation extends BaseMotivation {
     @Override
     public int getCode() {
         return motivationCode;
+    }
+
+    private boolean compareAttributes(Attributes attributesA, Attributes attributesB) {
+        if (Math.abs(attributesA.getSize() - attributesB.getSize()) > 5) {
+            return false;
+        }
+        if (Math.abs(attributesA.getCreationSize() - attributesB.getCreationSize()) > 1) {
+            return false;
+        }
+        if (Math.abs(attributesA.getRange() - attributesB.getRange()) > 0) {
+            return false;
+        }
+        return true;
     }
 
 }

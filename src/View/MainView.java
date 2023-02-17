@@ -16,17 +16,27 @@ public class MainView extends JFrame {
     private JMenu saveMenu;
     private JMenu loadMenu;
     private JMenu presetsMenu;
+    private JMenu toolSettingsMenu;
     private JMenuBar menuBar;
 
     private JButton saveAgentsMenuButton;
     private JButton loadAgentsMenuButton;
     private JButton saveEnvironmentSettingsMenuButton;
     private JButton loadEnvironmentSettingsMenuButton;
+    private JButton saveSettingsMenuButton;
+    private JButton loadSettingsMenuButton;
+
+    private JButton preset1Button;
+    private JButton preset2Button;
+    private JButton preset3Button;
+
+    private JButton toggleControlsButton;
+    private JButton toggleSimpleModeButton;
 
     private EnvironmentSettingsPanel environmentSettingsPanel;
     private SimulationControlPanel simulationControlPanel;
     private AgentEditorPanel agentEditorPanel;
-    private WorldPanel worldPanel;
+    private SimulationPanel simulationPanel;
     private ActiveAgentsPanel activeAgentsPanel;
     private DiagnosticsPanel diagnosticsPanel;
 
@@ -54,18 +64,37 @@ public class MainView extends JFrame {
         loadMenu = new JMenu("Load");
         loadMenu.setMnemonic(KeyEvent.VK_L);
         presetsMenu = new JMenu("Presets");
+        toolSettingsMenu = new JMenu("Settings");
 
         // Build the save menu
+        saveSettingsMenuButton = new JButton("Save Settings");
+        saveMenu.add(saveSettingsMenuButton);
         saveAgentsMenuButton = new JButton("Save Agents");
         saveEnvironmentSettingsMenuButton = new JButton("Save Environment");
         saveMenu.add(saveAgentsMenuButton);
         saveMenu.add(saveEnvironmentSettingsMenuButton);
 
         // Build the load menu
+        loadSettingsMenuButton = new JButton("Load Settings");
+        loadMenu.add(loadSettingsMenuButton);
         loadAgentsMenuButton = new JButton("Load Agents");
         loadEnvironmentSettingsMenuButton = new JButton("Load Environment");
         loadMenu.add(loadAgentsMenuButton);
         loadMenu.add(loadEnvironmentSettingsMenuButton);
+
+        // Build the presets menu
+        preset1Button = new JButton("Preset 1");
+        preset2Button = new JButton("Preset 3");
+        preset3Button = new JButton("Preset 2");
+        presetsMenu.add(preset1Button);
+        presetsMenu.add(preset2Button);
+        presetsMenu.add(preset3Button);
+
+        // Build the tool settings menu
+        toggleControlsButton = new JButton("Toggle Controls");
+        toolSettingsMenu.add(toggleControlsButton);
+        //toggleSimpleModeButton = new JButton("Simple Mode");
+       // toolSettingsMenu.add(toggleSimpleModeButton);
 
         menuBar.add(new JLabel("|"));
         menuBar.add(saveMenu);
@@ -73,6 +102,8 @@ public class MainView extends JFrame {
         menuBar.add(loadMenu);
         menuBar.add(new JLabel("|"));
         menuBar.add(presetsMenu);
+        menuBar.add(new JLabel("|"));
+        menuBar.add(toolSettingsMenu);
         menuBar.add(new JLabel("|"));
         menuBar.setFont(new Font("Dialog", Font.BOLD, 12));
         setJMenuBar(menuBar);
@@ -100,10 +131,10 @@ public class MainView extends JFrame {
         centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.PAGE_AXIS));
         activeAgentsPanel = new ActiveAgentsPanel();
-        worldPanel = new WorldPanel();
+        simulationPanel = new SimulationPanel();
         simulationControlPanel = new SimulationControlPanel();
         centerPanel.add(activeAgentsPanel);
-        centerPanel.add(worldPanel);
+        centerPanel.add(simulationPanel);
         centerPanel.add(simulationControlPanel);
 
         c.gridx = 1;
@@ -123,12 +154,12 @@ public class MainView extends JFrame {
         this.add(diagnosticsPanel, c);
 
         setResizable(false);
-        setVisible(true);
         pack();
+        setLocationRelativeTo(null);
     }
 
-    public void updateWorldPanel(BufferedImage worldImage) {
-        this.worldPanel.updateWorldImage(worldImage);
+    public void updateSimulationPanel(BufferedImage worldImage) {
+        this.simulationPanel.updateWorldImage(worldImage);
         this.repaint();
     }
 
@@ -170,7 +201,31 @@ public class MainView extends JFrame {
         return fileChooser;
     }
 
-    public WorldPanel getWorldPanel() {
-        return worldPanel;
+    public SimulationPanel getWorldPanel() {
+        return simulationPanel;
+    }
+
+    public JButton getSimpleModeButton() {
+        return toggleControlsButton;
+    }
+
+    public JButton getToggleControlsButton() {
+        return toggleControlsButton;
+    }
+
+    public void toggleControls() {
+        diagnosticsPanel.setVisible(!diagnosticsPanel.isVisible());
+        leftPanel.setVisible(!leftPanel.isVisible());
+        activeAgentsPanel.setVisible(!activeAgentsPanel.isVisible());
+        simulationControlPanel.setVisible(!simulationControlPanel.isVisible());
+        pack();
+    }
+
+    public JButton getSaveSettingsMenuButton() {
+        return saveSettingsMenuButton;
+    }
+
+    public JButton getLoadSettingsMenuButton() {
+        return loadSettingsMenuButton;
     }
 }

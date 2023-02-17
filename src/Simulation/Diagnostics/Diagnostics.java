@@ -1,5 +1,7 @@
 package Simulation.Diagnostics;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 
 public class Diagnostics {
@@ -29,9 +31,10 @@ public class Diagnostics {
     public String printLogQueue() {
             StringBuilder logString = new StringBuilder();
             for (String logMsg : logQueue) {
-                logString.append(logMsg).append("\n ");
+                logString.append(logMsg).append("\n");
             }
             logQueue.clear();
+            logString.deleteCharAt(logString.length()-1);
             return logString.toString();
     }
 
@@ -39,7 +42,7 @@ public class Diagnostics {
         return !logQueue.isEmpty();
     }
 
-    public Diagnostics() {
+    public Diagnostics(int maxEnvironmentEnergy) {
         agentNames = new String[]{"Agent 1", "Agent 2", "Agent 3", "Agent 4", "Agent 5", "Agent 6", "Agent 7", "Agent 8"};
         agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
         averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
@@ -47,13 +50,23 @@ public class Diagnostics {
         logQueue = new ArrayDeque<>();
         step = 0;
         lastStepsAgentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
-        extinctFlags = new Integer[]{0, 0, 0, 0, 0, 0, 0, 0};
-        maxEnvironmentEnergy = 0;
-        currentEnvironmentEnergy = 0;
+        extinctFlags = new Integer[]{-1, -1, -1, -1, -1, -1, -1, -1};
+        this.maxEnvironmentEnergy = maxEnvironmentEnergy;
+        currentEnvironmentEnergy = maxEnvironmentEnergy;
     }
 
     public void iterateStep() {
         step = step + 1;
+        boolean extinctionOccured = false;
+        for (int i = 0; i < 8; i++) {
+            if (agentPopulations[i] <= 0 && extinctFlags[i] == 0) {
+                extinctFlags[i] = 1;
+                extinctionOccured = true;
+            }
+        }
+        if (extinctionOccured) {
+            createExtinctAgentMsgs();
+        }
     }
 
     public void setAgentPopulation(int index, int population) {
@@ -66,6 +79,10 @@ public class Diagnostics {
 
     public void setAveragePopulationLifespan(int index, Double populationAge) {
         averagePopulationsLifespan[index] = populationAge;
+    }
+
+    public void setExtinctFlags(int flag) {
+        this.extinctFlags = new Integer[]{flag,flag,flag,flag,flag,flag,flag,flag};
     }
 
     public void setAgentName(int index, String name) {
@@ -89,18 +106,15 @@ public class Diagnostics {
     }
 
     public void modifyCurrentEnvironmentEnergy(int modifyValue) {
-        currentEnvironmentEnergy += modifyValue;
-        if (currentEnvironmentEnergy < 0) {
-            currentEnvironmentEnergy = 0;
-        }
-        if (currentEnvironmentEnergy > maxEnvironmentEnergy) {
-            currentEnvironmentEnergy = maxEnvironmentEnergy;
-        }
-        //System.out.println(currentEnvironmentEnergy);
+        this.currentEnvironmentEnergy = Math.min(Math.max(currentEnvironmentEnergy + modifyValue, 0), maxEnvironmentEnergy);
     }
 
     public void resetCurrentEnvironmentEnergy() {
         currentEnvironmentEnergy = maxEnvironmentEnergy;
+    }
+
+    public Integer getCurrentEnvironmentEnergy() {
+        return currentEnvironmentEnergy;
     }
 
     public Object[] getEnvironmentStats() {
@@ -140,6 +154,9 @@ public class Diagnostics {
         agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
         averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+    }
+
+    public void clearExtinctFlags() {
         extinctFlags = new Integer[]{0, 0, 0, 0, 0, 0, 0, 0};
     }
 
@@ -159,7 +176,7 @@ public class Diagnostics {
         for (int i = 0; i < activeAgentsNumber; i++) {
             if (extinctFlags[i] == 1) {
                 extinctFlags[i] = 2;
-                addToLogQueue("[AGENTS]: " + agentNames[i] + " has gone extinct at step " + step);
+                addToLogQueue("[AGENT]: " + agentNames[i] + " has gone extinct at step " + step);
             }
         }
     }
