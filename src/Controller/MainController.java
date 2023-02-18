@@ -9,6 +9,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
@@ -50,6 +51,7 @@ public class MainController {
         this.simulationRunning = false;
         this.runningNSteps = false;
         this.scale = 600 / size;
+        //this.scale = 1;
     }
 
     public void initController() {
@@ -116,7 +118,14 @@ public class MainController {
             } else {
                 cycleFlag = !cycleFlag;
                 if (cycleFlag) {
+                    view.getSimulationControlPanel().getStopStartButton().setBackground(new Color(200, 50, 20));
+                    view.getSimulationControlPanel().getStopStartButton().setText("Stop");
                     runSimulation();
+                }
+                else {
+                    view.getSimulationControlPanel().getStopStartButton().setBackground(new Color(100, 220, 100));
+                    view.getSimulationControlPanel().getStopStartButton().setText("Start");
+
                 }
             }
         }

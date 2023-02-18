@@ -25,88 +25,69 @@ public class SimulationControlPanel extends JPanel {
 
     public SimulationControlPanel() {
         super();
-        setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(600, 100));
+        setLayout(new GridLayout(1, 6));
+        setPreferredSize(new Dimension(600, 60));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         // First all elements are defined and their attributes set
         runStepButton = new JButton("Run Step");
-        runStepButton.setPreferredSize(new Dimension(600, 25));
+        runStepButton.setPreferredSize(new Dimension(120, 60));
+        //runStepButton.setBackground(new Color(100, 150, 255));
+        runStepButton.setFont(new Font("Dialog", Font.PLAIN, 16));
 
-        stopStartButton = new JButton("Stop / Start");
-        stopStartButton.setPreferredSize(new Dimension(300, 25));
+        stopStartButton = new JButton("Start");
+        stopStartButton.setPreferredSize(new Dimension(120, 60));
+        stopStartButton.setBackground(new Color(100, 220, 100));
+        stopStartButton.setFont(new Font("Dialog", Font.PLAIN, 16));
 
         clearButton = new JButton("Clear");
-        clearButton.setPreferredSize(new Dimension(300, 25));
+        clearButton.setPreferredSize(new Dimension(120, 60));
+        //clearButton.setBackground(new Color(255, 130, 130));
+        clearButton.setFont(new Font("Dialog", Font.PLAIN, 16));
 
-        replenishEnvironmentEnergyButton = new JButton("Replenish Environment Energy");
-        replenishEnvironmentEnergyButton.setPreferredSize(new Dimension(600, 25));
+        replenishEnvironmentEnergyButton = new JButton("<html>Replenish<br>Energy</html>");
+        replenishEnvironmentEnergyButton.setPreferredSize(new Dimension(120, 60));
+        //replenishEnvironmentEnergyButton.setBackground(new Color(255, 255, 150));
+        replenishEnvironmentEnergyButton.setFont(new Font("Dialog", Font.PLAIN, 14));
 
         // Here we build the run n steps panel
-        runNStepsButton = new JButton("Run N Steps: ");
-        runNStepsButton.setPreferredSize(new Dimension(225, 25));
+        runNStepsButton = new JButton("Run For: ");
+        runNStepsButton.setPreferredSize(new Dimension(120, 30));
+        //runNStepsButton.setBackground(new Color(200, 200, 200));
+        runNStepsButton.setFont(new Font("Dialog", Font.BOLD, 12));
 
         runNStepsSpinner = new JSpinner(new SpinnerNumberModel(10, 0, 1000000, 1));
-        runNStepsSpinner.setPreferredSize(new Dimension(75, 25));
+        runNStepsSpinner.setPreferredSize(new Dimension(100, 25));
+        //runNStepsSpinner.setBackground(new Color(200, 200, 200));
 
-        runNStepsPanel = new JPanel(new GridBagLayout());
-        runNStepsPanel.setPreferredSize(new Dimension(300, 25));
+        runNStepsPanel = new JPanel(new GridLayout(2, 0));
+        runNStepsPanel.setPreferredSize(new Dimension(120, 60));
+
+        runNStepsPanel.add(runNStepsButton);
+        runNStepsPanel.add(runNStepsSpinner);
 
         // Here we build the population panel
         populateButton = new JButton("Populate");
-        populateButton.setPreferredSize(new Dimension(225, 25));
+        populateButton.setPreferredSize(new Dimension(120, 30));
+        //populateButton.setBackground(new Color(200, 200, 200));
+        populateButton.setFont(new Font("Dialog", Font.BOLD, 12));
 
-        populationDensitySpinner = new JSpinner(new SpinnerNumberModel(5.0, 0, 100.0, 1));
-        populationDensitySpinner.setPreferredSize(new Dimension(75, 25));
+        populationDensitySpinner = new JSpinner(new SpinnerNumberModel(1.0, 0, 100.0, 1));
+        populationDensitySpinner.setPreferredSize(new Dimension(120, 25));
+        //populationDensitySpinner.setBackground(new Color(200, 200, 200));
 
-        populatePanel = new JPanel(new GridBagLayout());
-        populatePanel.setPreferredSize(new Dimension(300, 25));
+        populatePanel = new JPanel(new GridLayout(2, 1));
+        populatePanel.setPreferredSize(new Dimension(120, 60));
 
-        // The GridBag constraints we'll be using to build our panels
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.BOTH;
-        c.weightx = 1;
-        c.weighty = 1;
-        c.gridwidth = 3;
-        runNStepsPanel.add(runNStepsButton, c);
-        c.gridwidth = 1;
-        runNStepsPanel.add(runNStepsSpinner, c);
+        populatePanel.add(populateButton);
+        populatePanel.add(populationDensitySpinner);
 
-        c.gridwidth = 3;
-        populatePanel.add(populateButton, c);
-        c.gridwidth = 1;
-        populatePanel.add(populationDensitySpinner, c);
-
-        // Now all elements are added to the panel
-        // First we add the top row components
-        c.gridwidth = 2;
-        c.gridx = 0;
-        add(runStepButton, c);
-
-        // Now we add the second row components, these will be 1 per cell so we reset gridwidth to 1
-        c.gridy = 1;
-        c.gridwidth = 1;
-
-        add(stopStartButton, c);
-
-        c.gridx = 1;
-        add(runNStepsPanel, c);
-
-        // Now we add the third row components
-        c.gridy = 2;
-
-        c.gridx = 0;
-        add(populatePanel, c);
-
-        c.gridx = 1;
-        add(clearButton, c);
-
-        // Now we add the forth row components
-        c.gridy = 3;
-
-        c.gridwidth = 4;
-        c.gridx = 0;
-        add(replenishEnvironmentEnergyButton, c);
+        add(runStepButton);
+        add(stopStartButton);
+        add(runNStepsPanel);
+        add(populatePanel);
+        add(replenishEnvironmentEnergyButton);
+        add(clearButton);
     }
 
     public JButton getRunStepButton() {

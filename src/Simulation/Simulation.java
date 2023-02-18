@@ -95,6 +95,7 @@ public class Simulation {
             }
         }
         agentList = aliveAgentList;
+        Collections.shuffle(agentList);
         aliveAgentList = new ArrayList<>();
         IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
             if (random.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {

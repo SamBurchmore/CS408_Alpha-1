@@ -28,7 +28,7 @@ public class ActiveAgentsPanel extends JPanel {
     public ActiveAgentsPanel() {
         super();
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(600, 65));
+        setPreferredSize(new Dimension(600, 105));
         setBorder(BorderFactory.createLineBorder(Color.darkGray));
 
         final String emptyName = "Blank Agent";
