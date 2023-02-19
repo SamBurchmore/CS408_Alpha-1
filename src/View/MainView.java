@@ -1,5 +1,7 @@
 package View;
 
+import Simulation.SimulationUtility.TerrainSettings;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -12,13 +14,10 @@ import java.io.IOException;
 public class MainView extends JFrame {
 
     JFileChooser fileChooser;
+    private JMenuBar menuBar;
 
     private JMenu saveMenu;
     private JMenu loadMenu;
-    private JMenu presetsMenu;
-    private JMenu toolSettingsMenu;
-    private JMenuBar menuBar;
-
     private JButton saveAgentsMenuButton;
     private JButton loadAgentsMenuButton;
     private JButton saveEnvironmentSettingsMenuButton;
@@ -26,12 +25,21 @@ public class MainView extends JFrame {
     private JButton saveSettingsMenuButton;
     private JButton loadSettingsMenuButton;
 
+
+    private JMenu presetsMenu;
     private JButton preset1Button;
     private JButton preset2Button;
     private JButton preset3Button;
 
+
+    private JMenu toolSettingsMenu;
     private JButton toggleControlsButton;
-    private JButton toggleSimpleModeButton;
+
+
+    private JMenu terrainMenu;
+    private JButton clearTerrain;
+    private JButton generateTerrain;
+    private JButton terrainSettings;
 
     private EnvironmentSettingsPanel environmentSettingsPanel;
     private SimulationControlPanel simulationControlPanel;
@@ -65,6 +73,7 @@ public class MainView extends JFrame {
         loadMenu.setMnemonic(KeyEvent.VK_L);
         presetsMenu = new JMenu("Presets");
         toolSettingsMenu = new JMenu("Settings");
+        terrainMenu = new JMenu("Terrain");
 
         // Build the save menu
         saveSettingsMenuButton = new JButton("Save Settings");
@@ -96,6 +105,16 @@ public class MainView extends JFrame {
         //toggleSimpleModeButton = new JButton("Simple Mode");
        // toolSettingsMenu.add(toggleSimpleModeButton);
 
+        // Build the terrain generator menu
+        generateTerrain = new JButton("Generate Terrain");
+        terrainMenu.add(generateTerrain);
+
+        clearTerrain = new JButton("Clear Terrain");
+        terrainMenu.add(clearTerrain);
+
+        terrainSettings = new JButton("Terrain Settings");
+        terrainMenu.add(terrainSettings);
+
         menuBar.add(new JLabel("|"));
         menuBar.add(saveMenu);
         menuBar.add(new JLabel("|"));
@@ -104,6 +123,8 @@ public class MainView extends JFrame {
         menuBar.add(presetsMenu);
         menuBar.add(new JLabel("|"));
         menuBar.add(toolSettingsMenu);
+        menuBar.add(new JLabel("|"));
+        menuBar.add(terrainMenu);
         menuBar.add(new JLabel("|"));
         menuBar.setFont(new Font("Dialog", Font.BOLD, 12));
         setJMenuBar(menuBar);
@@ -228,4 +249,23 @@ public class MainView extends JFrame {
     public JButton getLoadSettingsMenuButton() {
         return loadSettingsMenuButton;
     }
+
+    public JButton getTerrainSettings() {
+        return terrainSettings;
+    }
+
+    public TerrainSettings openTerrainSettings(TerrainSettings terrainSettings) {;
+        TerrainDialog terrainDialog = new TerrainDialog(this, terrainSettings);
+        return terrainDialog.getTerrainSettings();
+    }
+
+    public JButton getClearTerrain() {
+        return clearTerrain;
+    }
+
+    public JButton getGenerateTerrain() {
+        return generateTerrain;
+    }
+
+
 }

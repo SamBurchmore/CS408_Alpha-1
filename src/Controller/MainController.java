@@ -4,15 +4,14 @@ import Simulation.Agent.AgentUtility.ActiveAgentsSettings;
 import Simulation.Environment.EnvironmentSettings;
 import Simulation.Simulation;
 import Simulation.SimulationUtility.SimulationSettings;
+import Simulation.SimulationUtility.TerrainSettings;
 import View.MainView;
 import org.apache.commons.io.FilenameUtils;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.concurrent.TimeUnit;
 
 public class MainController {
 
@@ -90,6 +89,9 @@ public class MainController {
         view.getSaveSettingsMenuButton().addActionListener(e -> saveSettings());
         view.getLoadSettingsMenuButton().addActionListener(e -> loadSettings());
         view.getToggleControlsButton().addActionListener(e -> viewController.toggleControls());
+        view.getTerrainSettings().addActionListener(e -> viewController.openTerrainSettings());
+        view.getClearTerrain().addActionListener(e -> simulationController.clearTerrain());
+        view.getGenerateTerrain().addActionListener(e -> simulationController.generateTerrain());
 
     }
 
@@ -276,6 +278,17 @@ public class MainController {
             simulation.getDiagnostics().setMaxEnvironmentEnergy(simulation.getMaxTileEnergy() * simulation.getEnvironmentSize()* simulation.getEnvironmentSize());
             simulation.getDiagnostics().resetCurrentEnvironmentEnergy();
         }
+
+        public void clearTerrain() {
+            simulation.getTerrainGenerator().clearTerrain();
+            viewController.updateSimulationView();
+        }
+
+        public void generateTerrain() {
+            simulation.getTerrainGenerator().generateTerrain();
+            viewController.updateSimulationView();
+        }
+
     }
 
     public class ViewController {
@@ -336,6 +349,13 @@ public class MainController {
             viewController.updateEnvironmentSettingsPanel();
             viewController.updateDiagnosticsPanel();
             view.setVisible(true);
+        }
+
+        public void openTerrainSettings() {
+            //System.out.println(simulation.getTerrainGenerator().getTerrainSettings().toString());
+            simulation.getTerrainGenerator().setTerrainSettings(view.openTerrainSettings(simulation.getTerrainGenerator().getTerrainSettings()));
+            //System.out.println(simulation.getTerrainGenerator().getTerrainSettings().toString());
+
         }
     }
 

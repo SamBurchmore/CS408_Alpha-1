@@ -19,6 +19,7 @@ import Simulation.Environment.EnvironmentSettings;
 import Simulation.Environment.EnvironmentTile;
 import Simulation.Environment.Location;
 import Simulation.SimulationUtility.SimulationSettings;
+import Simulation.SimulationUtility.TerrainSettings;
 import View.SimulationPanel;
 
 /**
@@ -57,14 +58,6 @@ public class Simulation {
         this.agentLogic = new AgentLogic();
         this.terrainGenerator = new TerrainGenerator();
         this.simulationPanel = simulationPanel;
-//        terrainGenerator.placeRocks(5, 20);
-        //terrainGenerator.placeCircleRocks(2, 50);
-        //terrainGenerator.placeMountainRanges(600, 30, 1, 250);
-        //terrainGenerator.placeCircleCluster(5, 25, 1);
-       // terrainGenerator.circleMountainRange(600, 5, 20, 1000, 1000);
-        terrainGenerator.placeCircleMountainRanges(600, 3, 6, 6000, 100, 5);
-       // terrainGenerator.placeCircleRocks(1, 30);
-//        terrainGenerator.circleLine(600, 5, 20, 100, 1000, 0, 1, new Location(1000, 100));
     }
 
     public void setEnvironment(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
@@ -424,11 +417,62 @@ public class Simulation {
 
     }
 
-    private class TerrainGenerator {
-
+    public class TerrainGenerator {
+        // TODO the settings system is ridiculously hard to read, maybe clean it up
         //(x-a)^2 + (y-b)^2 = r ^2
 
-        public void circleRock(int rockSize) {
+        private TerrainSettings terrainSettings;
+
+        public TerrainGenerator() {
+            terrainSettings = new TerrainSettings(3, 6, 555, 600, 1111, 1);
+        }
+
+        public TerrainSettings getTerrainSettings() {
+            return terrainSettings;
+        }
+
+        public void setTerrainSettings(TerrainSettings terrainSettings) {
+            this.terrainSettings = terrainSettings;
+        }
+
+        public void clearTerrain() {
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                environment.getGrid()[i].setTerrain(0);
+            });
+        }
+
+        public void generateCircleLines(int rockSize, int clusterSize, int clusterDensity,  int lineSize, int lineDensity, int objectDensity){
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < objectDensity) {
+                    generateCircleLine(rockSize, clusterSize, clusterDensity, lineSize, lineDensity);
+                }
+            });
+        }
+        public void generateCircleLine(int rockSize, int clusterSize, int clusterDensity,  int lineSize, int lineDensity) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            int dx = random.nextInt(3) - 1;
+            int dy = random.nextInt(3) - 1;
+            for (int i = 0; i < lineSize; i++) {
+                if (random.nextInt(10000) < lineDensity) {
+                    generateCircleCluster(1 + rockSize,  random.nextInt(clusterSize-1), clusterDensity, seedLocation);
+                }
+                seedLocation.setX(seedLocation.getX() + dx);
+                seedLocation.setY(seedLocation.getY() + dy);
+            }
+        }
+
+
+        public void generateTerrain() {
+            generateCircleLines(
+                    terrainSettings.getRockSize(),
+                    terrainSettings.getClusterSize(),
+                    terrainSettings.getClusterDensity(),
+                    terrainSettings.getLineSize(),
+                    terrainSettings.getLineDensity(),
+                    terrainSettings.getObjectDensity());
+        }
+
+        public void generateCircleRock(int rockSize) {
             Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
             int seedX = seedLocation.getX();
             int seedY = seedLocation.getY();
@@ -449,9 +493,9 @@ public class Simulation {
                     }
                 }
             }
-        }
+        } // Places one circle
 
-        public void circleRock(int rockSize, Location location) {
+        public void generateCircleRock(int rockSize, Location location) {
             Location seedLocation = location;
             int seedX = seedLocation.getX();
             int seedY = seedLocation.getY();
@@ -471,6 +515,132 @@ public class Simulation {
                         environment.setTileTerrain(new Location(x1, y1), 2);
                     }
                 }
+            }
+        } // Places one circle
+
+        public void generateCircleCluster(int rockSize, int clusterSize, int clusterDensity) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            int seedX = seedLocation.getX();
+            int seedY = seedLocation.getY();
+            int x1;
+            int y1;
+            for (int x = -clusterSize; x <= clusterSize; x++) {
+                for (int y = -clusterSize; y <= clusterSize; y++) {
+                    x1 = seedX + x;
+                    y1 = seedY + y;
+                    // Checks the agent isn't looking outside the grid or at its current tile
+                    if (((  x1 < environment.getSize())
+                            && (y1 < environment.getSize()))
+                            && ((x1 >= 0) && (y1 >= 0))
+                            && ((x1 - seedX) * (x1 - seedX) + (y1 - seedY) * (y1 - seedY)) <= clusterSize * clusterSize
+                            && random.nextInt(10000) < clusterDensity
+                    )
+                    {
+                        generateCircleRock(rockSize, new Location(x1, y1));
+                    }
+                }
+            }
+        } // Places one cluster
+
+        public void generateCircleCluster(int rockSize, int clusterSize, int clusterDensity, Location seedLocation) {
+            int seedX = seedLocation.getX();
+            int seedY = seedLocation.getY();
+            int x1;
+            int y1;
+            for (int x = -clusterSize; x <= clusterSize; x++) {
+                for (int y = -clusterSize; y <= clusterSize; y++) {
+                    x1 = seedX + x;
+                    y1 = seedY + y;
+                    // Checks the agent isn't looking outside the grid or at its current tile
+                    if (((  x1 < environment.getSize())
+                            && (y1 < environment.getSize()))
+                            && ((x1 >= 0) && (y1 >= 0))
+                            && ((x1 - seedX) * (x1 - seedX) + (y1 - seedY) * (y1 - seedY)) <= clusterSize * clusterSize
+                            && random.nextInt(10000) < clusterDensity
+                    )
+                    {
+                        generateCircleRock(rockSize, new Location(x1, y1));
+                    }
+                }
+            }
+        } // Places one cluster
+
+        public void generateCircleRocks(int rockSize, int objectDensity) {
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < objectDensity) {
+                    generateCircleRock(1 + random.nextInt(rockSize-1));
+                }
+            });
+        } // Places circles randomly depending on objectDensity
+
+        public void generateCircleClusters(int rockSize, int clusterSize, int clusterDensity, int objectDensity) {
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < objectDensity) {
+                    generateCircleCluster(rockSize, clusterSize, clusterDensity);
+                }
+            });
+        } // Places clusters randomly depending on objectDensity
+
+
+
+
+        public void placeClusters(int density, int sizeRange) {
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < density) {
+                    placeRocks(1 + random.nextInt(density-1), 1 + random.nextInt(sizeRange-1));
+                }
+            });
+        }
+
+        public void placeRocks(int density, int sizeRange) {
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < density) {
+                    squareRock(1 + random.nextInt(sizeRange-1));
+                }
+            });
+        }
+
+        public void squareMountainRange(int rangeSize, int mountainSizeRange, int density) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            int dx = random.nextInt(3) - 1;
+            int dy = random.nextInt(3) - 1;
+            int lastSize;
+            for (int i = 0; i < rangeSize; i++) {
+                if (random.nextInt(10000) < density) {
+                    squareRock(1 + random.nextInt(mountainSizeRange-1), seedLocation);
+                }
+                seedLocation.setX(seedLocation.getX() + dx);
+                seedLocation.setY(seedLocation.getY() + dy);
+            }
+        }
+
+        public void placeMountainRanges(int rangeSize, int mountainSize, int rangeDensity, int mountainDensity){
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < rangeDensity) {
+                    squareMountainRange(rangeSize, mountainSize, mountainDensity);
+                }
+            });
+        }
+
+        public void circleLine(int rangeSize, int rockSize, int clusterSize, int clusterDensity, int lineDensity, int dx, int dy) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            for (int i = 0; i < rangeSize; i++) {
+                if (random.nextInt(10000) < lineDensity) {
+                    generateCircleCluster(1 + rockSize,  random.nextInt(clusterSize-1), clusterDensity, seedLocation);
+                }
+                seedLocation.setX(seedLocation.getX() + dx);
+                seedLocation.setY(seedLocation.getY() + dy);
+            }
+        }
+
+        public void circleLine(int rangeSize, int rockSize, int clusterSize, int clusterDensity, int lineDensity, int dx, int dy, Location location) {
+            Location seedLocation = location;
+            for (int i = 0; i < rangeSize; i++) {
+                if (random.nextInt(10000) < lineDensity) {
+                    generateCircleCluster(1 + rockSize,  random.nextInt(clusterSize-1), clusterDensity, seedLocation);
+                }
+                seedLocation.setX(seedLocation.getX() + dx);
+                seedLocation.setY(seedLocation.getY() + dy);
             }
         }
 
@@ -580,152 +750,11 @@ public class Simulation {
                 }
             }
         }
-
-        public void placeCircleCluster(int rockSize, int clusterSize, int clusterDensity) {
-            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
-            int seedX = seedLocation.getX();
-            int seedY = seedLocation.getY();
-            int x1;
-            int y1;
-            for (int x = -clusterSize; x <= clusterSize; x++) {
-                for (int y = -clusterSize; y <= clusterSize; y++) {
-                    x1 = seedX + x;
-                    y1 = seedY + y;
-                    // Checks the agent isn't looking outside the grid or at its current tile
-                    if (((  x1 < environment.getSize())
-                            && (y1 < environment.getSize()))
-                            && ((x1 >= 0) && (y1 >= 0))
-                            && ((x1 - seedX) * (x1 - seedX) + (y1 - seedY) * (y1 - seedY)) <= clusterSize * clusterSize
-                            && random.nextInt(10000) < clusterDensity
-                    )
-                    {
-                        circleRock(rockSize, new Location(x1, y1));
-                    }
-                }
-            }
-        }
-
-        public void placeCircleCluster(int rockSize, int clusterSize, int clusterDensity, Location seedLocation) {
-            int seedX = seedLocation.getX();
-            int seedY = seedLocation.getY();
-            int x1;
-            int y1;
-            for (int x = -clusterSize; x <= clusterSize; x++) {
-                for (int y = -clusterSize; y <= clusterSize; y++) {
-                    x1 = seedX + x;
-                    y1 = seedY + y;
-                    // Checks the agent isn't looking outside the grid or at its current tile
-                    if (((  x1 < environment.getSize())
-                            && (y1 < environment.getSize()))
-                            && ((x1 >= 0) && (y1 >= 0))
-                            && ((x1 - seedX) * (x1 - seedX) + (y1 - seedY) * (y1 - seedY)) <= clusterSize * clusterSize
-                            && random.nextInt(10000) < clusterDensity
-                    )
-                    {
-                        circleRock(rockSize, new Location(x1, y1));
-                    }
-                }
-            }
-        }
-
-        public void circleMountainRange(int rangeSize, int rockSize, int clusterSize, int mountainRangeDensity, int clusterDensity) {
-            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
-            int dx = random.nextInt(3) - 1;
-            int dy = random.nextInt(3) - 1;
-            for (int i = 0; i < rangeSize; i++) {
-                if (random.nextInt(10000) < mountainRangeDensity) {
-                    placeCircleCluster(1 + rockSize,  random.nextInt(clusterSize-1), clusterDensity, seedLocation);
-                }
-                seedLocation.setX(seedLocation.getX() + dx);
-                seedLocation.setY(seedLocation.getY() + dy);
-            }
-        }
-
-        public void placeRocks(int density, int sizeRange) {
-            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-                if (random.nextInt(10000) < density) {
-                    squareRock(1 + random.nextInt(sizeRange-1));
-                }
-            });
-        }
-
-        public void placeCircleRocks(int density, int sizeRange) {
-            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-                if (random.nextInt(10000) < density) {
-                    circleRock(1 + random.nextInt(sizeRange-1));
-                }
-            });
-        }
-
-        public void placeClusters(int density, int sizeRange) {
-            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-                if (random.nextInt(10000) < density) {
-                    placeRocks(1 + random.nextInt(density-1), 1 + random.nextInt(sizeRange-1));
-                }
-            });
-        }
-
-        public void placeCircleClusters(int rockSize, int clusterSize, int clusterDensity, int density) {
-            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-                if (random.nextInt(10000) < density) {
-                placeCircleCluster(rockSize, clusterSize, clusterDensity);
-                }
-            });
-        }
-
-        public void squareMountainRange(int rangeSize, int mountainSizeRange, int density) {
-            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
-            int dx = random.nextInt(3) - 1;
-            int dy = random.nextInt(3) - 1;
-            int lastSize;
-            for (int i = 0; i < rangeSize; i++) {
-                if (random.nextInt(10000) < density) {
-                    squareRock(1 + random.nextInt(mountainSizeRange-1), seedLocation);
-                }
-                seedLocation.setX(seedLocation.getX() + dx);
-                seedLocation.setY(seedLocation.getY() + dy);
-            }
-        }
-
-        public void placeMountainRanges(int rangeSize, int mountainSize, int rangeDensity, int mountainDensity){
-            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-                if (random.nextInt(10000) < rangeDensity) {
-                    squareMountainRange(rangeSize, mountainSize, mountainDensity);
-                }
-            });
-        }
-
-        public void placeCircleMountainRanges(int rangeSize, int rockSize, int clusterSize, int mountainRangeDensity, int clusterDensity, int rangeDensity){
-            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-                if (random.nextInt(10000) < rangeDensity) {
-                    circleMountainRange(rangeSize, rockSize, clusterSize, mountainRangeDensity, clusterDensity);
-                }
-            });
-        }
-
-        public void circleLine(int rangeSize, int rockSize, int clusterSize, int clusterDensity, int lineDensity, int dx, int dy) {
-            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
-            for (int i = 0; i < rangeSize; i++) {
-                if (random.nextInt(10000) < lineDensity) {
-                    placeCircleCluster(1 + rockSize,  random.nextInt(clusterSize-1), clusterDensity, seedLocation);
-                }
-                seedLocation.setX(seedLocation.getX() + dx);
-                seedLocation.setY(seedLocation.getY() + dy);
-            }
-        }
-
-        public void circleLine(int rangeSize, int rockSize, int clusterSize, int clusterDensity, int lineDensity, int dx, int dy, Location location) {
-            Location seedLocation = location;
-            for (int i = 0; i < rangeSize; i++) {
-                if (random.nextInt(10000) < lineDensity) {
-                    placeCircleCluster(1 + rockSize,  random.nextInt(clusterSize-1), clusterDensity, seedLocation);
-                }
-                seedLocation.setX(seedLocation.getX() + dx);
-                seedLocation.setY(seedLocation.getY() + dy);
-            }
-        }
     }
 
+    public TerrainGenerator getTerrainGenerator() {
+        return terrainGenerator;
+    }
 
 }
 
