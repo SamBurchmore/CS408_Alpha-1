@@ -32,7 +32,7 @@ public class AgentEditor {
         omniMotivations.add(new CreatorMotivation(20, 1));
         omniMotivations.add(new GrazerMotivation(10, 1));
         omniMotivations.add(new PredatorMotivation(10, 1));
-        Color[] agentColors = new Color[]{new Color(0, 0, 255), new Color(255, 0, 0), new Color(0, 255, 0), new Color(180, 0, 190), new Color(255, 102, 0), Color.cyan, Color.pink, Color.yellow};
+        Color[] agentColors = new Color[]{new Color(30, 30, 200), new Color(200, 30, 30), new Color(30, 200, 30), new Color(180, 0, 190), new Color(255, 102, 0), Color.cyan, Color.pink, Color.yellow};
         String[] agentNames = new String[]{"Blue", "Red", "Green", "Purple", "Orange", "Cyan", "Pink", "Yellow"};
         //        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Blue", 0,    Color.blue, true, 10,                                               1, 2, 8), (ArrayList<Motivation>) grazerMotivations.clone()), 0);
 //        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(0.25, "Red", 1,    Color.red, true, 10,                                                 1, 5, 1), (ArrayList<Motivation>) predMotivations.clone()), 1);
@@ -51,7 +51,7 @@ public class AgentEditor {
 //        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Pink", 6, Color.pink,                           1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 6);
 //        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Cyan", 7, Color.cyan,                           1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 7);
         for (int i = 0; i < 8; i++) {
-            activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, agentNames[i], i, agentColors[i], 0,1, 3, 4), (ArrayList<Motivation>) grazerMotivations.clone()), i);
+            activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, agentNames[i], i, agentColors[i], 3,1, 3, 4), (ArrayList<Motivation>) omniMotivations.clone()), i);
         }
 //        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Agent 1", 0, agentColors[0], 1,1, 3, 8), (ArrayList<Motivation>) grazerMotivations.clone()), 0);
 //        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Agent 2", 1, agentColors[1], 1,1, 4, 4), (ArrayList<Motivation>) predMotivations.clone()), 1);

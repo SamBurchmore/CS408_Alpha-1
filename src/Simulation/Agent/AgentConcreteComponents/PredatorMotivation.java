@@ -19,7 +19,7 @@ public class PredatorMotivation extends BaseMotivation {
     @Override
     public AgentDecision run(AgentVision tile, Attributes attributes, Scores scores) {
         if (tile.isOccupied()) { // Predator motivation motivates agent to move to occupied tiles
-            if (tile.getOccupantAttributes().getSize() <= attributes.getSize() && tile.getOccupantAttributes().getCode() != attributes.getCode()) {
+            if (tile.getOccupantAttributes().getSize() < attributes.getSize() && tile.getOccupantAttributes().getCode() != attributes.getCode()) {
                 // Tile is occupied, its occupant is smaller than the agent, and it's a different 'species' (code is different),
                 // set decision to PREDATE and its score to the occupants size multiplied by how much energy its missing
                 return new AgentDecision(tile.getLocation(), AgentAction.PREDATE, (super.getBias() + tile.getOccupantAttributes().getSize()) * super.getWeight());

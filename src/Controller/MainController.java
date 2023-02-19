@@ -39,6 +39,7 @@ public class MainController {
         loadingDialog.pack();
         loadingDialog.setLocationRelativeTo(null);
         loadingDialog.setVisible(true);
+        this.scale = 600 / size;
         this.view = new MainView();
         this.simulation = new Simulation(view.getWorldPanel(), size, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
         this.simulationController = new SimulationController();
@@ -50,7 +51,6 @@ public class MainController {
         this.cycleFlag = false;
         this.simulationRunning = false;
         this.runningNSteps = false;
-        this.scale = 600 / size;
         //this.scale = 1;
     }
 
@@ -90,6 +90,7 @@ public class MainController {
         view.getSaveSettingsMenuButton().addActionListener(e -> saveSettings());
         view.getLoadSettingsMenuButton().addActionListener(e -> loadSettings());
         view.getToggleControlsButton().addActionListener(e -> viewController.toggleControls());
+
     }
 
     public void setEditingAgent(int index) {
@@ -120,11 +121,22 @@ public class MainController {
                 if (cycleFlag) {
                     view.getSimulationControlPanel().getStopStartButton().setBackground(new Color(200, 50, 20));
                     view.getSimulationControlPanel().getStopStartButton().setText("Stop");
+                    view.getSimulationControlPanel().getClearButton().setEnabled(false);
+                    view.getSimulationControlPanel().getRunStepButton().setEnabled(false);
+                    view.getSimulationControlPanel().getPopulateButton().setEnabled(false);
+                    view.getSimulationControlPanel().getRunNStepsButton().setEnabled(false);
+
                     runSimulation();
                 }
                 else {
                     view.getSimulationControlPanel().getStopStartButton().setBackground(new Color(100, 220, 100));
                     view.getSimulationControlPanel().getStopStartButton().setText("Start");
+                    view.getSimulationControlPanel().getClearButton().setEnabled(true);
+                    view.getSimulationControlPanel().getRunStepButton().setEnabled(true);
+                    view.getSimulationControlPanel().getPopulateButton().setEnabled(true);
+                    view.getSimulationControlPanel().getRunNStepsButton().setEnabled(true);
+
+
 
                 }
             }

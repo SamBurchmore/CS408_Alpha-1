@@ -39,8 +39,8 @@ public class BasicAttributes implements Attributes, Serializable {
         this.creationSize = creationSize;
 
         // Calculate attributes that are based on other attributes
-        this.energyCapacity = 30 + (int) Math.round(Math.pow(size, 1.2));
-        this.energyLostPerTurn = (int) Math.round(Math.pow(size, 0.75));
+        this.energyCapacity = size*10;
+        this.energyLostPerTurn = (int) Math.round(Math.pow(size, 0.70));
         this.eatAmount = (int) Math.round(Math.pow(size, 0.5)) * 2;
         this.lifespan = 25 + (int) Math.round(Math.pow(size, 1.1));
         this.creationAge = this.lifespan / 5;
@@ -71,9 +71,9 @@ public class BasicAttributes implements Attributes, Serializable {
         this.range = (int) getChoice(random, attributesA.getRange(), attributesB.getRange());
 
         // Calculate attributes that are based on other attributes y\ =\ x^{2}-30y\ +\ 300
-        this.energyCapacity = 30 + (int) Math.round(Math.pow(size, 1.2));
-        this.energyLostPerTurn = (int) Math.round(Math.pow(size, 0.75));
-        this.eatAmount = (int) Math.round(Math.pow(size, 0.5)) * 2;
+        this.energyCapacity = size*10;
+        this.energyLostPerTurn = (int) Math.round(Math.pow(size, 0.7));
+        this.eatAmount = (int) Math.round(Math.pow(size, 0.7)) * 2;
         this.lifespan = 25 + (int) Math.round(Math.pow(size, 1.1));
         this.creationAge = this.lifespan / 5;
         this.creationCost = (this.energyCapacity / 2) / creationSize;
@@ -81,14 +81,24 @@ public class BasicAttributes implements Attributes, Serializable {
     }
 
     public void generateColor(double a, double b, double c, int constant) {
-        int x2 = add255(getSeedColor().getRed(), ((int) (a * constant)));
-        int y2 = add255(getSeedColor().getGreen(), ((int) (b * constant)));
-        int z2 = add255(getSeedColor().getBlue(), ((int) (c * constant)));
+        int x2 = overflow255(getSeedColor().getRed(), ((int) (a * constant)));
+        int y2 = overflow255(getSeedColor().getGreen(), ((int) (b * constant)));
+        int z2 = overflow255(getSeedColor().getBlue(), ((int) (c * constant)));
         setMutatingColor(new Color(x2, y2, z2));
     }
 
     private static int add255(int p, int k) {
         return Math.max(Math.min(p + k, 255), 0);
+    }
+
+    private static int overflow255(int p, int k) {
+        if (p + k > 255) {
+            return p + k - 255;
+        }
+        else if (p + k < 0) {
+            return 255 - p + k;
+        }
+        return p + k;
     }
 
     private static Object getChoice(Random random, Object attributeA, Object attributeB) {

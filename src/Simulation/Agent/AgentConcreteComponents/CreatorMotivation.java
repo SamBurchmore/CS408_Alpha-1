@@ -49,13 +49,13 @@ public class CreatorMotivation extends BaseMotivation {
     }
 
     private boolean compareAttributes(Attributes attributesA, Attributes attributesB) {
-        if (Math.abs(attributesA.getSize() - attributesB.getSize()) > 5) {
+        if (Math.abs(attributesA.getSize() - attributesB.getSize()) > 10) {
             return false;
         }
-        if (Math.abs(attributesA.getCreationSize() - attributesB.getCreationSize()) > 1) {
+        if (Math.abs(attributesA.getCreationSize() - attributesB.getCreationSize()) > 2) {
             return false;
         }
-        if (Math.abs(attributesA.getRange() - attributesB.getRange()) > 0) {
+        if (Math.abs(attributesA.getRange() - attributesB.getRange()) > 2) {
             return false;
         }
         return true;

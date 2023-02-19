@@ -84,8 +84,8 @@ public class SimulationControlPanel extends JPanel {
 
         add(runStepButton);
         add(stopStartButton);
-        add(runNStepsPanel);
         add(populatePanel);
+        add(runNStepsPanel);
         add(replenishEnvironmentEnergyButton);
         add(clearButton);
     }

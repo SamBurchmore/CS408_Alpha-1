@@ -39,6 +39,8 @@ public class Simulation {
 
     private final AgentLogic agentLogic; // The instance of the agent logic inner class
 
+    private final TerrainGenerator terrainGenerator;
+
     private Random random;
 
     private int diagnosticsVerbosity = 1; // How much info is logged by the diagnostics class = (0=low, 1=standard, 2=high)
@@ -53,7 +55,15 @@ public class Simulation {
         this.diagnostics = new Diagnostics(maxEnergyLevel * size);
         this.agentEditor = new AgentEditor();
         this.agentLogic = new AgentLogic();
+        this.terrainGenerator = new TerrainGenerator();
         this.simulationPanel = simulationPanel;
+//        terrainGenerator.placeRocks(5, 20);
+        //terrainGenerator.placeCircleRocks(2, 50);
+        //terrainGenerator.placeMountainRanges(600, 30, 1, 250);
+        //terrainGenerator.placeCircleCluster(5, 25, 1);
+       // terrainGenerator.circleMountainRange(600, 5, 20, 1000, 1000);
+        terrainGenerator.placeCircleMountainRanges(600, 3, 10, 10000, 60, 1);
+        terrainGenerator.placeCircleRocks(1, 30);
     }
 
     public void setEnvironment(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
@@ -125,6 +135,7 @@ public class Simulation {
         if (environmentSettings.getSize() != environment.getSize()) {
             clearAgents();
             environment.setEnvironmentSettings(environmentSettings);
+            //terrainGenerator.placeRocks(5, 20);
             diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize()*getEnvironmentSize());
             diagnostics.resetCurrentEnvironmentEnergy();
         }
@@ -355,7 +366,8 @@ public class Simulation {
                     if (((  X < environment.getSize())
                             && (Y < environment.getSize()))
                             && ((X >= 0) && (Y >= 0))
-                            && !(i == 0 && j == 0))
+                            && !(i == 0 && j == 0)
+                            && !environment.getTile(X, Y).isTerrain())
                     {
                         AgentVision av = environment.getTileView(X, Y);
                         agentViews.add(av);
@@ -408,6 +420,291 @@ public class Simulation {
             }
             return 3*modifier;
         }
+
+    }
+
+    private class TerrainGenerator {
+
+        //(x-a)^2 + (y-b)^2 = r ^2
+
+        public void circleRock(int rockSize) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            int seedX = seedLocation.getX();
+            int seedY = seedLocation.getY();
+            int x1;
+            int y1;
+            for (int x = -rockSize; x <= rockSize; x++) {
+                for (int y = -rockSize; y <= rockSize; y++) {
+                    x1 = seedX + x;
+                    y1 = seedY + y;
+                    // Checks the agent isn't looking outside the grid or at its current tile
+                    if (((  x1 < environment.getSize())
+                            && (y1 < environment.getSize()))
+                            && ((x1 >= 0) && (y1 >= 0))
+                            && ((x1 - seedX) * (x1 - seedX) + (y1 - seedY) * (y1 - seedY)) <= rockSize * rockSize
+                    )
+                    {
+                        environment.setTileTerrain(new Location(x1, y1), 2);
+                    }
+                }
+            }
+        }
+
+        public void circleRock(int rockSize, Location location) {
+            Location seedLocation = location;
+            int seedX = seedLocation.getX();
+            int seedY = seedLocation.getY();
+            int x1;
+            int y1;
+            for (int x = -rockSize; x <= rockSize; x++) {
+                for (int y = -rockSize; y <= rockSize; y++) {
+                    x1 = seedX + x;
+                    y1 = seedY + y;
+                    // Checks the agent isn't looking outside the grid or at its current tile
+                    if (((  x1 < environment.getSize())
+                            && (y1 < environment.getSize()))
+                            && ((x1 >= 0) && (y1 >= 0))
+                            && ((x1 - seedX) * (x1 - seedX) + (y1 - seedY) * (y1 - seedY)) <= rockSize * rockSize
+                    )
+                    {
+                        environment.setTileTerrain(new Location(x1, y1), 2);
+                    }
+                }
+            }
+        }
+
+        public void squareRock(int rockSize) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            for (int i = -rockSize; i <= rockSize; i++) {
+                for (int j = -rockSize; j <= rockSize; j++) {
+                    int X = seedLocation.getX() + i;
+                    int Y = seedLocation.getY() + j;
+                    // Checks the agent isn't looking outside the grid or at its current tile
+                    if (((  X < environment.getSize())
+                            && (Y < environment.getSize()))
+                            && ((X >= 0) && (Y >= 0)))
+                    {
+                        environment.setTileTerrain(new Location(X, Y), 2);
+                    }
+                }
+            }
+        }
+
+        public void squareRock(int rockSize, Location location) {
+            Location seedLocation = location;
+            for (int i = -rockSize; i <= rockSize; i++) {
+                for (int j = -rockSize; j <= rockSize; j++) {
+                    int X = seedLocation.getX() + i;
+                    int Y = seedLocation.getY() + j;
+                    // Checks the agent isn't looking outside the grid or at its current tile
+                    if (((  X < environment.getSize())
+                            && (Y < environment.getSize()))
+                            && ((X >= 0) && (Y >= 0)))
+                    {
+                        environment.setTileTerrain(new Location(X, Y), 2);
+                    }
+                }
+            }
+        }
+
+        public void agentRock(int rockSize) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            for (int i = -rockSize; i <= rockSize; i++) {
+                for (int j = -rockSize; j <= rockSize; j++) {
+                    int X = seedLocation.getX() + i;
+                    int Y = seedLocation.getY() + j;
+                    // Checks the agent isn't looking outside the grid or at its current tile
+                    if (((  X < environment.getSize())
+                            && (Y < environment.getSize()))
+                            && ((X >= 0) && (Y >= 0)))
+                    {
+                        Agent agent = (Agent) agentEditor.getAgent(0).copy();
+                        agent.setLocation(new Location(X, Y));
+                        agentList.add(agent);
+                        environment.getTile(X, Y).setOccupant(agent);
+                    }
+                }
+            }
+        }
+
+        public void terrainCycle() {
+            for (Agent currentAgent : agentList) {
+                if (!currentAgent.isEaten()) {
+                    agentLogic.runAgent(currentAgent); // Iterate and run over all agents in the simulation
+                }
+                environment.setTileTerrain(currentAgent.getLocation(), 1);
+            }
+            agentList = aliveAgentList;
+            Collections.shuffle(agentList);
+            aliveAgentList = new ArrayList<>();
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {
+                    int modifyAmount = environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
+                    diagnostics.modifyCurrentEnvironmentEnergy(modifyAmount);
+                }
+            });
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                environment.getGrid()[i].setTerrain(2);
+                environment.getGrid()[i].setOccupant(null);
+            });
+            agentList = new ArrayList<>();
+        }
+
+        public void placeAgentRocks(int density, int sizeRange) {
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < density) {
+                    agentRock(1 + random.nextInt(sizeRange));
+                }
+            });
+            for (int i = 0; i < 1; i++) {
+                terrainCycle();
+            }
+        }
+
+        public void placeCluster(int rockSize, int clusterSize, int clusterDensity) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            for (int i = -clusterSize; i <= clusterSize; i++) {
+                for (int j = -clusterSize; j <= clusterSize; j++) {
+                    int X = seedLocation.getX() + i;
+                    int Y = seedLocation.getY() + j;
+                    // Checks the agent isn't looking outside the grid or at its current tile
+                    if (((  X < environment.getSize())
+                            && (Y < environment.getSize()))
+                            && ((X >= 0) && (Y >= 0)))
+                    {
+                        if (random.nextInt(100) < clusterDensity) {
+                            squareRock(rockSize);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void placeCircleCluster(int rockSize, int clusterSize, int clusterDensity) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            int seedX = seedLocation.getX();
+            int seedY = seedLocation.getY();
+            int x1;
+            int y1;
+            for (int x = -clusterSize; x <= clusterSize; x++) {
+                for (int y = -clusterSize; y <= clusterSize; y++) {
+                    x1 = seedX + x;
+                    y1 = seedY + y;
+                    // Checks the agent isn't looking outside the grid or at its current tile
+                    if (((  x1 < environment.getSize())
+                            && (y1 < environment.getSize()))
+                            && ((x1 >= 0) && (y1 >= 0))
+                            && ((x1 - seedX) * (x1 - seedX) + (y1 - seedY) * (y1 - seedY)) <= clusterSize * clusterSize
+                            && random.nextInt(10000) < clusterDensity
+                    )
+                    {
+                        circleRock(rockSize, new Location(x1, y1));
+                    }
+                }
+            }
+        }
+
+        public void placeCircleCluster(int rockSize, int clusterSize, int clusterDensity, Location seedLocation) {
+            int seedX = seedLocation.getX();
+            int seedY = seedLocation.getY();
+            int x1;
+            int y1;
+            for (int x = -clusterSize; x <= clusterSize; x++) {
+                for (int y = -clusterSize; y <= clusterSize; y++) {
+                    x1 = seedX + x;
+                    y1 = seedY + y;
+                    // Checks the agent isn't looking outside the grid or at its current tile
+                    if (((  x1 < environment.getSize())
+                            && (y1 < environment.getSize()))
+                            && ((x1 >= 0) && (y1 >= 0))
+                            && ((x1 - seedX) * (x1 - seedX) + (y1 - seedY) * (y1 - seedY)) <= clusterSize * clusterSize
+                            && random.nextInt(10000) < clusterDensity
+                    )
+                    {
+                        circleRock(rockSize, new Location(x1, y1));
+                    }
+                }
+            }
+        }
+
+        public void circleMountainRange(int rangeSize, int rockSize, int clusterSize, int mountainRangeDensity, int clusterDensity) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            int dx = random.nextInt(3) - 1;
+            int dy = random.nextInt(3) - 1;
+            for (int i = 0; i < rangeSize; i++) {
+                if (random.nextInt(10000) < mountainRangeDensity) {
+                    placeCircleCluster(1 + rockSize,  random.nextInt(clusterSize-1), clusterDensity, seedLocation);
+                }
+                seedLocation.setX(seedLocation.getX() + dx);
+                seedLocation.setY(seedLocation.getY() + dy);
+            }
+        }
+
+        public void placeRocks(int density, int sizeRange) {
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < density) {
+                    squareRock(1 + random.nextInt(sizeRange-1));
+                }
+            });
+        }
+
+        public void placeCircleRocks(int density, int sizeRange) {
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < density) {
+                    circleRock(1 + random.nextInt(sizeRange-1));
+                }
+            });
+        }
+
+
+
+        public void placeClusters(int density, int sizeRange) {
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < density) {
+                    placeRocks(1 + random.nextInt(density-1), 1 + random.nextInt(sizeRange-1));
+                }
+            });
+        }
+
+        public void placeCircleClusters(int rockSize, int clusterSize, int clusterDensity, int density) {
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < density) {
+                placeCircleCluster(rockSize, clusterSize, clusterDensity);
+                }
+            });
+        }
+
+        public void squareMountainRange(int rangeSize, int mountainSizeRange, int density) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            int dx = random.nextInt(3) - 1;
+            int dy = random.nextInt(3) - 1;
+            int lastSize;
+            for (int i = 0; i < rangeSize; i++) {
+                if (random.nextInt(10000) < density) {
+                    squareRock(1 + random.nextInt(mountainSizeRange-1), seedLocation);
+                }
+                seedLocation.setX(seedLocation.getX() + dx);
+                seedLocation.setY(seedLocation.getY() + dy);
+            }
+        }
+
+        public void placeMountainRanges(int rangeSize, int mountainSize, int rangeDensity, int mountainDensity){
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < rangeDensity) {
+                    squareMountainRange(rangeSize, mountainSize, mountainDensity);
+                }
+            });
+        }
+
+        public void placeCircleMountainRanges(int rangeSize, int rockSize, int clusterSize, int mountainRangeDensity, int clusterDensity, int rangeDensity){
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                if (random.nextInt(10000) < rangeDensity) {
+                    circleMountainRange(rangeSize, rockSize, clusterSize, mountainRangeDensity, clusterDensity);
+                }
+            });
+        }
+
+
 
     }
 

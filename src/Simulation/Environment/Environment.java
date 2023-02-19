@@ -1,6 +1,7 @@
 package Simulation.Environment;
 
 import Simulation.Agent.AgentInterfaces.Agent;
+import Simulation.Agent.AgentInterfaces.Attributes;
 import Simulation.Agent.AgentStructs.AgentVision;
 
 import java.awt.*;
@@ -85,14 +86,18 @@ public class Environment implements Serializable {
         this.grid[newAgent.getLocation().getY() * this.size + newAgent.getLocation().getX()].setOccupant(newAgent);
     }
 
-    public ArrayList<Location> emptyAdjacent(Location location) {
+    public ArrayList<Location> freeSpace(Location location, Attributes attributes) {
         ArrayList<Location> empties = new ArrayList<>();
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 int x_coord = location.getX() + i;
                 int y_coord = location.getY() + j;
                 // Checks the agent isn't looking outside the grid
-                if (((x_coord < this.getSize()) && (y_coord < this.getSize())) && ((x_coord >= 0) && (y_coord >= 0)) && !(i == 0 && j == 0)) {
+                if ((
+                        (x_coord < this.getSize())
+                        && (y_coord < this.getSize()))
+                        && ((x_coord >= 0) && (y_coord >= 0))
+                        && !(i == 0 && j == 0)) {
                     if (!this.getTile(x_coord, y_coord).isOccupied()) {
                         empties.add(new Location(x_coord, y_coord));
                     }
@@ -164,6 +169,9 @@ public class Environment implements Serializable {
 
     public Color getTileColor(int x, int y) {
         Location location = new Location(x, y);
+        if (this.getTile(location).isTerrain()) {
+            return new Color(100, 100, 100);
+        }
         if (this.getTile(location).isOccupied()) {
             if (this.getTile(location).getOccupant().getAttributes().getMutationMagnitude() > 0) {
                 return this.getTile(location).getOccupant().getAttributes().getMutatingColor();
@@ -229,7 +237,6 @@ public class Environment implements Serializable {
         BufferedImage worldImage = new BufferedImage(this.size * scale, this.size * scale, BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x <= scale * this.size; x += scale) {
             for (int y = 0; y <= scale * this.size; y += scale) {
-                int t = 0;
                 for (int i = 0; i < scale; i++) {
                     for (int j = 0; j < scale; j++) {
                         if (((x + i < scale * this.getSize()) && (y + j < scale * this.getSize())) && ((x + i >= 0) && (y + j >= 0))) {
@@ -376,5 +383,9 @@ public class Environment implements Serializable {
                 getEnergyRegenChance(),
                 getEnergyRegenAmount(),
                 getColors());
+    }
+
+    public void setTileTerrain(Location location, int isTerrain) {
+        getTile(location).setTerrain(isTerrain);
     }
 }

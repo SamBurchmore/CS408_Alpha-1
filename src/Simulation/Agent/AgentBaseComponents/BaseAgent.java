@@ -116,7 +116,7 @@ public abstract class BaseAgent implements Agent {
 
     @Override
     public ArrayList<Agent> create(Location parentBLocation, int startingEnergy, Environment environment) {
-        ArrayList<Location> childLocations = environment.emptyAdjacent(this.getLocation());
+        ArrayList<Location> childLocations = environment.freeSpace(this.getLocation(), attributes);
         ArrayList<Agent> childAgents = new ArrayList<>();
         if (!childLocations.isEmpty()) {
             Collections.shuffle(childLocations);
