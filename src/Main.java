@@ -3,6 +3,7 @@ import Simulation.Agent.AgentConcreteComponents.BasicAttributes;
 import Simulation.Agent.AgentInterfaces.Agent;
 import Simulation.Agent.AgentInterfaces.Attributes;
 import Simulation.Simulation;
+import View.TerrainDialog;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException, IOException {
         FlatIntelliJLaf.setup();
         UIManager.put("Panel.background", new Color(224, 224, 224));
-        MainController mainController = new MainController(600, 8, 0, 8, 2, 8);
+        MainController mainController = new MainController(600, 8, 0, 8, 1.5, 8);
     }
 
     private static void testColors() {

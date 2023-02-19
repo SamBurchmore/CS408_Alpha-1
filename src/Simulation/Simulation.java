@@ -62,8 +62,9 @@ public class Simulation {
         //terrainGenerator.placeMountainRanges(600, 30, 1, 250);
         //terrainGenerator.placeCircleCluster(5, 25, 1);
        // terrainGenerator.circleMountainRange(600, 5, 20, 1000, 1000);
-        terrainGenerator.placeCircleMountainRanges(600, 3, 10, 10000, 60, 1);
-        terrainGenerator.placeCircleRocks(1, 30);
+        terrainGenerator.placeCircleMountainRanges(600, 3, 6, 6000, 100, 5);
+       // terrainGenerator.placeCircleRocks(1, 30);
+//        terrainGenerator.circleLine(600, 5, 20, 100, 1000, 0, 1, new Location(1000, 100));
     }
 
     public void setEnvironment(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
@@ -108,7 +109,7 @@ public class Simulation {
         Collections.shuffle(agentList);
         aliveAgentList = new ArrayList<>();
         IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-            if (random.nextInt(10000) / 100.0 < environment.getEnergyRegenChance()) {
+            if (random.nextInt(10000) / 100.0 < environment.getEnergyRegenChance() && !environment.getGrid()[i].isTerrain()) {
                 int modifyAmount = environment.modifyTileFoodLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
                 diagnostics.modifyCurrentEnvironmentEnergy(modifyAmount);
             }
@@ -320,8 +321,8 @@ public class Simulation {
 
         private Attributes mutate(Attributes attributes) {
             // We've decided the agent is going to mutate, now we need to randomly decide what attribute to mutate.
-            int ran = random.nextInt(11);
-            if (ran < 5) {
+            int ran = random.nextInt(10);
+            if (ran < 8) {
                 // Mutate size
                 int oldSize = attributes.getSize();
                 attributes.setSize(Math.min(Math.max(attributes.getSize() + mutationMagnitude(random), 2), 10));
@@ -330,7 +331,7 @@ public class Simulation {
                 }
                 return attributes;
             }
-            if (ran < 8) {
+            if (ran < 9) {
                 // Mutate range
                 int oldRange = attributes.getRange();
                 attributes.setRange(Math.min(Math.max(attributes.getRange() + mutationMagnitude(random), 0), 5));
@@ -656,8 +657,6 @@ public class Simulation {
             });
         }
 
-
-
         public void placeClusters(int density, int sizeRange) {
             IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
                 if (random.nextInt(10000) < density) {
@@ -704,9 +703,29 @@ public class Simulation {
             });
         }
 
+        public void circleLine(int rangeSize, int rockSize, int clusterSize, int clusterDensity, int lineDensity, int dx, int dy) {
+            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+            for (int i = 0; i < rangeSize; i++) {
+                if (random.nextInt(10000) < lineDensity) {
+                    placeCircleCluster(1 + rockSize,  random.nextInt(clusterSize-1), clusterDensity, seedLocation);
+                }
+                seedLocation.setX(seedLocation.getX() + dx);
+                seedLocation.setY(seedLocation.getY() + dy);
+            }
+        }
 
-
+        public void circleLine(int rangeSize, int rockSize, int clusterSize, int clusterDensity, int lineDensity, int dx, int dy, Location location) {
+            Location seedLocation = location;
+            for (int i = 0; i < rangeSize; i++) {
+                if (random.nextInt(10000) < lineDensity) {
+                    placeCircleCluster(1 + rockSize,  random.nextInt(clusterSize-1), clusterDensity, seedLocation);
+                }
+                seedLocation.setX(seedLocation.getX() + dx);
+                seedLocation.setY(seedLocation.getY() + dy);
+            }
+        }
     }
 
 
 }
+
