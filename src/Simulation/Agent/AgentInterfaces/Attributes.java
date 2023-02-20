@@ -1,6 +1,7 @@
 package Simulation.Agent.AgentInterfaces;
 
 import java.awt.*;
+import java.util.Random;
 
 public interface Attributes {
 
@@ -11,14 +12,14 @@ public interface Attributes {
     int getCreationSize();
     int getCreationDelay();
     int getEnergyCapacity();
-    int getEnergyLostPerTurn();
+    int getEnergyLostPerTile();
     int getEatAmount();
     int getCreationCost();
     String getName();
     int getCode();
     Color getSeedColor();
     double getSpawningWeight();
-    int getMutationMagnitude();
+    int getMutationChance();
     void setRange(int range);
     void setSize(int size);
     void setLifespan(int lifespan);
@@ -29,8 +30,17 @@ public interface Attributes {
     void setCode(int code);
     void setSeedColor(Color seedColor);
     void setSpawningWeight(double spawningWeight);
-    void setMutationMagnitude(int mutationMagnitude);
+    void setMutationChance(int mutationChance);
     Attributes copy();
-    void generateColor(double a, double b, double c, int constant);
+    void mutateAttributesColor(double a, double b, double c, int constant);
+    void mutateSeedColor(int magnitude);
     Color getMutatingColor();
+    Color getColor();
+    void calculateAttributes();
+    void setEnergyCapacity(int energyCapacity);
+    void setEatAmount(int eatAmount);
+    void setCreationCost(int creationCost);
+    void setEnergyLostPerTile(int energyLostPerTile);
+    void setMutatingColor(Color mutatingColor);
+
 }
