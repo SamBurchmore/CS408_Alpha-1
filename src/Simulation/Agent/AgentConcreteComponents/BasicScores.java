@@ -4,116 +4,84 @@ import Simulation.Agent.AgentInterfaces.Scores;
 
 import java.io.Serializable;
 
+/**
+ * Makes up the agents scores. Scores are the agents current state, how much energy it has, how old it is, and if
+ * it's still in its creationDelay period.
+ * @author Sam Burchmore
+ * @version 1.0a
+ * @since 1.0a
+ */
 public class BasicScores implements Scores, Serializable {
-
-    private int hunger;
-    private int health;
+    // The agents current energy
+    private int energy;
+    // How many steps the agents has existed for
     private int age;
-    private int maxHunger;
-    private int maxHealth;
+    // How much energy the agent can store, used here so energy isn't increased past it
+    private int maxEnergy;
+    // How long the agent can exist for, used here so energy isn't increased past it
     private int maxAge;
-    private int creationDelay;
+    // Keeps track of if the agent can currently breed
     private int creationCounter;
 
-    public BasicScores(int hunger, int health, int maxHunger, int maxHealth, int maxAge, int creationDelay_) {
-        this.hunger = hunger;
-        this.health = health;
-        this.maxHunger = maxHunger;
-        this.maxHealth = maxHealth;
+    /**
+     * Constructs a BasicScores object using the input parameters.
+     * <p>
+     * The constructor simply takes the input parameters and assigns them
+     * to the new BasicAttributes instance. Then it calls the calculateAttributes()
+     * method to calculate the rest of the attributes. If the attributes mutationMagnitude
+     * is greater than zero, it will generate its mutating color from its seed color.
+     */
+    public BasicScores(int energy, int maxEnergy, int maxAge) {
+        this.energy = energy;
+        this.maxEnergy = maxEnergy;
         this.maxAge = maxAge;
-        this.creationDelay = creationDelay_;
         this.creationCounter = 0;
         this.age = 0;
-
-    }
-
-    @Override
-    public void setEnergy(int hunger) {
-        this.hunger = hunger;
-        if (this.hunger > this.maxHunger) {
-            this.hunger = this.maxHunger;
-        }
     }
 
     @Override
     public int getEnergy() {
-        return this.hunger;
+        return this.energy;
     }
-
+    @Override
+    public void setEnergy(int energy) {
+        this.energy = Math.min(Math.max(energy, 0), maxEnergy);
+    }
+    @Override
+    public int getMaxEnergy() {
+        return this.maxEnergy;
+    }
+    @Override
+    public void setMaxEnergy(int maxHunger) {
+        this.maxEnergy = maxHunger;
+    }
     @Override
     public int getAge() {
         return this.age;
     }
-
     @Override
     public void setAge(int age) {
         this.age = age;
     }
-
-    @Override
-    public int getHealth() {
-        return this.health;
-    }
-
-    @Override
-    public void setHealth(int health) {
-        this.health = health;
-        if (this.health > this.maxHealth) {
-            this.health = this.maxHealth;
-        }
-    }
-
-    @Override
-    public int getMaxEnergy() {
-        return this.maxHunger;
-    }
-
     @Override
     public int getMaxAge() {
         return this.maxAge;
     }
-
-    @Override
-    public int getMaxHealth() {
-        return this.maxHealth;
-    }
-
-    @Override
-    public void setMaxEnergy(int maxHunger) {
-        this.maxHunger = maxHunger;
-    }
-
     @Override
     public void setMaxAge(int maxAge) {
         this.maxAge = maxAge;
     }
-
     @Override
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    @Override
-    public int getCreationDelay() {
-        return this.creationDelay;
-    }
-
-    @Override
-    public void setCreationDelay(int creationDelay_) {
-        this.creationDelay = creationDelay_;
-        if (this.creationDelay <= 0) {
-            this.creationDelay = 0;
-        }
-    }
-
     public int getCreationCounter() {
         return this.creationCounter;
     }
-
+    @Override
     public void setCreationCounter(int creationCounter) {
-        this.creationCounter = creationCounter;
-        if (this.creationCounter < 0) {
-            this.creationCounter = 0;
-        }
+        this.creationCounter = Math.max(creationCounter, 0);
+
+    }
+    @Override
+    public Scores copy() {
+        return new BasicScores(getEnergy(), getMaxEnergy(), getMaxAge());
     }
 }
