@@ -35,10 +35,10 @@ public class TerrainDialog extends JDialog {
 
     public TerrainDialog(JFrame parent, TerrainSettings terrainSettings) {
         super(parent);
-        setSize(new Dimension(500, 600));
+        setSize(new Dimension(400, 200));
 
         settingsPanel = new JPanel(new GridLayout(4, 2));
-        settingsPanel.setPreferredSize(new Dimension(500, 600));
+        settingsPanel.setPreferredSize(new Dimension(400, 200));
 
         rockSizeSpinner = new JSpinner(new SpinnerNumberModel(3, 1, 25, 1));
         rockSizeLabel = new JLabel("Rock Size: ");
@@ -47,13 +47,13 @@ public class TerrainDialog extends JDialog {
         rockSizePanel.add(rockSizeLabel);
         rockSizePanel.add(rockSizeSpinner);
 
-        clusterSizeSpinner = new JSpinner(new SpinnerNumberModel(6, 1, 25, 1));
+        clusterSizeSpinner = new JSpinner(new SpinnerNumberModel(6, 1, 100, 1));
         clusterSizeLabel = new JLabel("Cluster Size: ");
         clusterSizePanel = new JPanel();
         clusterSizePanel.add(clusterSizeLabel);
         clusterSizePanel.add(clusterSizeSpinner);
 
-        clusterDensitySpinner = new JSpinner(new SpinnerNumberModel(10.0, 0.01, 100.0, 0.01));
+        clusterDensitySpinner = new JSpinner(new SpinnerNumberModel(10.0, 0.0001, 100.0, 0.001));
         clusterDensityLabel = new JLabel("Cluster Density: ");
         clusterDensityPanel = new JPanel();
         clusterDensityPanel.add(clusterDensityLabel);
@@ -86,7 +86,7 @@ public class TerrainDialog extends JDialog {
         settingsPanel.add(lineDensityPanel);
         settingsPanel.add(terrainDensityPanel);
 
-        okButton = new JButton("Ok");
+        okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -98,6 +98,7 @@ public class TerrainDialog extends JDialog {
 
         add(settingsPanel);
 
+        setName("Terrain Settings");
         setModal(true);
         setVisible(true);
         pack();
@@ -112,7 +113,7 @@ public class TerrainDialog extends JDialog {
         return new TerrainSettings(
                 (int) rockSizeSpinner.getValue(),
                 (int) clusterSizeSpinner.getValue(),
-                (int) ((double) clusterDensitySpinner.getValue() * 100),
+                (int) ((double) clusterDensitySpinner.getValue() * 1000),
                 (int) lineSizeSpinner.getValue(),
                 (int) ((double) lineDensitySpinner.getValue() * 100),
                 (int) ((double) terrainDensitySpinner.getValue() * 100)
@@ -122,9 +123,9 @@ public class TerrainDialog extends JDialog {
     public void setTerrainSettings(TerrainSettings terrainSettings) {
         rockSizeSpinner.setValue(terrainSettings.getRockSize());
         clusterSizeSpinner.setValue(terrainSettings.getClusterSize());
-        clusterDensitySpinner.setValue((double) terrainSettings.getClusterDensity() / 100);
+        clusterDensitySpinner.setValue((double) terrainSettings.getClusterDensity() / 1000);
         lineSizeSpinner.setValue(terrainSettings.getLineSize());
         lineDensitySpinner.setValue((double) terrainSettings.getLineDensity() / 100);
-        terrainDensitySpinner.setValue((double) terrainSettings.getObjectDensity() / 100);
+        terrainDensitySpinner.setValue((double) terrainSettings.getLineMagnitude() / 100);
     }
 }

@@ -170,7 +170,7 @@ public class Environment implements Serializable {
     public Color getTileColor(int x, int y) {
         Location location = new Location(x, y);
         if (this.getTile(location).isTerrain()) {
-            return new Color(100, 100, 100);
+            return new Color(65, 65, 65);
         }
         if (this.getTile(location).isOccupied()) {
             if (this.getTile(location).getOccupant().getAttributes().getMutationMagnitude() > 0) {

@@ -32,7 +32,7 @@ public class MainController {
     public MainController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount) throws IOException, InterruptedException {
         JDialog loadingDialog = new JDialog();
         JLabel loadingIcon = new JLabel();
-        loadingIcon.setIcon(new ImageIcon(this.getClass().getResource("../images/loading-image-v2.png")));
+        loadingIcon.setIcon(new ImageIcon(this.getClass().getResource("../images/loading-image.png")));
         loadingDialog.add(loadingIcon);
         loadingDialog.setUndecorated(true);
         loadingDialog.pack();
@@ -282,11 +282,13 @@ public class MainController {
         public void clearTerrain() {
             simulation.getTerrainGenerator().clearTerrain();
             viewController.updateSimulationView();
+            viewController.logMsg("[TERRAIN]: Terrain cleared.");
         }
 
         public void generateTerrain() {
             simulation.getTerrainGenerator().generateTerrain();
             viewController.updateSimulationView();
+            viewController.logMsg("[TERRAIN]: Terrain generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
         }
 
     }

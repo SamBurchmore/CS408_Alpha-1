@@ -23,7 +23,7 @@ public class CreatorMotivation extends BaseMotivation {
                     tile.getOccupantAttributes().getCode() == attributes.getCode()
                     && scores.getAge() >= attributes.getCreationAge()
                     && scores.getCreationCounter() <= 0
-                    && scores.getEnergy() > attributes.getEnergyCapacity() / 2
+                    && scores.getEnergy() > attributes.getEnergyCapacity() / 4
                     && tile.getOccupantScores().getAge() > tile.getOccupantAttributes().getCreationAge()
                     && tile.getOccupantScores().getCreationCounter() <= 0
                     && compareAttributes(attributes, tile.getOccupantAttributes()) )

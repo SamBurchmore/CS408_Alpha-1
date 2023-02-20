@@ -54,6 +54,14 @@ public class BasicAttributes implements Attributes, Serializable {
                     getRange() / 5.0,
                     125);
         }
+        else {
+            Random random = new Random();
+            seedColor = new Color(
+                    overflow255(seedColor.getRed(), random.nextInt(50)),
+                    overflow255(seedColor.getGreen(), random.nextInt(50)),
+                    overflow255(seedColor.getBlue(), random.nextInt(50))
+            );
+        }
 
     }
 
@@ -78,6 +86,12 @@ public class BasicAttributes implements Attributes, Serializable {
         this.creationAge = this.lifespan / 5;
         this.creationCost = (this.energyCapacity / 2) / creationSize;
         this.creationDelay = (int) Math.round(Math.pow(size, 0.5));
+
+        seedColor = new Color(
+                overflow255(seedColor.getRed(), random.nextInt(5)),
+                overflow255(seedColor.getGreen(), random.nextInt(5)),
+                overflow255(seedColor.getBlue(), random.nextInt(5))
+        );
     }
 
     public void generateColor(double a, double b, double c, int constant) {

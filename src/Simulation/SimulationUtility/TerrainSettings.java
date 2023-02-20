@@ -16,15 +16,15 @@ public class TerrainSettings {
     private int clusterDensity;
     private int lineSize;
     private int lineDensity;
-    private int objectDensity;
+    private int lineMagnitude;
 
-    public TerrainSettings(int rockSize, int clusterSize, int clusterDensity, int lineSize, int lineDensity, int objectDensity) {
+    public TerrainSettings(int rockSize, int clusterSize, int clusterDensity, int lineSize, int lineDensity, int lineMagnitude) {
         this.rockSize = rockSize;
         this.clusterSize = clusterSize;
         this.clusterDensity = clusterDensity;
         this.lineSize = lineSize;
         this.lineDensity = lineDensity;
-        this.objectDensity = objectDensity;
+        this.lineMagnitude = lineMagnitude;
     }
 
     public int getRockSize() {
@@ -67,23 +67,21 @@ public class TerrainSettings {
         this.lineDensity = lineDensity;
     }
 
-    public int getObjectDensity() {
-        return objectDensity;
+    public int getLineMagnitude() {
+        return lineMagnitude;
     }
 
-    public void setObjectDensity(int objectDensity) {
-        this.objectDensity = objectDensity;
+    public void setLineMagnitude(int lineMagnitude) {
+        this.lineMagnitude = lineMagnitude;
     }
 
     @Override
     public String toString() {
-        return "TerrainSettings{" +
-                "rockSize=" + rockSize +
-                ", clusterSize=" + clusterSize +
-                ", clusterDensity=" + clusterDensity +
-                ", lineSize=" + lineSize +
-                ", lineDensity=" + lineDensity +
-                ", objectDensity=" + objectDensity +
-                '}';
+        return "-Rock Size=" + rockSize +
+                ",\n-Cluster Size=" + clusterSize +
+                ",\n-Cluster Density=" + clusterDensity +
+                ",\n-Line Size=" + lineSize +
+                ",\n-Line Density=" + lineDensity +
+                ",\n-Line Magnitude=" + lineMagnitude;
     }
 }
