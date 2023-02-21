@@ -1,5 +1,6 @@
 package View;
 
+import Simulation.Agent.AgentStructs.ColorModel;
 import Simulation.Agent.AgentUtility.AgentSettings;
 import Simulation.Agent.AgentConcreteComponents.CreatorMotivation;
 import Simulation.Agent.AgentConcreteComponents.GrazerMotivation;
@@ -86,6 +87,17 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
     final private JSpinner grazerWeightSpinner;
     final private JSpinner predatorWeightSpinner;
     //------------------------------------------------------------------------------------------------------------/>
+
+    // The components where the color model is selected---------------------</
+    final private ButtonGroup colorModelButtonGroup;
+    final private JPanel colorModelPanel;
+    final private JPanel staticModelPanel;
+    final private JPanel attributesModelPanel;
+    final private JPanel randomModelPanel;
+    final private JRadioButton staticModelButton;
+    final private JRadioButton attributesModelButton;
+    final private JRadioButton randomModelButton;
+    //----------------------------------------------------------------------</
 
     // The components where the spawning weight and mutation chance are selected---------------------</
     final private JPanel spawningWeightPanel;
@@ -404,6 +416,26 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         mutationChanceAndSpawningPanel.add(mutationMagnitudePanel);
         //--------------------------------------------------------------------------Mutations and Inheritance Panel End
 
+        //--------------------------------------------------------------------------Colour Model Panel Start
+        staticModelPanel = new JPanel();
+        attributesModelPanel = new JPanel();
+        randomModelPanel = new JPanel();
+        colorModelPanel = new JPanel();
+        colorModelPanel.setName("Color Model");
+
+        colorModelButtonGroup = new ButtonGroup();
+        staticModelButton = new JRadioButton("Static");
+        attributesModelButton = new JRadioButton("Attributes");
+        randomModelButton = new JRadioButton("Random");
+        colorModelButtonGroup.add(staticModelButton);
+        colorModelButtonGroup.add(attributesModelButton);
+        colorModelButtonGroup.add(randomModelButton);
+
+        colorModelPanel.add(staticModelButton);
+        colorModelPanel.add(attributesModelButton);
+        colorModelPanel.add(randomModelButton);
+
+        //--------------------------------------------------------------------------Colour Model Panel End
 
         //--------------------------------------------------------------------------Main Pane Start
         mainPane = new JTabbedPane();
@@ -411,7 +443,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         mainPane.setPreferredSize(new Dimension(450, 180));
         mainPane.add(attributesPanel);
         mainPane.add(motivationsPanel);
-        //mainPane.add(mutationsAndInheritancePanel);
+        mainPane.add(colorModelPanel);
         //--------------------------------------------------------------------------Main Pane End
 
         spawningWeightPanel = new JPanel();
@@ -490,12 +522,21 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
                 predatorWeightSpinner.setValue(motivation.getWeight());
             }
         }
-        mutationMagnitudeSpinner.setValue(agentSettings.getAttributes().getMutationMagnitude());
-        if (agentSettings.getAttributes().getMutationMagnitude() > 0) {
+        mutationMagnitudeSpinner.setValue(agentSettings.getAttributes().getMutationChance());
+        if (agentSettings.getAttributes().getMutationChance() > 0 && agentSettings.getAttributes().getColorModel().equals(ColorModel.ATTRIBUTES)) {
             generatedColorValue.setBackground(agentSettings.getAttributes().getMutatingColor());
         }
         else {
             generatedColorValue.setBackground(agentSettings.getAttributes().getSeedColor());
+        }
+        if (agentSettings.getColorModel().equals(ColorModel.STATIC)) {
+            colorModelButtonGroup.setSelected(staticModelButton.getModel(), true);
+        }
+        else if (agentSettings.getColorModel().equals(ColorModel.ATTRIBUTES)) {
+            colorModelButtonGroup.setSelected(attributesModelButton.getModel(), true);
+        }
+        else {
+            colorModelButtonGroup.setSelected(randomModelButton.getModel(), true);
         }
     }
 
@@ -508,11 +549,19 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         if (isPredatorToggle.isSelected()) {
             motivations.add(new PredatorMotivation((int) predatorBiasSpinner.getValue(), (int) predatorWeightSpinner.getValue()));
         }
+        ColorModel colorModel = ColorModel.STATIC;
+        if (colorModelButtonGroup.getSelection().equals(attributesModelButton.getModel())) {
+            colorModel = ColorModel.ATTRIBUTES;
+        }
+        else if (colorModelButtonGroup.getSelection().equals(randomModelButton.getModel())) {
+            colorModel = ColorModel.RANDOM;
+        }
         return new AgentSettings(
                               (double) spawningWeightSpinner.getValue(),
                                        agentNameTextField.getText(),
                                  (int) agentCodeSpinner.getValue(),
                                        seedColourChooserButton.getBackground(),
+                                 colorModel,
                                  (int) mutationMagnitudeSpinner.getValue(),
                                  (int) rangeSpinner.getValue(),
                                  (int) sizeSpinner.getValue(),

@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 
 import Simulation.Agent.AgentConcreteComponents.BasicAgent;
 import Simulation.Agent.AgentInterfaces.Attributes;
+import Simulation.Agent.AgentStructs.ColorModel;
 import Simulation.Agent.AgentUtility.AgentEditor;
 import Simulation.Agent.AgentInterfaces.Agent;
 import Simulation.Agent.AgentInterfaces.Motivation;
@@ -20,7 +21,6 @@ import Simulation.Environment.EnvironmentTile;
 import Simulation.Environment.Location;
 import Simulation.SimulationUtility.SimulationSettings;
 import Simulation.SimulationUtility.TerrainSettings;
-import View.SimulationPanel;
 
 /** This class represents the simulation. It acts as a controller to the Environment and the Agents. It contains 2 inner classes: AgentLogic and TerrainGenerator.
  * AgentLogic contains all the methods required for agents to interact with and live in the simulation. TerrainGenerator contains methods which generate terrain shapes
@@ -30,7 +30,6 @@ import View.SimulationPanel;
  * @since 1.0a
  */
 public class Simulation {
-
     // The instance of the environment class
     private Environment environment;
     // Here we store all the agents currently in the simulation
@@ -38,7 +37,7 @@ public class Simulation {
     // All newly born and surviving agents from each cycle are placed in here. At the end agentList is set to this
     private ArrayList<Agent> aliveAgentList;
     // The instance of the agent editor class
-    private AgentEditor agentEditor;
+    private final AgentEditor agentEditor;
     // The instance of the diagnostics class
     private final Diagnostics diagnostics;
     // The instance of the agent logic inner class
@@ -77,7 +76,7 @@ public class Simulation {
                 BasicAgent agent;
                 for (int j = 0; j < activeAgents.size(); j++) {
                     if (j == agentIndex && agentEditor.getAgent(j).getAttributes().getSpawningWeight() * 100 > random.nextInt(100)) {
-                        agent = agentLogic.getAgent(j);
+                        agent = agentLogic.getAgentFromEditor(j);
                         EnvironmentTile wt = environment.getGrid()[i];
                         agent.setLocation(wt.getLocation());
                         wt.setOccupant(agent);
@@ -153,25 +152,47 @@ public class Simulation {
         if (environmentSettings.getSize() != environment.getSize()) {
             clearAgents();
             environment.setEnvironmentSettings(environmentSettings);
-            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize()*getEnvironmentSize());
+            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * environment.getSize()*environment.getSize());
             diagnostics.resetCurrentEnvironmentEnergy();
         }
         else if (environmentSettings.getMaxEnergyLevel() < environment.getMaxEnergyLevel()) {
             environment.setEnvironmentSettings(environmentSettings);
-            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize()*getEnvironmentSize());
+            diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * environment.getSize()*environment.getSize());
             diagnostics.resetCurrentEnvironmentEnergy();
         }
         environment.setEnvironmentSettings(environmentSettings);
-        diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * getEnvironmentSize()*getEnvironmentSize());
+        diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * environment.getSize()*environment.getSize());
     }
 
+    /**
+     * Groups the logical methods used for running agents.
+     * <p>
+     * This class is responsible for the agent's logic. These methods are placed here so the environment and agents can
+     * communicate directly, rather than passing objects around. Only 2 methods in this class are public: runAgent() and
+     * getAgentFromEditor(). All other methods exist to support the runAgent() method.
+     * @author Sam Burchmore
+     * @version 1.0a
+     * @since 1.0a
+     */
     private class AgentLogic {
 
+        /**
+         * Runs the input agent for one day.
+         * <p>
+         * This method modifies the following Simulation parameters: environment, aliveAgentList, and diagnostics.
+         * First the method checks if the agent has been eaten, this means its place on the environment has been taken,
+         * so at this point the method ends. If an agent survives the day, it will be added to the aliveAgentList so by simply
+         * ending the method we've now removed this agent from the simulation. If the method continues, it then calls the agents
+         * liveDay() method, this increments its age and decrements its creationCounter. If the agent is still alive after this,
+         * a collection of AgentVision objects is produced by the lookaround() method. This is then transformed into a single AgentDecision
+         * method. The method then handles the agents decision.
+         * @param agent the agent to be run
+         */
         public void runAgent(Agent agent) {
             if (agent.isEaten()) {
                 return; // Agent has been eaten by another agent, therefor its already been removed from the environment, all we need to do is not add it to the aliveAgentList
             }
-            agent.liveDay(); // Live a day, i.e. increase age, reduce creation cooldown.
+            agent.liveDay(); // Increments its age and decrements its creationCounter
             if (agent.isDead()) {
                 environment.setOccupant(agent.getLocation(), null); // If the agent is now dead, remove it from the board and don't add it to aliveAgentList
                 return;
@@ -181,48 +202,66 @@ public class Simulation {
             if (agentDecision.agentAction().equals(AgentAction.NONE)) { // Do nothing
                 aliveAgentList.add(agent); // Agent is still alive
             }
-            else if (agentDecision.agentAction().equals(AgentAction.MOVE)) {
-                environment.setOccupant(agent.getLocation(), null);
-                agent.move(agentDecision.location()); // Move to the chosen location
-                environment.setOccupant(agent);
+            else if (agentDecision.agentAction().equals(AgentAction.MOVE)) { //Just Move
+                environment.setOccupant(agent.getLocation(), null); // Remove agent from old location
+                agent.move(agentDecision.location()); // Move to the new location
+                environment.setOccupant(agent); // Set the agent to the new location
                 aliveAgentList.add(agent); // Agent is still alive
             }
             else if (agentDecision.agentAction().equals(AgentAction.CREATE)) { // Create children
                 ArrayList<Agent> childAgents;
-                if (agent.mutates()) {
+                if (agent.mutates()) { // If the agent is a mutating agent, then handle their mutations before adding them to the environment
                     childAgents = mutateAndPlaceAgents(agent.create(agentDecision.location(), agent.getAttributes().getCreationCost(), environment), agent.getAttributes().getMutationChance());
                 }
-                else {
+                else { // Else we just add them
                     childAgents = placeAgents(agent.create(agentDecision.location(), agent.getAttributes().getCreationCost(), environment));
                 }
                 aliveAgentList.addAll(childAgents); // Add new agents to the alive agents list
                 aliveAgentList.add(agent); // Agent is still alive
             }
-            else if (agentDecision.agentAction().equals(AgentAction.GRAZE)) {
-                environment.setOccupant(agent.getLocation(), null);
+            else if (agentDecision.agentAction().equals(AgentAction.GRAZE)) { // Take energy from the environment
+                environment.setOccupant(agent.getLocation(), null); // Remove agent from old location
                 agent.move(agentDecision.location()); // Move to chosen location
-                environment.setOccupant(agent);
-                int grazeAmount = -agent.graze(environment.getTile(agent.getLocation()));
-                environment.modifyTileEnergyLevel(agent.getLocation(), grazeAmount); // Consume energy at chosen location
+                environment.setOccupant(agent); // Set the agent to the new location
+                int grazeAmount = -agent.graze(environment.getTile(agent.getLocation())); // Take energy, grazeAmount equals how much was successfully taken
+                environment.modifyTileEnergyLevel(agent.getLocation(), grazeAmount); // Update environment with grazeAmount
                 aliveAgentList.add(agent); // Agent is still alive
-                diagnostics.modifyCurrentEnvironmentEnergy(grazeAmount);
+                diagnostics.modifyCurrentEnvironmentEnergy(grazeAmount); // Track the energy change in the diagnostics class
             }
-            else if (agentDecision.agentAction().equals(AgentAction.PREDATE)) {
+            else if (agentDecision.agentAction().equals(AgentAction.PREDATE)) { // Take energy from another agent and take its place
                 environment.getTile(agentDecision.location()).getOccupant().setBeenEaten(); // We set the preys hasBeenEaten flag to true
                 agent.predate(environment.getTile(agentDecision.location()).getOccupant().getScores()); // Predator gains energy from the prey
-                environment.setOccupant(agent.getLocation(), null);
+                environment.setOccupant(agent.getLocation(), null); // Move to chosen location
                 agent.move(agentDecision.location()); // Predator now occupies preys location
-                environment.setOccupant(agent);
+                environment.setOccupant(agent); // Overwrite the occupant to the predator
                 aliveAgentList.add(agent); // Agent is still alive
             }
-            if (agent.isDead()) {
+            if (agent.isDead()) { // Agent may have exhausted its energy so check again here
                 environment.setOccupant(agent.getLocation(), null); // If the agent is now dead, remove it from the board and don't add it to aliveAgentList
             }
         }
 
+        /**
+         * Returns a copy of the agent from the agentEditor at the specified index
+         * <p>
+         * @param index the index of the agent to copy
+         */
+        public BasicAgent getAgentFromEditor(int index) {
+            return (BasicAgent) agentEditor.getAgent(index).copy();
+        }
+
+        /**
+         * Trys to mutate child agents before placing them on the environment.
+         * <p>
+         * Iterates through the input collection of child agents and trys to mutate them based on the mutationChance.
+         * Before placing an agent it will re-generate its mutating color. New agents are tracked here.
+         * @param childAgents the collection of new agents
+         * @param mutationChance the percent chance a child agent will mutate
+         */
         private ArrayList<Agent> mutateAndPlaceAgents(ArrayList<Agent> childAgents, int mutationChance) {
             for (Agent child : childAgents) {
-                double[] oldStats = new double[]{
+                diagnostics.addToAgentsBornLastStep(child.getAttributes().getCode(), 1); // log that a new agents been born
+                double[] oldStats = new double[]{ // store stats before mutating, allows us to track the stat change.
                         child.getAttributes().getSize(),
                         child.getAttributes().getCreationSize(),
                         child.getAttributes().getRange()
@@ -234,33 +273,45 @@ public class Simulation {
                         (child.getAttributes().getSize() / 100.0) - (oldStats[0] / 100),
                         (child.getAttributes().getCreationSize() / 8.0) - (oldStats[1] / 8),
                         (child.getAttributes().getRange() / 5.0) - (oldStats[2] / 5),
-                        125
-                );
-                child.getAttributes().calculateAttributes();
+                        125);
+                child.getAttributes().calculateAttributes(); // Calculate the agents calculated attributes
                 environment.setOccupant(child);
             }
             return childAgents;
         }
 
+        /**
+         * Places agents on the environment and possibly mutates their seed color.
+         * <p>
+         * Iterates through the input collection of child agents, checks if it uses the RANDOM color model. If so then
+         * mutate its seed color before adding it to the environment.
+         * @param childAgents the collection of new agents
+         */
         private ArrayList<Agent> placeAgents(ArrayList<Agent> childAgents) {
             for (Agent child : childAgents) {
+                diagnostics.addToAgentsBornLastStep(child.getAttributes().getCode(), 1); // log that a new agents been born
                 child.getAttributes().calculateAttributes();
                 environment.setOccupant(child);
+                if (child.getAttributes().getColorModel().equals(ColorModel.RANDOM)) { // Check if the agent is using the random color model and handle accordingly
+                    child.getAttributes().mutateSeedColor(5);
+                }
             }
             return childAgents;
         }
 
-        public BasicAgent getAgent(int index) {
-            return (BasicAgent) agentEditor.getAgent(index).copy();
-        }
-
+        /**
+         * Mutates the input attributes object.
+         * <p>
+         * Has an 80% chance of mutating size, and a 10% chance for range or creationSize. If the diagnostics verbosity is
+         * set to high, then a message with the agents name, mutated attribute and how much it mutated by is added to the log queue.
+         * @param attributes the attributes object to be mutated.
+         */
         private Attributes mutate(Attributes attributes) {
-            // We've decided the agent is going to mutate, now we need to randomly decide what attribute to mutate.
             int ran = random.nextInt(10);
             if (ran < 8) {
                 // Mutate size
                 int oldSize = attributes.getSize();
-                attributes.setSize(Math.min(Math.max(attributes.getSize() + mutationMagnitude(random), 2), 10));
+                attributes.setSize(Math.min(Math.max(attributes.getSize() + mutationMagnitude(), 2), 10));
                 if (diagnosticsVerbosity >= 1) {
                     diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ": Size mutated by: " + (attributes.getSize() - oldSize) + ".");
                 }
@@ -268,7 +319,7 @@ public class Simulation {
             else if (ran < 9) {
                 // Mutate range
                 int oldRange = attributes.getRange();
-                attributes.setRange(Math.min(Math.max(attributes.getRange() + mutationMagnitude(random), 0), 5));
+                attributes.setRange(Math.min(Math.max(attributes.getRange() + mutationMagnitude(), 0), 5));
                 if (diagnosticsVerbosity >= 1) {
                     diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ": Range mutated by: " + (attributes.getRange() - oldRange) + ".");
                 }
@@ -276,7 +327,7 @@ public class Simulation {
             else {
                 // Mutate creationAmount
                 int oldCreationSize = attributes.getCreationSize();
-                attributes.setCreationSize(Math.min(Math.max(attributes.getCreationSize() + mutationMagnitude(random), 1), 8));
+                attributes.setCreationSize(Math.min(Math.max(attributes.getCreationSize() + mutationMagnitude(), 1), 8));
                 if (diagnosticsVerbosity >= 1) {
                     diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ": Litter Size mutated by: " + (attributes.getCreationSize() - oldCreationSize) + ".");
                 }
@@ -284,18 +335,47 @@ public class Simulation {
             return attributes;
         }
 
+        /**
+         * Returns an integer between -3 and 3, weighted towards 1.
+         * <p>
+         * 3 = 1%
+         * 2 = 11.5%
+         * 1 = 37.5%
+         * 1 = 37.5%
+         * 2 = 11.5%
+         * 3 = 1%
+         */
+        private int mutationMagnitude() {
+            int r = random.nextInt(100);
+            int modifier = random.nextInt(2);
+            if (modifier == 0) {
+                modifier -= 1;
+            }
+            if (r < 75) {
+                return modifier;
+            }
+            if (r < 98) {
+                return 2*modifier;
+            }
+            return 3*modifier;
+        }
+
+        /**
+         * Returns an AgentVision object of each tile within the agents range.
+         * <p>
+         * Iterates in a square pattern centered on the agent. A range of 1 means only the 8 adjacent tiles
+         * will be looked at. A range of 2 means the surrounding 24 tiles are looked at and so on.
+         * @param agent the agent to look around
+         */
         private ArrayList<AgentVision> lookAround(Agent agent) {
             Location agentLocation = agent.getLocation();
             int visionRange = agent.getAttributes().getRange();
-            // Generate a new ArrayList of the AgentVision object, everything the agent sees will be stored here.
             ArrayList<AgentVision> agentViews = new ArrayList<>();
-            // Retrieve the agents vision attribute, lets us know how far the agent can see.
-            // Now we iterate over all the surrounding tiles, adding their visible contents to the AgentVision ArrayList.
             for (int i = -visionRange; i <= visionRange; i++) {
                 for (int j = -visionRange; j <= visionRange; j++) {
                     int X = agentLocation.getX() + i;
                     int Y = agentLocation.getY() + j;
-                    // Checks the agent isn't looking outside the grid or at its current tile
+                    // Checks the agent isn't looking outside the grid, at its current tile or at terrain.
                     if (((  X < environment.getSize())
                             && (Y < environment.getSize()))
                             && ((X >= 0) && (Y >= 0))
@@ -311,6 +391,14 @@ public class Simulation {
             return agentViews;
         }
 
+        /**
+         * Produces an AgentDecision from a collection of AgentVision objects and the agents motivations.
+         * <p>
+         * Iterates over each AgentVision object and produces a possible decision for each one. It then calls
+         * the getBestDecision() method to get the chosen AgentDecision.
+         * @param agent the agent to look around
+         * @param agentView the collection of AgentVision objects
+         */
         private static AgentDecision reactToView(Agent agent, ArrayList<AgentVision> agentView) {
             ArrayList<AgentDecision> possibleDecisions = new ArrayList<>();
             for (AgentVision currentAV : agentView) {
@@ -319,6 +407,14 @@ public class Simulation {
             return getBestDecision(possibleDecisions);
         }
 
+        /**
+         * Produces an AgentDecision from a single AgentVision object and the agents motivations.
+         * <p>
+         * Iterates over each of the agents motivations and produces a possible decision for each one. It then calls
+         * getBestDecision() to return the chosen decision.
+         * @param agent the agent to look around
+         * @param agentVision the AgentVision object to produce a decision for
+         */
         private static AgentDecision reactToTile(Agent agent, AgentVision agentVision) {
             ArrayList<AgentDecision> possibleDecisions = new ArrayList<>();
             for (Motivation motivation : agent.getMotivations()) {
@@ -327,7 +423,11 @@ public class Simulation {
             return getBestDecision(possibleDecisions);
         }
 
-        // A utility function which takes a collection of agent decisions, and returns the one with the highest decision score.
+        /**
+         * Returns the AgentDecision with the highest score.
+         * <p>
+         * @param agentDecisions the agent to look around
+         */
         private static AgentDecision getBestDecision(ArrayList<AgentDecision> agentDecisions) {
             AgentDecision finalDecision = new AgentDecision(null, AgentAction.NONE, 0);
             Collections.shuffle(agentDecisions);
@@ -338,116 +438,46 @@ public class Simulation {
             }
             return finalDecision;
         }
-
-        private static int mutationMagnitude(Random random) {
-            int r = random.nextInt(100);
-            int modifier = random.nextInt(2);
-            if (modifier == 0) {
-                modifier -= 1;
-            }
-            if (r < 75) {
-                return modifier;
-            }
-            if (r < 98) {
-                return 2*modifier;
-            }
-            return 3*modifier;
-        }
-
     }
 
+    /**
+     * Groups the methods which paint terrain on the environment.
+     * <p>
+     * Whether a tile is terrain or not is defined by a boolean value. This class contains methods that sets environment tiles
+     * terrain flags to true in varying patterns. At the lowest level a circle is generated with a specified size, then using the
+     * same algorithm and a Random object, a cluster of circles is generated. A cluster size and density is specified. Then a line
+     * of clusters is generated with a line size and  density specified. Finally, a number of lines generated at random positions
+     * with random directions are generated. Here only a density is specified. By changing the values, fairly different forms of terrain
+     * can be generated.
+     * @author Sam Burchmore
+     * @version 1.0a
+     * @since 1.0a
+     */
     public class TerrainGenerator {
-        // TODO the settings system is ridiculously hard to read, maybe clean it up
-        //(x-a)^2 + (y-b)^2 = r ^2
-
+        // The TerrainSettings object that stores the initial and current terrain settings
         private TerrainSettings terrainSettings;
-
         public TerrainGenerator() {
-            terrainSettings = new TerrainSettings(2, 4, 60, 600, 8500, 1);
+            terrainSettings = new TerrainSettings(2, 5, 60, 300, 8500, 1);
         }
 
-        public TerrainSettings getTerrainSettings() {
-            return terrainSettings;
-        }
-
-        public void setTerrainSettings(TerrainSettings terrainSettings) {
-            this.terrainSettings = terrainSettings;
-        }
-
-        public void clearTerrain() {
-            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-                environment.getGrid()[i].setTerrain(false);
-            });
-        }
-
-        public void generateCircleLines(int rockSize, int clusterSize, int clusterDensity,  int lineSize, int lineDensity, int objectDensity){
-            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-                if (random.nextInt(10000) < objectDensity) {
-                    generateCircleLine(rockSize, clusterSize, clusterDensity, lineSize, lineDensity);
-                }
-            });
-        }
-
-        public void generateCircleLine(int rockSize, int clusterSize, int clusterDensity,  int lineSize, int lineDensity) {
-            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
-            int dx = random.nextInt(3) - 1;
-            int dy = random.nextInt(3) - 1;
-            for (int j = 0; j < 10; j++) {
-                int rand = random.nextInt(10000);
-                for (int i = 0; i < lineSize / 10; i++) {
-                    if (rand < lineDensity) {
-                        generateCircleCluster(1 + rockSize, clusterSize, clusterDensity, seedLocation);
-                    }
-                    seedLocation.setX(seedLocation.getX() + dx);
-                    seedLocation.setY(seedLocation.getY() + dy);
-                }
-            }
-        }
-
-        public void generateTerrain() {
-            generateCircleLines(
-                    terrainSettings.getRockSize(),
-                    terrainSettings.getClusterSize(),
-                    terrainSettings.getClusterDensity(),
-                    terrainSettings.getLineSize(),
-                    terrainSettings.getLineDensity(),
-                    terrainSettings.getLineMagnitude());
-        }
-
-        public void generateCircleRock(int rockSize) {
-            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
-            int seedX = seedLocation.getX();
-            int seedY = seedLocation.getY();
-            int x1;
-            int y1;
-            for (int x = -rockSize; x <= rockSize; x++) {
-                for (int y = -rockSize; y <= rockSize; y++) {
-                    x1 = seedX + x;
-                    y1 = seedY + y;
-                    // Checks the agent isn't looking outside the grid or at its current tile
-                    if (((  x1 < environment.getSize())
-                            && (y1 < environment.getSize()))
-                            && ((x1 >= 0) && (y1 >= 0))
-                            && ((x1 - seedX) * (x1 - seedX) + (y1 - seedY) * (y1 - seedY)) <= rockSize * rockSize
-                    )
-                    {
-                        environment.setTileTerrain(new Location(x1, y1), true);
-                    }
-                }
-            }
-        } // Places one circle
-
+        /**
+         * Paints a circle pattern of terrain flags centered at the specified location.
+         * <p>
+         * Iterates in a square pattern centered on the location specified. Works similarly to AgentLogic.lookAround(Agent agent).
+         * If a tile satisfies the formula: (x-x1)^2 + (y-x1)^2 = r^2 then set its terrain flag to true, where (x, y) are the center
+         * coordinates and (x1, y1) are the subject coordinates.
+         * @param rockSize the circles radius
+         * @param location the location to paint at.
+         */
         public void generateCircleRock(int rockSize, Location location) {
-            Location seedLocation = location;
-            int seedX = seedLocation.getX();
-            int seedY = seedLocation.getY();
+            int seedX = location.getX();
+            int seedY = location.getY();
             int x1;
             int y1;
             for (int x = -rockSize; x <= rockSize; x++) {
                 for (int y = -rockSize; y <= rockSize; y++) {
                     x1 = seedX + x;
                     y1 = seedY + y;
-                    // Checks the agent isn't looking outside the grid or at its current tile
                     if (((  x1 < environment.getSize())
                             && (y1 < environment.getSize()))
                             && ((x1 >= 0) && (y1 >= 0))
@@ -458,42 +488,27 @@ public class Simulation {
                     }
                 }
             }
-        } // Places one circle
+        }
 
-        public void generateCircleCluster(int rockSize, int clusterSize, int clusterDensity) {
-            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
-            int seedX = seedLocation.getX();
-            int seedY = seedLocation.getY();
+        /**
+         * Paints a cluster of circles centered at the specified location.
+         * <p>
+         * Uses the same algorithm as the generateCircleRock() method, but instead of setting every tile to terrain, it will try to paint
+         * a circle centered on the tile. The success of this is decided by the clusterDensity paramter.
+         * @param rockSize the circles radius
+         * @param clusterSize the cluster radius
+         * @param clusterDensity the likelihood a circle will be placed at each tile.
+         * @param location the location to paint at.
+         */
+        public void generateCircleRockCluster(int rockSize, int clusterSize, int clusterDensity, Location location) {
+            int seedX = location.getX();
+            int seedY = location.getY();
             int x1;
             int y1;
             for (int x = -clusterSize; x <= clusterSize; x++) {
                 for (int y = -clusterSize; y <= clusterSize; y++) {
                     x1 = seedX + x;
                     y1 = seedY + y;
-                    // Checks the agent isn't looking outside the grid or at its current tile
-                    if (((  x1 < environment.getSize())
-                            && (y1 < environment.getSize()))
-                            && ((x1 >= 0) && (y1 >= 0))
-                            && ((x1 - seedX) * (x1 - seedX) + (y1 - seedY) * (y1 - seedY)) <= clusterSize * clusterSize
-                            && random.nextInt(1000000) < clusterDensity
-                    )
-                    {
-                        generateCircleRock(rockSize, new Location(x1, y1));
-                    }
-                }
-            }
-        } // Places one cluster
-
-        public void generateCircleCluster(int rockSize, int clusterSize, int clusterDensity, Location seedLocation) {
-            int seedX = seedLocation.getX();
-            int seedY = seedLocation.getY();
-            int x1;
-            int y1;
-            for (int x = -clusterSize; x <= clusterSize; x++) {
-                for (int y = -clusterSize; y <= clusterSize; y++) {
-                    x1 = seedX + x;
-                    y1 = seedY + y;
-                    // Checks the agent isn't looking outside the grid or at its current tile
                     if (((  x1 < environment.getSize())
                             && (y1 < environment.getSize()))
                             && ((x1 >= 0) && (y1 >= 0))
@@ -507,164 +522,109 @@ public class Simulation {
             }
         } // Places one cluster
 
-        public void generateCircleRocks(int rockSize, int objectDensity) {
+        /**
+         * Paints a line of clusters at the specified location and in the specified direction.
+         * <p>
+         * Trys to paint a cluster at the specified location before incrementing the location in the specified direction.
+         * @param rockSize the circles radius
+         * @param clusterSize the cluster radius
+         * @param clusterDensity the likelihood a circle will be placed at each tile.
+         * @param lineSize how many times the location will be incremented in the direction (how long the line is)
+         * @param lineDensity the likelihood of a cluster being painted at a location.
+         * @param location the location to paint at.
+         * @param dx the x direction
+         * @param dy the y direction
+         */
+        public void generateCircleLine(int rockSize, int clusterSize, int clusterDensity,  int lineSize, int lineDensity, Location location, int dx, int dy) {
+            for (int i = 0; i < lineSize; i++) {
+                if (random.nextInt(10000) < lineDensity) {
+                    generateCircleRockCluster(1 + rockSize, clusterSize, clusterDensity, location);
+                }
+                location.setX(location.getX() + dx);
+                location.setY(location.getY() + dy);
+            }
+        }
+
+        /**
+         * Trys to paint a lines at random locations and in random directions.
+         * <p>
+         * For each tile in the environment, a random location will be chosen, along with a random direction. The method will then
+         * try to paint the line at the location. The likelihood  of success is defined by the objectDensity parameter.
+         * @param rockSize the circles radius
+         * @param clusterSize the cluster radius
+         * @param clusterDensity the likelihood a circle will be placed at each tile.
+         * @param lineSize how many times the location will be incremented in the direction (how long the line is)
+         * @param lineDensity the likelihood of a cluster being painted at a location.
+         * @param objectDensity the likelihood of a line being painted at a tile.
+         */
+        public void generateCircleLines(int rockSize, int clusterSize, int clusterDensity,  int lineSize, int lineDensity, int objectDensity){
             IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
                 if (random.nextInt(10000) < objectDensity) {
-                    generateCircleRock(1 + random.nextInt(rockSize-1));
+                    Location location = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
+                    int dx = random.nextInt(3) - 1;
+                    int dy = random.nextInt(3) - 1;
+                    generateCircleLine(rockSize, clusterSize, clusterDensity, lineSize, lineDensity, location, dx, dy);
                 }
             });
-        } // Places circles randomly depending on objectDensity
+        }
 
-        public void generateCircleClusters(int rockSize, int clusterSize, int clusterDensity, int objectDensity) {
+        /**
+         * Sets all tiles in the environment to not terrain.
+         */
+        public void clearTerrain() {
             IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-                if (random.nextInt(10000) < objectDensity) {
-                    generateCircleCluster(rockSize, clusterSize, clusterDensity);
-                }
+                environment.getGrid()[i].setTerrain(false);
             });
-        } // Places clusters randomly depending on objectDensity
-
-
-        public void squareRock(int rockSize) {
-            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
-            for (int i = -rockSize; i <= rockSize; i++) {
-                for (int j = -rockSize; j <= rockSize; j++) {
-                    int X = seedLocation.getX() + i;
-                    int Y = seedLocation.getY() + j;
-                    // Checks the agent isn't looking outside the grid or at its current tile
-                    if (((  X < environment.getSize())
-                            && (Y < environment.getSize()))
-                            && ((X >= 0) && (Y >= 0)))
-                    {
-                        environment.setTileTerrain(new Location(X, Y), true);
-                    }
-                }
-            }
         }
 
-        public void squareRock(int rockSize, Location location) {
-            Location seedLocation = location;
-            for (int i = -rockSize; i <= rockSize; i++) {
-                for (int j = -rockSize; j <= rockSize; j++) {
-                    int X = seedLocation.getX() + i;
-                    int Y = seedLocation.getY() + j;
-                    // Checks the agent isn't looking outside the grid or at its current tile
-                    if (((  X < environment.getSize())
-                            && (Y < environment.getSize()))
-                            && ((X >= 0) && (Y >= 0)))
-                    {
-                        environment.setTileTerrain(new Location(X, Y), true);
-                    }
-                }
-            }
+        /**
+         * Calls the generateCircleLines() method with the terrainSettings as parameters.
+         */
+        public void generateTerrain() {
+            generateCircleLines(
+                    terrainSettings.getRockSize(),
+                    terrainSettings.getClusterSize(),
+                    terrainSettings.getClusterDensity(),
+                    terrainSettings.getLineSize(),
+                    terrainSettings.getLineDensity(),
+                    terrainSettings.getLineMagnitude());
         }
 
-        public void placeCluster(int rockSize, int clusterSize, int clusterDensity) {
-            Location seedLocation = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
-            for (int i = -clusterSize; i <= clusterSize; i++) {
-                for (int j = -clusterSize; j <= clusterSize; j++) {
-                    int X = seedLocation.getX() + i;
-                    int Y = seedLocation.getY() + j;
-                    // Checks the agent isn't looking outside the grid or at its current tile
-                    if (((  X < environment.getSize())
-                            && (Y < environment.getSize()))
-                            && ((X >= 0) && (Y >= 0)))
-                    {
-                        if (random.nextInt(100) < clusterDensity) {
-                            squareRock(rockSize);
-                        }
-                    }
-                }
-            }
+        public TerrainSettings getTerrainSettings() {
+            return terrainSettings;
+        }
+        public void setTerrainSettings(TerrainSettings terrainSettings) {
+            this.terrainSettings = terrainSettings;
         }
     }
 
-    public void setEnvironmentColors(Color[] color) {
-        environment.setColors(color);
+    public void setDiagnosticsVerbosity(int diagnosticsVerbosity) {
+        this.diagnosticsVerbosity = diagnosticsVerbosity;
     }
-
-    public Color[] getEnvironmentColors() {
-        return environment.getColors();
+    public void updateAgentNames() {
+        diagnostics.setAgentNames(agentEditor.getAgentNames());
     }
-
-    public void setEnvironment(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
-        this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel, energyRegenChance, energyRegenAmount);
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
     public SimulationSettings getSimulationSettings(String name) {
         return new SimulationSettings(
                 name,
                 agentEditor.getActiveAgentsSettings(),
                 environment.getEnvironmentSettings());
     }
-
     public void setSimulationSettings(SimulationSettings simulationSettings) {
         environment.setEnvironmentSettings(simulationSettings.getEnvironmentSettings());
         agentEditor.setActiveAgentsSettings(simulationSettings.getAgentSettings());
     }
-
+    public Environment getEnvironment() {
+        return environment;
+    }
     public Diagnostics getDiagnostics() {
         return this.diagnostics;
     }
-
-    public BufferedImage getSimulationImage(int scale) {
-        return this.environment.toBufferedImage(scale);
-    }
-
     public AgentEditor getAgentEditor() {
         return agentEditor;
     }
-
-    public void updateAgentNames() {
-        diagnostics.setAgentNames(agentEditor.getAgentNames());
-    }
-
-    public int getDiagnosticsVerbosity() {
-        return diagnosticsVerbosity;
-    }
-
-    public void setDiagnosticsVerbosity(int diagnosticsVerbosity) {
-        this.diagnosticsVerbosity = diagnosticsVerbosity;
-    }
-
-    public void setAgentEditor(AgentEditor agentEditor) {
-        this.agentEditor = agentEditor;
-    }
-
-    public int getEnergyRegenAmount() {
-        return environment.getEnergyRegenAmount();
-    }
-
-    public double getEnergyRegenChance() {
-        return environment.getEnergyRegenChance();
-    }
-
-    public int getMaxTileEnergy() {
-        return environment.getMaxEnergyLevel();
-    }
-
-    public int getMinTileEnergy() {
-        return environment.getMinEnergyLevel();
-    }
-
-    public void setMaxTileEnergy(int maxEnergy) {
-        environment.setMaxEnergyLevel(maxEnergy);
-    }
-
-    public void setMinTileEnergy(int minEnergy) {
-        environment.setMinEnergyLevel(minEnergy);
-    }
-
-    public int getEnvironmentSize() {
-        return environment.getSize();
-    }
-
     public TerrainGenerator getTerrainGenerator() {
         return terrainGenerator;
     }
-
 }
 

@@ -3,6 +3,7 @@ package Simulation.Agent.AgentUtility;
 import Simulation.Agent.AgentConcreteComponents.BasicAttributes;
 import Simulation.Agent.AgentInterfaces.Attributes;
 import Simulation.Agent.AgentInterfaces.Motivation;
+import Simulation.Agent.AgentStructs.ColorModel;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -13,8 +14,8 @@ public class AgentSettings implements Serializable {
     private Attributes attributes;
     private ArrayList<Motivation> motivations;
 
-    public AgentSettings(double spawningWeight, String name, int code, Color seedColor, int mutationMagnitude, int range, int size, int creationAmount, ArrayList<Motivation> motivations) {
-        this.attributes = new BasicAttributes(spawningWeight, name, code, seedColor, mutationMagnitude, range, size, creationAmount);
+    public AgentSettings(double spawningWeight, String name, int code, Color seedColor, ColorModel colorModel, int mutationMagnitude, int range, int size, int creationAmount, ArrayList<Motivation> motivations) {
+        this.attributes = new BasicAttributes(spawningWeight, name, code, seedColor, colorModel, mutationMagnitude, range, size, creationAmount);
         this.motivations = (ArrayList<Motivation>) motivations.clone();
     }
 
@@ -88,7 +89,7 @@ public class AgentSettings implements Serializable {
     }
 
     public Integer getEnergyLostPerTurn() {
-        return attributes.getEnergyLostPerTurn();
+        return attributes.getEnergyLostPerTile();
     }
 
     public int getCreationAmount() {
@@ -137,5 +138,13 @@ public class AgentSettings implements Serializable {
 
     public Integer getCreationCost() {
         return attributes.getCreationCost();
+    }
+
+    public ColorModel getColorModel() {
+        return attributes.getColorModel();
+    }
+
+    public void setColorModel(ColorModel colorModel) {
+        attributes.setColorModel(colorModel);
     }
 }

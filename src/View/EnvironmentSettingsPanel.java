@@ -287,7 +287,7 @@ public class EnvironmentSettingsPanel extends JPanel implements ActionListener {
         this.environmentSizeSpinner.setValue(environmentSettings.getSize());
         this.getMaxEnergySpinner().setValue(environmentSettings.getMaxEnergyLevel());
         this.getMinEnergySpinner().setValue(environmentSettings.getMinEnergyLevel());
-        this.getEnergyRegenChanceSpinner().setValue(environmentSettings.getEnergyRegenAmount());
+        this.getEnergyRegenChanceSpinner().setValue(environmentSettings.getEnergyRegenChance());
         this.getEnergyRegenAmountSpinner().setValue(environmentSettings.getEnergyRegenAmount());
         setColors(environmentSettings.getEnvironmentColors());
     }

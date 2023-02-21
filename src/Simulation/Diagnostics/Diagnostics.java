@@ -12,6 +12,7 @@ public class Diagnostics {
 
     private String[] agentNames; // The names of the agents
     private Integer[] agentPopulations; // The size of each agent population
+    private Integer[] agentsBornLastStep; // How many agents where born last step
     private Double[] averagePopulationsEnergy; // The average percent of max energy in each agent population
     private Double[] averagePopulationsLifespan; // The average percent of max age in each agent population
 
@@ -45,6 +46,7 @@ public class Diagnostics {
     public Diagnostics(int maxEnvironmentEnergy) {
         agentNames = new String[]{"Agent 1", "Agent 2", "Agent 3", "Agent 4", "Agent 5", "Agent 6", "Agent 7", "Agent 8"};
         agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
+        agentsBornLastStep = new Integer[]{0,0,0,0,0,0,0,0};
         averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         logQueue = new ArrayDeque<>();
@@ -93,6 +95,11 @@ public class Diagnostics {
         agentPopulations[index] += newAgents;
     }
 
+    public void addToAgentsBornLastStep(int index, int newAgents) {
+        agentsBornLastStep[index] += newAgents;
+    }
+
+
     public void addToAveragePopulationEnergy(int index, double energy) {
         averagePopulationsEnergy[index] += energy;
     }
@@ -138,7 +145,7 @@ public class Diagnostics {
     }
 
     public Object[][] getAgentStats() {
-        return new Object[][]{agentNames, agentPopulations, calculateAverages(averagePopulationsEnergy), calculateAverages(averagePopulationsLifespan), getAgentsBornLastStep()};
+        return new Object[][]{agentNames, agentPopulations, calculateAverages(averagePopulationsEnergy), calculateAverages(averagePopulationsLifespan), agentsBornLastStep};
     }
 
     private Double[] calculateAverages(Double[] statistics) {
@@ -150,8 +157,8 @@ public class Diagnostics {
     }
 
     public void clearAgentStats() {
-        lastStepsAgentPopulations = agentPopulations;
         agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
+        agentsBornLastStep = new Integer[]{0,0,0,0,0,0,0,0};
         averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
     }

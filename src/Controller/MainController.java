@@ -40,7 +40,7 @@ public class MainController {
         loadingDialog.setVisible(true);
         this.scale = 600 / size;
         this.view = new MainView();
-        this.simulation = new Simulation(view.getWorldPanel(), size, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
+        this.simulation = new Simulation(size, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
         this.simulationController = new SimulationController();
         this.viewController = new ViewController();
         simulationController.initDiagnostics();
@@ -232,7 +232,7 @@ public class MainController {
         public void clearAgents() {
             if (!simulationRunning) {
                 simulation.clearAgents();
-                view.updateSimulationPanel(simulation.getSimulationImage(scale));
+                viewController.updateSimulationView();
                 simulation.getDiagnostics().clearAgentStats();
                 simulation.getDiagnostics().setExtinctFlags(-1);
                 simulation.getDiagnostics().clearSteps();
@@ -275,7 +275,7 @@ public class MainController {
         // Initialises the diagnostics panel with the agent names and environment energy.
         public void initDiagnostics() {
             simulation.getDiagnostics().setAgentNames(simulation.getAgentEditor().getAgentNames());
-            simulation.getDiagnostics().setMaxEnvironmentEnergy(simulation.getMaxTileEnergy() * simulation.getEnvironmentSize()* simulation.getEnvironmentSize());
+            simulation.getDiagnostics().setMaxEnvironmentEnergy(simulation.getEnvironment().getMaxEnergyLevel() * simulation.getEnvironment().getSize()* simulation.getEnvironment().getSize());
             simulation.getDiagnostics().resetCurrentEnvironmentEnergy();
         }
 
@@ -296,7 +296,7 @@ public class MainController {
     public class ViewController {
         // Updates the environment image to reflect the environment in the model
         public void updateSimulationView() {
-            view.updateSimulationPanel(simulation.getSimulationImage(scale));
+            view.updateSimulationPanel(simulation.getEnvironment().scaledImage(scale));
         }
 
         // Add a log message to the diagnostics panels text log
@@ -306,12 +306,7 @@ public class MainController {
 
         // Updates the values in the environment settings panel to match those of the current environment
         public void updateEnvironmentSettingsPanel() {
-            view.getEnvironmentSettingsPanel().setColors(simulation.getEnvironmentColors());
-            view.getEnvironmentSettingsPanel().getMaxEnergySpinner().setValue(simulation.getMaxTileEnergy());
-            view.getEnvironmentSettingsPanel().getMinEnergySpinner().setValue(simulation.getMinTileEnergy());
-            view.getEnvironmentSettingsPanel().getEnergyRegenChanceSpinner().setValue(simulation.getEnergyRegenChance());
-            view.getEnvironmentSettingsPanel().getEnergyRegenAmountSpinner().setValue(simulation.getEnergyRegenAmount());
-            view.getEnvironmentSettingsPanel().getEnvironmentSizeSpinner().setValue(simulation.getEnvironmentSize());
+            view.getEnvironmentSettingsPanel().setEnvironmentSettings(simulation.getEnvironment().getEnvironmentSettings());
         }
 
         // Updates the data in the diagnostics panel to match the data in the diagnostics panel

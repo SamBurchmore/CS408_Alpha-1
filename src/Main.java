@@ -1,19 +1,14 @@
 import Controller.MainController;
 import Simulation.Agent.AgentConcreteComponents.BasicAttributes;
-import Simulation.Agent.AgentInterfaces.Agent;
 import Simulation.Agent.AgentInterfaces.Attributes;
-import Simulation.Simulation;
-import View.TerrainDialog;
+import Simulation.Agent.AgentStructs.ColorModel;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException, IOException {
@@ -35,6 +30,7 @@ public class Main {
                 "Agent 1",
                 0,
                 new Color(100, 100, 100),
+                ColorModel.ATTRIBUTES,
                 1,
                 1,
                 1,
@@ -68,7 +64,7 @@ public class Main {
             attributes = mutate(attributes, random);
             double[] newStats = new double[]{attributes.getSize(), attributes.getCreationSize(), attributes.getRange()};
             System.out.println("---\n" + attributes.getMutatingColor().toString());
-            attributes.generateColor(
+            attributes.mutateAttributesColor(
                         (newStats[0] / 100) - (oldStats[0] / 100),
                         (newStats[1] / 8) - (oldStats[1] / 8),
                         (newStats[2] / 5) - (oldStats[2] / 5),

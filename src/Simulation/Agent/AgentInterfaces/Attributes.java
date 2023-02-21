@@ -1,5 +1,7 @@
 package Simulation.Agent.AgentInterfaces;
 
+import Simulation.Agent.AgentStructs.ColorModel;
+
 import java.awt.*;
 import java.util.Random;
 
@@ -42,5 +44,6 @@ public interface Attributes {
     void setCreationCost(int creationCost);
     void setEnergyLostPerTile(int energyLostPerTile);
     void setMutatingColor(Color mutatingColor);
-
+    ColorModel getColorModel();
+    void setColorModel(ColorModel colorModel);
 }

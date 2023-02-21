@@ -43,7 +43,6 @@ public class TerrainDialog extends JDialog {
         rockSizeSpinner = new JSpinner(new SpinnerNumberModel(3, 1, 25, 1));
         rockSizeLabel = new JLabel("Rock Size: ");
         rockSizePanel = new JPanel();
-        //rockSizePanel.setPreferredSize(new Dimension(200, 50));
         rockSizePanel.add(rockSizeLabel);
         rockSizePanel.add(rockSizeSpinner);
 
