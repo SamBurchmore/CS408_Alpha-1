@@ -18,7 +18,7 @@ public interface Attributes {
     int getEatAmount();
     int getCreationCost();
     String getName();
-    int getCode();
+    Integer getCode();
     Color getSeedColor();
     double getSpawningWeight();
     int getMutationChance();

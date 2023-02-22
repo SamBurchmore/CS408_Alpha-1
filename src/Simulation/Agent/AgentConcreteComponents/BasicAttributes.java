@@ -20,7 +20,7 @@ public class BasicAttributes implements Attributes, Serializable {
     // The string that identifies the agent in the diagnostics view
     private String name;
     // The agents unique identifier, an agent will breed with and not eat agents with the same code
-    private int code;
+    private Integer code;
     // The percentage value for how likely the attributes are to mutate
     private int mutationChance;
     // The agents initial color
@@ -234,7 +234,7 @@ public class BasicAttributes implements Attributes, Serializable {
         this.name = name;
     }
     @Override
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
     @Override

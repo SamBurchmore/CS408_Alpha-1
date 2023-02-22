@@ -41,7 +41,7 @@ public class AgentSettings implements Serializable {
     }
 
     public Color getColor() {
-        return attributes.getSeedColor();
+        return attributes.getColor();
     }
 
     public void setColor(Color color) {
@@ -112,7 +112,7 @@ public class AgentSettings implements Serializable {
         attributes.setCode(code);
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return attributes.getCode();
     }
 
@@ -146,5 +146,9 @@ public class AgentSettings implements Serializable {
 
     public void setColorModel(ColorModel colorModel) {
         attributes.setColorModel(colorModel);
+    }
+
+    public Color getSeedColor() {
+        return attributes.getSeedColor();
     }
 }

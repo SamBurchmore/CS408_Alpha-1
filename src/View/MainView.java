@@ -49,12 +49,12 @@ public class MainView extends JFrame {
     private DiagnosticsPanel diagnosticsPanel;
 
     private JPanel leftPanel;
-
     private JPanel centerPanel;
+    private JPanel rightPanel;
 
     public MainView() throws IOException {
 
-        getContentPane().setLayout(new GridBagLayout());
+        getContentPane().setLayout(new FlowLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setIconImage(ImageIO.read(this.getClass().getResource("../images/tool-icon-v1.png")));
@@ -102,8 +102,6 @@ public class MainView extends JFrame {
         // Build the tool settings menu
         toggleControlsButton = new JButton("Toggle Controls");
         toolSettingsMenu.add(toggleControlsButton);
-        //toggleSimpleModeButton = new JButton("Simple Mode");
-       // toolSettingsMenu.add(toggleSimpleModeButton);
 
         // Build the terrain generator menu
         generateTerrain = new JButton("Generate Terrain");
@@ -129,52 +127,37 @@ public class MainView extends JFrame {
         menuBar.setFont(new Font("Dialog", Font.BOLD, 12));
         setJMenuBar(menuBar);
 
-        // The GridBag constraints we'll be using to build the GUI
-        GridBagConstraints c = new GridBagConstraints();
-
         // First we build the left panel and then add it to the frame
         agentEditorPanel = new AgentEditorPanel();
         environmentSettingsPanel = new EnvironmentSettingsPanel();
         leftPanel = new JPanel(new GridLayout(2, 1));
-        leftPanel.setPreferredSize(new Dimension(460, 765));
+        leftPanel.setPreferredSize(new Dimension(460, 764));
+        leftPanel.setBackground(Color.red);
         leftPanel.add(agentEditorPanel);
         leftPanel.add(environmentSettingsPanel);
-
-        c.gridx = 0;
-        c.gridy = 0;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 1;
-        c.gridheight = 4;
-
         this.add(leftPanel);
 
         // Now we build the centre panel and add it to the frame
         centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.PAGE_AXIS));
+        centerPanel.setPreferredSize(new Dimension(600, 764));
         activeAgentsPanel = new ActiveAgentsPanel();
         simulationPanel = new SimulationPanel();
         simulationControlPanel = new SimulationControlPanel();
         centerPanel.add(activeAgentsPanel);
         centerPanel.add(simulationPanel);
         centerPanel.add(simulationControlPanel);
-
-        c.gridx = 1;
-        c.gridy = 0;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 2;
-        c.gridheight = 4;
-
         this.add(centerPanel);
 
+        // Now we build the right panel and add it to the frame
+        rightPanel = new JPanel(new GridLayout(1, 1));
+        rightPanel.setBackground(Color.green);
+        rightPanel.setPreferredSize(new Dimension(400, 764));
         diagnosticsPanel = new DiagnosticsPanel();
-        c.gridx = 3;
-        c.gridy = 0;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 1;
-        c.gridheight = 4;
-        this.add(diagnosticsPanel, c);
+        rightPanel.add(diagnosticsPanel);
+        this.add(rightPanel);
 
-        setResizable(false);
+        setResizable(true);
         pack();
         setLocationRelativeTo(null);
     }
@@ -235,7 +218,13 @@ public class MainView extends JFrame {
     }
 
     public void toggleControls() {
-        diagnosticsPanel.setVisible(!diagnosticsPanel.isVisible());
+        if (rightPanel.isVisible()) {
+            centerPanel.setPreferredSize(simulationPanel.getPreferredSize());
+        }
+        else {
+            centerPanel.setPreferredSize(new Dimension(600, 764));
+        }
+        rightPanel.setVisible(!rightPanel.isVisible());
         leftPanel.setVisible(!leftPanel.isVisible());
         activeAgentsPanel.setVisible(!activeAgentsPanel.isVisible());
         simulationControlPanel.setVisible(!simulationControlPanel.isVisible());

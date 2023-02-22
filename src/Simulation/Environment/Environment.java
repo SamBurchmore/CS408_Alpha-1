@@ -219,10 +219,10 @@ public class Environment implements Serializable {
             return this.mediumHighColor;
         }
         if (this.getTile(location).getEnergyLevel() >= this.maxEnergyLevel - ( (maxEnergyLevel / 4) * 3)) {
-            return this.lowColor;
+            return this.mediumLowColor;
         }
         if (this.getTile(location).getEnergyLevel() > this.minEnergyLevel) {
-            return this.mediumLowColor;
+            return this.lowColor;
         }
         return this.minColor;
     }
@@ -280,7 +280,6 @@ public class Environment implements Serializable {
         else {
             return this.scaledImage(scale);
         }
-
     }
 
     /**
@@ -375,58 +374,17 @@ public class Environment implements Serializable {
     public void setTileTerrain(Location location, boolean isTerrain) {
         getTile(location).setTerrain(isTerrain);
     }
-    public Color getMaxColor() {
-        return maxColor;
-    }
-    public Color getHighColor() {
-        return highColor;
-    }
-    public Color getMediumHighColor() {
-        return mediumHighColor;
-    }
-    public Color getMediumLowColor() {
-        return mediumLowColor;
-    }
-    public Color getLowColor() {
-        return lowColor;
-    }
-    public Color getMinColor() {
-        return minColor;
-    }
-    public void setMaxColor(Color maxColor) {
-        this.maxColor = maxColor;
-    }
-    public void setHighColor(Color highColor) {
-        this.highColor = highColor;
-    }
-    public void setMediumHighColor(Color mediumHighColor) {
-        this.mediumHighColor = mediumHighColor;
-    }
-    public void setMediumLowColor(Color mediumLowColor) {
-        this.mediumLowColor = mediumLowColor;
-    }
-    public void setLowColor(Color lowColor) {
-        this.lowColor = lowColor;
-    }
-    public void setMinColor(Color minColor) {
-        this.minColor = minColor;
-    }
-    public void setTileEnergyLevel(Location location, int foodLevel) {
-        this.getTile(location).setEnergyLevel(foodLevel);
-    }
-    public int getTileEnergyLevel(Location location) {
-        return this.getTile(location).getEnergyLevel();
-    }
     public Color[] getColors() {
-        return new Color[]{minColor, lowColor, mediumLowColor, mediumHighColor, highColor, maxColor};
+        return new Color[]{minColor, lowColor, mediumLowColor, mediumHighColor, highColor, maxColor, terrainColor};
     }
     public void setColors(Color[] color) {
-        setMinColor(color[0]);
-        setLowColor(color[1]);
-        setMediumLowColor(color[2]);
-        setMediumHighColor(color[3]);
-        setHighColor(color[4]);
-        setMaxColor(color[5]);
+        minColor = color[0];
+        lowColor = color[1];
+        mediumLowColor = color[2];
+        mediumHighColor = color[3];
+        highColor = color[4];
+        maxColor = color[5];
+        terrainColor = color[6];
     }
     @Override
     public String toString() {

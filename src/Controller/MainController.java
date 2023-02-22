@@ -66,14 +66,14 @@ public class MainController {
         view.getEnvironmentSettingsPanel().getRefreshSettingsButton().addActionListener(e -> simulationController.updateEnvironmentSettings());
 
         // Add action listeners to Active Agents Panel
-        view.getActiveAgentsPanel().getAgent0Button().addActionListener(e -> setEditingAgent(0));
-        view.getActiveAgentsPanel().getAgent1Button().addActionListener(e -> setEditingAgent(1));
-        view.getActiveAgentsPanel().getAgent2Button().addActionListener(e -> setEditingAgent(2));
-        view.getActiveAgentsPanel().getAgent3Button().addActionListener(e -> setEditingAgent(3));
-        view.getActiveAgentsPanel().getAgent4Button().addActionListener(e -> setEditingAgent(4));
-        view.getActiveAgentsPanel().getAgent5Button().addActionListener(e -> setEditingAgent(5));
-        view.getActiveAgentsPanel().getAgent6Button().addActionListener(e -> setEditingAgent(6));
-        view.getActiveAgentsPanel().getAgent7Button().addActionListener(e -> setEditingAgent(7));
+        ((JButton) view.getActiveAgentsPanel().getAgent0Button()).addActionListener(e -> setEditingAgent(0));
+        ((JButton) view.getActiveAgentsPanel().getAgent1Button()).addActionListener(e -> setEditingAgent(1));
+        ((JButton) view.getActiveAgentsPanel().getAgent2Button()).addActionListener(e -> setEditingAgent(2));
+        ((JButton) view.getActiveAgentsPanel().getAgent3Button()).addActionListener(e -> setEditingAgent(3));
+        ((JButton) view.getActiveAgentsPanel().getAgent4Button()).addActionListener(e -> setEditingAgent(4));
+        ((JButton) view.getActiveAgentsPanel().getAgent5Button()).addActionListener(e -> setEditingAgent(5));
+        ((JButton) view.getActiveAgentsPanel().getAgent6Button()).addActionListener(e -> setEditingAgent(6));
+        ((JButton) view.getActiveAgentsPanel().getAgent7Button()).addActionListener(e -> setEditingAgent(7));
 
         // Add action listener to Agent Editor Panel
         view.getAgentEditorPanel().getUpdateSettingsButton().addActionListener(e -> setEditingAgent(simulation.getAgentEditor().getEditingAgentIndex()));
@@ -296,7 +296,7 @@ public class MainController {
     public class ViewController {
         // Updates the environment image to reflect the environment in the model
         public void updateSimulationView() {
-            view.updateSimulationPanel(simulation.getEnvironment().scaledImage(scale));
+            view.updateSimulationPanel(simulation.getEnvironment().toBufferedImage(scale));
         }
 
         // Add a log message to the diagnostics panels text log
