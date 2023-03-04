@@ -39,7 +39,10 @@ public class MainView extends JFrame {
 
     private JMenu terrainMenu;
     private JButton clearTerrain;
-    private JButton generateTerrain;
+    private JButton fillTerrain;
+    private JButton generateLine;
+    private JButton generateCave;
+    private JButton generateWaveCave;
     private JButton terrainSettings;
 
     private EnvironmentSettingsPanel environmentSettingsPanel;
@@ -104,9 +107,14 @@ public class MainView extends JFrame {
         toggleControlsButton = new JButton("Toggle Controls");
         toolSettingsMenu.add(toggleControlsButton);
 
-        // Build the terrain generator menu
-        generateTerrain = new JButton("Generate Terrain");
-        terrainMenu.add(generateTerrain);
+        generateCave = new JButton("Generate Cave");
+        terrainMenu.add(generateCave);
+
+        generateWaveCave = new JButton("Generate Wavey Cave");
+        terrainMenu.add(generateWaveCave);
+
+        fillTerrain = new JButton("Fill Terrain");
+        terrainMenu.add(fillTerrain);
 
         clearTerrain = new JButton("Clear Terrain");
         terrainMenu.add(clearTerrain);
@@ -253,8 +261,20 @@ public class MainView extends JFrame {
         return clearTerrain;
     }
 
-    public JButton getGenerateTerrain() {
-        return generateTerrain;
+    public JButton getFillTerrain() {
+        return fillTerrain;
+    }
+
+    public JButton getGenerateLine() {
+        return generateLine;
+    }
+
+    public JButton getGenerateCave() {
+        return generateCave;
+    }
+
+    public JButton getGenerateWaveCave() {
+        return generateWaveCave;
     }
 
     public SimulationPanel getSimulationPanel() {

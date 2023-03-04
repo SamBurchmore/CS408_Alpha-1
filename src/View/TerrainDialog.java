@@ -22,6 +22,7 @@ public class TerrainDialog extends JDialog {
     final private JPanel bendDensityPanel;
     final private JPanel caveWavePanel;
     final private JPanel terrainDensityPanel;
+    final private JPanel isTerrainPanel;
 
     final private JLabel rockSizeLabel;
     final private JLabel clusterSizeLabel;
@@ -44,6 +45,7 @@ public class TerrainDialog extends JDialog {
     final private JSpinner bendDensitySpinner;
     final private JSpinner caveWaveSpinner;
     final private JSpinner terrainDensitySpinner;
+    final private JCheckBox isTerrainCheckBox;
 
     public TerrainDialog(JFrame parent, TerrainSettings terrainSettings) {
         super(parent);
@@ -88,7 +90,6 @@ public class TerrainDialog extends JDialog {
         caveWavePanel.add(caveWaveLabel);
         caveWavePanel.add(caveWaveSpinner);
 
-
         lengthSpinner = new JSpinner(new SpinnerNumberModel(400, 1, 20000, 1));
         lengthLabel = new JLabel("Line Size: ");
         lengthPanel = new JPanel();
@@ -113,6 +114,10 @@ public class TerrainDialog extends JDialog {
         terrainDensityPanel.add(terrainDensityLabel);
         terrainDensityPanel.add(terrainDensitySpinner);
 
+        isTerrainCheckBox = new JCheckBox("Clear");
+        isTerrainPanel = new JPanel();
+        isTerrainPanel.add(isTerrainCheckBox);
+
         setTerrainSettings(terrainSettings);
 
         settingsPanel.add(rockSizePanel);
@@ -125,6 +130,7 @@ public class TerrainDialog extends JDialog {
         settingsPanel.add(lineDensityPanel);
         settingsPanel.add(caveWavePanel);
         settingsPanel.add(terrainDensityPanel);
+        settingsPanel.add(isTerrainPanel);
 
         okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
@@ -160,7 +166,8 @@ public class TerrainDialog extends JDialog {
                 (int) lengthSpinner.getValue(),
                 (int) ((double) lineDensitySpinner.getValue() * 1000),
                 (int) caveWaveSpinner.getValue(),
-                (int) ((double) terrainDensitySpinner.getValue() * 1000)
+                (int) ((double) terrainDensitySpinner.getValue() * 1000),
+                !isTerrainCheckBox.isSelected()
         );
     }
 
@@ -175,5 +182,6 @@ public class TerrainDialog extends JDialog {
         lineDensitySpinner.setValue((double) terrainSettings.getLineDensity() / 1000);
         caveWaveSpinner.setValue(terrainSettings.getCaveWave());
         terrainDensitySpinner.setValue((double) terrainSettings.getTerrainAmount() / 1000);
+        isTerrainCheckBox.setSelected(terrainSettings.isTerrain());
     }
 }

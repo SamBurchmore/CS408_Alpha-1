@@ -21,8 +21,9 @@ public class TerrainSettings {
     private int lineDensity;
     private int caveWave;
     private int terrainAmount;
+    private boolean terrain;
 
-    public TerrainSettings(int rockSize, int clusterSize, int upperCaveSize, int lowerCaveSize, int clusterDensity, int bendDensity, int lineSize, int lineDensity, int caveWave, int terrainAmount) {
+    public TerrainSettings(int rockSize, int clusterSize, int upperCaveSize, int lowerCaveSize, int clusterDensity, int bendDensity, int lineSize, int lineDensity, int caveWave, int terrainAmount, boolean terrain) {
         this.rockSize = rockSize;
         this.clusterSize = clusterSize;
         this.upperCaveSize = upperCaveSize;
@@ -33,6 +34,7 @@ public class TerrainSettings {
         this.lineDensity = lineDensity;
         this.caveWave = caveWave;
         this.terrainAmount = terrainAmount;
+        this.terrain = terrain;
     }
 
     public int getRockSize() {
@@ -113,6 +115,14 @@ public class TerrainSettings {
 
     public void setCaveWave(int caveWave) {
         this.caveWave = caveWave;
+    }
+
+    public boolean isTerrain() {
+        return terrain;
+    }
+
+    public void setTerrain(boolean terrain) {
+        this.terrain = terrain;
     }
 
     @Override

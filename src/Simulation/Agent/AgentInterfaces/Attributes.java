@@ -3,7 +3,6 @@ package Simulation.Agent.AgentInterfaces;
 import Simulation.Agent.AgentStructs.ColorModel;
 
 import java.awt.*;
-import java.util.Random;
 
 public interface Attributes {
 
@@ -18,7 +17,7 @@ public interface Attributes {
     int getEatAmount();
     int getCreationCost();
     String getName();
-    Integer getCode();
+    Integer getID();
     Color getSeedColor();
     double getSpawningWeight();
     int getMutationChance();
@@ -29,7 +28,7 @@ public interface Attributes {
     void setCreationSize(int creationSize);
     void setCreationDelay(int creationDelay);
     void setName(String name);
-    void setCode(int code);
+    void setID(int ID);
     void setSeedColor(Color seedColor);
     void setSpawningWeight(double spawningWeight);
     void setMutationChance(int mutationChance);

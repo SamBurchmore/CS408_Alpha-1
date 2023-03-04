@@ -94,7 +94,10 @@ public class MainController implements MouseListener {
         view.getToggleControlsButton().addActionListener(e -> viewController.toggleControls());
         view.getTerrainSettings().addActionListener(e -> viewController.openTerrainSettings());
         view.getClearTerrain().addActionListener(e -> simulationController.clearTerrain());
-        view.getGenerateTerrain().addActionListener(e -> simulationController.generateTerrain());
+        view.getFillTerrain().addActionListener(e -> simulationController.fillTerrain());
+        view.getClearTerrain().addActionListener(e -> simulationController.clearTerrain());
+        view.getGenerateCave().addActionListener(e -> simulationController.cave());
+        view.getGenerateWaveCave().addActionListener(e -> simulationController.waveyCave());
         view.getSimulationPanel().addMouseListener(this);
 
     }
@@ -117,8 +120,11 @@ public class MainController implements MouseListener {
     }
 
     public void mouseClicked(MouseEvent e) {
-//        int x=e.getX();
-//        int y=e.getY();
+        int x=e.getX();
+        int y=e.getY();
+        if (simulation.getEnvironment().getTile(x/scale, y/scale).isOccupied()) {
+            viewController.logMsg(simulation.getEnvironment().getTile(x/scale, y/scale).getOccupant().getAttributes().toString());
+        }
 //        if (SwingUtilities.isLeftMouseButton(e)) {
 //            paintCursor(new Location(x / scale, y / scale));
 //        }
@@ -334,10 +340,28 @@ public class MainController implements MouseListener {
             viewController.logMsg("[TERRAIN]: Terrain cleared.");
         }
 
-        public void generateTerrain() {
-            simulation.getTerrainGenerator().generateTerrain();
+        public void fillTerrain() {
+            simulation.getTerrainGenerator().fillTerrain();
             viewController.updateSimulationView();
-            viewController.logMsg("[TERRAIN]: Terrain generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
+            viewController.logMsg("[TERRAIN]: Terrain filled.");
+        }
+
+        public void line() {
+            simulation.getTerrainGenerator().placeLine();
+            viewController.updateSimulationView();
+            viewController.logMsg("[TERRAIN]: Line generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
+        }
+
+        public void waveyCave() {
+            simulation.getTerrainGenerator().placeVariableCave();
+            viewController.updateSimulationView();
+            viewController.logMsg("[TERRAIN]: Wavey Cave generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
+        }
+
+        public void cave() {
+            simulation.getTerrainGenerator().placeCave();
+            viewController.updateSimulationView();
+            viewController.logMsg("[TERRAIN]: Cave generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
         }
 
     }

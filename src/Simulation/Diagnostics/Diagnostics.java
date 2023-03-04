@@ -15,6 +15,9 @@ public class Diagnostics {
     private Integer[] agentsBornLastStep; // How many agents where born last step
     private Double[] averagePopulationsEnergy; // The average percent of max energy in each agent population
     private Double[] averagePopulationsLifespan; // The average percent of max age in each agent population
+    private Double[] averageSize;
+    private Double[] averageCreationSize;
+    private Double[] averageRange;
 
     private Integer[] lastStepsAgentPopulations; // The size of each agent population from the last step, used to calculate new agents born each step.
 
@@ -25,36 +28,39 @@ public class Diagnostics {
 
     private ArrayDeque<String> logQueue;
 
-    public void addToLogQueue(String logMsg) {
-        logQueue.add(logMsg);
-    }
-
-    public String printLogQueue() {
-            StringBuilder logString = new StringBuilder();
-            for (String logMsg : logQueue) {
-                logString.append(logMsg).append("\n");
-            }
-            logQueue.clear();
-            logString.deleteCharAt(logString.length()-1);
-            return logString.toString();
-    }
-
-    public boolean logMsgsInQueue() {
-        return !logQueue.isEmpty();
-    }
-
     public Diagnostics(int maxEnvironmentEnergy) {
         agentNames = new String[]{"Agent 1", "Agent 2", "Agent 3", "Agent 4", "Agent 5", "Agent 6", "Agent 7", "Agent 8"};
         agentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
         agentsBornLastStep = new Integer[]{0,0,0,0,0,0,0,0};
         averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        averageSize = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        averageCreationSize = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        averageRange = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         logQueue = new ArrayDeque<>();
         step = 0;
         lastStepsAgentPopulations = new Integer[]{0,0,0,0,0,0,0,0};
         extinctFlags = new Integer[]{-1, -1, -1, -1, -1, -1, -1, -1};
         this.maxEnvironmentEnergy = maxEnvironmentEnergy;
         currentEnvironmentEnergy = maxEnvironmentEnergy;
+    }
+
+    public void addToLogQueue(String logMsg) {
+        logQueue.add(logMsg);
+    }
+
+    public String printLogQueue() {
+        StringBuilder logString = new StringBuilder();
+        for (String logMsg : logQueue) {
+            logString.append(logMsg).append("\n");
+        }
+        logQueue.clear();
+        logString.deleteCharAt(logString.length()-1);
+        return logString.toString();
+    }
+
+    public boolean logMsgsInQueue() {
+        return !logQueue.isEmpty();
     }
 
     public void iterateStep() {
@@ -99,7 +105,6 @@ public class Diagnostics {
         agentsBornLastStep[index] += newAgents;
     }
 
-
     public void addToAveragePopulationEnergy(int index, double energy) {
         averagePopulationsEnergy[index] += energy;
     }
@@ -107,6 +112,19 @@ public class Diagnostics {
     public void addToAveragePopulationLifespan(int index, double age) {
         averagePopulationsLifespan[index] += age;
     }
+
+    public void addToAverageSize(int index, double age) {
+        averageSize[index] += age;
+    }
+
+    public void addToAverageCreationSize(int index, double age) {
+        averageCreationSize[index] += age;
+    }
+
+    public void addToAverageRange(int index, double age) {
+        averageRange[index] += age;
+    }
+
 
     public void setMaxEnvironmentEnergy(int maxEnvironmentEnergy) {
         this.maxEnvironmentEnergy = maxEnvironmentEnergy;
@@ -132,10 +150,13 @@ public class Diagnostics {
         return stats;
     }
 
-    public void addToAgentStats(int index, int population, double energy, double age) {
+    public void addToAgentStats(int index, int population, double energy, double age, double size, double creationSize, double range) {
         addToAgentPopulation(index, population);
         addToAveragePopulationEnergy(index, energy);
         addToAveragePopulationLifespan(index, age);
+        addToAverageSize(index, size);
+        addToAverageCreationSize(index, creationSize);
+        addToAverageRange(index, range);
     }
 
     public void setAgentNames(String[] agentNames) {
@@ -145,7 +166,15 @@ public class Diagnostics {
     }
 
     public Object[][] getAgentStats() {
-        return new Object[][]{agentNames, agentPopulations, calculateAverages(averagePopulationsEnergy), calculateAverages(averagePopulationsLifespan), agentsBornLastStep};
+        return new Object[][]{
+                agentNames,
+                agentPopulations,
+                calculateAverages(averagePopulationsEnergy),
+                calculateAverages(averagePopulationsLifespan),
+                agentsBornLastStep,
+                calculateAverages(averageSize),
+                calculateAverages(averageCreationSize),
+                calculateAverages(averageRange)};
     }
 
     private Double[] calculateAverages(Double[] statistics) {
@@ -161,6 +190,9 @@ public class Diagnostics {
         agentsBornLastStep = new Integer[]{0,0,0,0,0,0,0,0};
         averagePopulationsEnergy = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         averagePopulationsLifespan = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        averageSize = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        averageCreationSize = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        averageRange = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
     }
 
     public void clearExtinctFlags() {

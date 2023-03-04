@@ -20,7 +20,7 @@ public class CreatorMotivation extends BaseMotivation {
     public AgentDecision run(AgentVision tile, Attributes attributes, Scores scores) {
         if (tile.isOccupied()) {
             if (
-                    tile.getOccupantAttributes().getCode() == attributes.getCode()
+                    tile.getOccupantAttributes().getID() == attributes.getID()
                     && scores.getAge() >= attributes.getCreationAge()
                     && scores.getCreationCounter() <= 0
                     && scores.getEnergy() > attributes.getEnergyCapacity() / 4
