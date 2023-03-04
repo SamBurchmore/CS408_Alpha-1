@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public interface Agent {
 
     void liveDay();
-    void move(Location newLocation);
+    void move(Location newLocation, boolean isTerrain);
     boolean isDead();
     boolean isEaten();
     void setBeenEaten();

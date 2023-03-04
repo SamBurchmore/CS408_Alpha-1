@@ -129,9 +129,12 @@ public class BasicAttributes implements Attributes, Serializable {
      */
     @Override
     public void mutateAttributesColor(double a, double b, double c, int constant) {
-        int x2 = overflow255(getSeedColor().getRed(), ((int) (a * constant)));
-        int y2 = overflow255(getSeedColor().getGreen(), ((int) (b * constant)));
-        int z2 = overflow255(getSeedColor().getBlue(), ((int) (c * constant)));
+        int x2 = overflow255(getMutatingColor().getRed() + random.nextInt(2), ((int) (a * constant)));
+        //;
+        int y2 = overflow255(getMutatingColor().getGreen() + random.nextInt(2), ((int) (b * constant)));
+        //y2 += random.nextInt(2);
+        int z2 = overflow255(getMutatingColor().getBlue() + random.nextInt(2), ((int) (c * constant)));
+        //z2 += random.nextInt(2);
         setMutatingColor(new Color(x2, y2, z2));
     }
 
@@ -163,7 +166,7 @@ public class BasicAttributes implements Attributes, Serializable {
     @Override
     public void calculateAttributes() {
         energyCapacity = size*10;
-        energyLostPerTile = (int) Math.round(Math.pow(size, 0.70));
+        energyLostPerTile = (int) Math.round(Math.pow(size, 0.50));
         eatAmount = (int) Math.round(Math.pow(size, 0.5)) * 2;
         lifespan = 25 + (int) Math.round(Math.pow(size, 1.1));
         creationAge = lifespan / 5;

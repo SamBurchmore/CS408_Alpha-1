@@ -2,6 +2,7 @@ package Controller;
 import Simulation.Agent.AgentUtility.AgentSettings;
 import Simulation.Agent.AgentUtility.ActiveAgentsSettings;
 import Simulation.Environment.EnvironmentSettings;
+import Simulation.Environment.Location;
 import Simulation.Simulation;
 import Simulation.SimulationUtility.SimulationSettings;
 import Simulation.SimulationUtility.TerrainSettings;
@@ -10,10 +11,12 @@ import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-public class MainController {
+public class MainController implements MouseListener {
 
     // The class where the GUI and all its elements are stored
     final private MainView view;
@@ -92,6 +95,7 @@ public class MainController {
         view.getTerrainSettings().addActionListener(e -> viewController.openTerrainSettings());
         view.getClearTerrain().addActionListener(e -> simulationController.clearTerrain());
         view.getGenerateTerrain().addActionListener(e -> simulationController.generateTerrain());
+        view.getSimulationPanel().addMouseListener(this);
 
     }
 
@@ -101,7 +105,7 @@ public class MainController {
         simulation.getAgentEditor().setEditingAgentSettings(agentSettings);
 
         // Update the active agents panel
-        view.getActiveAgentsPanel().setAgentSelector(simulation.getAgentEditor().getEditingAgentIndex(), agentSettings.getColor(), agentSettings.getName());
+        view.getActiveAgentsPanel().setAgentSelector(simulation.getAgentEditor().getEditingAgentIndex(), agentSettings.getSeedColor(), agentSettings.getName());
 
         // Update the agent editor
         simulation.getAgentEditor().setEditingAgentIndex(index);
@@ -110,6 +114,51 @@ public class MainController {
         view.getAgentEditorPanel().setAgentSettings(simulation.getAgentEditor().getEditingAgentSettings());
         simulation.updateAgentNames();
         view.getDiagnosticsPanel().setAgentStats(simulation.getDiagnostics().getAgentStats());
+    }
+
+    public void mouseClicked(MouseEvent e) {
+//        int x=e.getX();
+//        int y=e.getY();
+//        if (SwingUtilities.isLeftMouseButton(e)) {
+//            paintCursor(new Location(x / scale, y / scale));
+//        }
+//        else {
+//            clearCursor(new Location(x / scale, y / scale));
+//        }
+    }
+
+    private boolean paintCursorFlag = false;
+
+    private void paintCursor(Location location) {
+            simulation.getTerrainGenerator().generateCircleRockCluster(simulation.getTerrainGenerator().getTerrainSettings().getRockSize(),
+                    simulation.getTerrainGenerator().getTerrainSettings().getClusterSize(),
+                    simulation.getTerrainGenerator().getTerrainSettings().getClusterDensity() ,location);
+            viewController.updateSimulationView();
+    }
+
+    private void clearCursor(Location location) {
+        simulation.getTerrainGenerator().clearCircle(simulation.getTerrainGenerator().getTerrainSettings().getRockSize() ,location);
+        viewController.updateSimulationView();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 
     public class SimulationController {

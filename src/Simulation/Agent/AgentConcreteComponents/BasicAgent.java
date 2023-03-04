@@ -54,14 +54,19 @@ public class BasicAgent implements Agent {
     }
 
     @Override
-    public void move(Location newLocation) {
+    public void move(Location newLocation, boolean isTerrain) {
         Location oldLocation = location;
         int distance = (int) Math.floor(
                 Math.sqrt(
                         ((newLocation.getX() - oldLocation.getX()) * (newLocation.getX() - oldLocation.getX()))
                       + ((newLocation.getY() - oldLocation.getY()) * (newLocation.getY() - oldLocation.getY()))
                 ));
-        this.getScores().setEnergy(this.getScores().getEnergy() - this.getAttributes().getEnergyLostPerTile() * distance);
+        if (isTerrain) {
+            this.getScores().setEnergy(this.getScores().getEnergy() - (this.getAttributes().getEnergyLostPerTile() * distance + this.getAttributes().getEnergyLostPerTile()));
+        }
+        else {
+            this.getScores().setEnergy(this.getScores().getEnergy() - this.getAttributes().getEnergyLostPerTile() * distance);
+        }
         this.setLocation(newLocation);
     }
 

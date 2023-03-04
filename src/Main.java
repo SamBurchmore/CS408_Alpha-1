@@ -2,6 +2,7 @@ import Controller.MainController;
 import Simulation.Agent.AgentConcreteComponents.BasicAttributes;
 import Simulation.Agent.AgentInterfaces.Attributes;
 import Simulation.Agent.AgentStructs.ColorModel;
+import Simulation.OverflowTest;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ public class Main {
         FlatIntelliJLaf.setup();
         UIManager.put("Panel.background", new Color(224, 224, 224));
         MainController mainController = new MainController(600, 8, 0, 8, 1.5, 8);
+        //OverflowTest overflowTest = new OverflowTest();
     }
 
     private static void testColors() {

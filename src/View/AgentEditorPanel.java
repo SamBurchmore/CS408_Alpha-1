@@ -481,7 +481,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
             }
         }
         mutationMagnitudeSpinner.setValue(agentSettings.getAttributes().getMutationChance());
-        if (agentSettings.getAttributes().getMutationChance() > 0 && agentSettings.getAttributes().getColorModel().equals(ColorModel.ATTRIBUTES)) {
+        if (agentSettings.getAttributes().getMutationChance() > 0) {
             generatedColorValue.setBackground(agentSettings.getAttributes().getMutatingColor());
         }
         else {

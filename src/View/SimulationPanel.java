@@ -2,9 +2,11 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
-public class SimulationPanel extends JPanel {
+public class SimulationPanel extends JPanel implements MouseListener {
 
     final private int size = 600;
 
@@ -27,4 +29,30 @@ public class SimulationPanel extends JPanel {
         this.worldImage = worldImage;
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        int x=e.getX();
+        int y=e.getY();
+        System.out.println(x+","+y);//these co-ords are relative to the component
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }

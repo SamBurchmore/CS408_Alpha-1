@@ -29,7 +29,7 @@ public class CreatorMotivation extends BaseMotivation {
                     && compareAttributes(attributes, tile.getOccupantAttributes()) )
             {
                 // Tile is occupied, and it's occupant is the same species, set the decision to CREATE and the score 10
-                return new AgentDecision(tile.getLocation(), AgentAction.CREATE, super.getBias() * super.getWeight());
+                return new AgentDecision(tile.getLocation(), AgentAction.CREATE,   attributes.getEatAmount() + super.getBias() * super.getWeight());
             }
             // Tile is occupied but its occupant is a different species, set decision to NONE and score to -10
             return new AgentDecision(null, AgentAction.NONE, -1);

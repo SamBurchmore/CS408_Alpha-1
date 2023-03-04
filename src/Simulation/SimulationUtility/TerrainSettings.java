@@ -13,18 +13,26 @@ public class TerrainSettings {
 
     private int rockSize;
     private int clusterSize;
+    private int upperCaveSize;
+    private int lowerCaveSize;
     private int clusterDensity;
+    private int bendDensity;
     private int lineSize;
     private int lineDensity;
-    private int lineMagnitude;
+    private int caveWave;
+    private int terrainAmount;
 
-    public TerrainSettings(int rockSize, int clusterSize, int clusterDensity, int lineSize, int lineDensity, int lineMagnitude) {
+    public TerrainSettings(int rockSize, int clusterSize, int upperCaveSize, int lowerCaveSize, int clusterDensity, int bendDensity, int lineSize, int lineDensity, int caveWave, int terrainAmount) {
         this.rockSize = rockSize;
         this.clusterSize = clusterSize;
+        this.upperCaveSize = upperCaveSize;
+        this.lowerCaveSize = lowerCaveSize;
         this.clusterDensity = clusterDensity;
+        this.bendDensity = bendDensity;
         this.lineSize = lineSize;
         this.lineDensity = lineDensity;
-        this.lineMagnitude = lineMagnitude;
+        this.caveWave = caveWave;
+        this.terrainAmount = terrainAmount;
     }
 
     public int getRockSize() {
@@ -67,21 +75,57 @@ public class TerrainSettings {
         this.lineDensity = lineDensity;
     }
 
-    public int getLineMagnitude() {
-        return lineMagnitude;
+    public int getTerrainAmount() {
+        return terrainAmount;
     }
 
-    public void setLineMagnitude(int lineMagnitude) {
-        this.lineMagnitude = lineMagnitude;
+    public void setTerrainAmount(int terrainAmount) {
+        this.terrainAmount = terrainAmount;
+    }
+
+    public int getUpperCaveSize() {
+        return upperCaveSize;
+    }
+
+    public void setUpperCaveSize(int upperCaveSize) {
+        this.upperCaveSize = upperCaveSize;
+    }
+
+    public int getLowerCaveSize() {
+        return lowerCaveSize;
+    }
+
+    public void setLowerCaveSize(int lowerCaveSize) {
+        this.lowerCaveSize = lowerCaveSize;
+    }
+
+    public int getBendDensity() {
+        return bendDensity;
+    }
+
+    public void setBendDensity(int bendDensity) {
+        this.bendDensity = bendDensity;
+    }
+
+    public int getCaveWave() {
+        return caveWave;
+    }
+
+    public void setCaveWave(int caveWave) {
+        this.caveWave = caveWave;
     }
 
     @Override
     public String toString() {
-        return "-Rock Size=" + rockSize +
-                ",\n-Cluster Size=" + clusterSize +
-                ",\n-Cluster Density=" + clusterDensity +
-                ",\n-Line Size=" + lineSize +
-                ",\n-Line Density=" + lineDensity +
-                ",\n-Line Magnitude=" + lineMagnitude;
+        return "-rockSize=" + rockSize +
+                ",\n-clusterSize=" + clusterSize +
+                ",\n-upperCaveSize=" + upperCaveSize +
+                ",\n-lowerCaveSize=" + lowerCaveSize +
+                ",\n-clusterDensity=" + clusterDensity +
+                ",\n-bendDensity=" + bendDensity +
+                ",\n-lineSize=" + lineSize +
+                ",\n-lineDensity=" + lineDensity +
+                ",\n-caveWave=" + caveWave +
+                ",\n-lineMagnitude=" + terrainAmount;
     }
 }

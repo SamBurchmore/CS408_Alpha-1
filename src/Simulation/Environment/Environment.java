@@ -203,11 +203,11 @@ public class Environment implements Serializable {
      */
     public Color getTileColor(int x, int y) {
         Location location = new Location(x, y);
-        if (this.getTile(location).isTerrain()) {
-            return terrainColor;
-        }
         if (this.getTile(location).isOccupied()) {
             return this.getTile(location).getOccupant().getAttributes().getColor();
+        }
+        if (this.getTile(location).isTerrain()) {
+            return terrainColor;
         }
         if (this.getTile(location).getEnergyLevel() >= this.maxEnergyLevel) {
             return this.maxColor;
@@ -315,6 +315,13 @@ public class Environment implements Serializable {
                 getColors());
     }
 
+    public boolean isLocationOnGrid(Location location) {
+        if (location.getX() > 0 && location.getX() < getSize()) {
+            return location.getY() > 0 && location.getY() < getSize();
+        }
+        return false;
+    }
+
     /**
      * Overwrites the environment grid with a blank one.
      * <p>
@@ -391,7 +398,7 @@ public class Environment implements Serializable {
         return  "-Max Energy Level=" + maxEnergyLevel +
                 ",\n-Min Energy Level=" + minEnergyLevel +
                 ",\n-Energy Regen Chance=" + energyRegenChance +
-                ",\n-Energy Regen Amount=" + energyRegenAmount +
+                "%,\n-Energy Regen Amount=" + energyRegenAmount +
                 ",\n-Environment Size=" + size +
                 ".";
     }
