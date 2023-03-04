@@ -109,11 +109,11 @@ public class AgentSettings implements Serializable {
     }
 
     public void setCode(int code) {
-        attributes.setCode(code);
+        attributes.setID(code);
     }
 
     public Integer getCode() {
-        return attributes.getCode();
+        return attributes.getID();
     }
 
     public double getSpawningWeight() {

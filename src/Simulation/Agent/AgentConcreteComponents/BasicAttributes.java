@@ -20,7 +20,7 @@ public class BasicAttributes implements Attributes, Serializable {
     // The string that identifies the agent in the diagnostics view
     private String name;
     // The agents unique identifier, an agent will breed with and not eat agents with the same code
-    private Integer code;
+    private Integer ID;
     // The percentage value for how likely the attributes are to mutate
     private int mutationChance;
     // The agents initial color
@@ -39,7 +39,7 @@ public class BasicAttributes implements Attributes, Serializable {
     private int energyLostPerTile;
     // How much energy the agent can take from the environment in one turn = (size^0.7)*2
     private int eatAmount;
-    // How long the agent can exist for = 25 + size^1.1
+    // How long the agent can exist for = 15 * size^0.75
     private int lifespan;
     // How old the agent needs to be before it can breed = lifespan / 5
     private int creationAge;
@@ -65,16 +65,16 @@ public class BasicAttributes implements Attributes, Serializable {
      * is greater than zero, it will generate its mutating color from its seed color.
      * @param spawningWeight the weight used for this agent when populating the environment
      * @param name the string that identifies the agent in the diagnostics view
-     * @param code the agents unique identifier, an agent will breed with and not eat agents with the same code
+     * @param ID the agents unique identifier, an agent will breed with and not eat agents with the same code
      * @param seedColor the agents initial color
      * @param mutationChance the percentage value for how likely the attributes are to mutate
      * @param range how far the agent can see and move in one turn
      * @param size used to calculate all the agents calculated stats
      * @param creationSize how many adjacent squares the agent will try to have children in, also used to calculate the creation cost.
      */
-    public BasicAttributes(double spawningWeight, String name, int code, Color seedColor, ColorModel colorModel, int mutationChance, int range, int size, int creationSize) {
+    public BasicAttributes(double spawningWeight, String name, int ID, Color seedColor, ColorModel colorModel, int mutationChance, int range, int size, int creationSize) {
         this.spawningWeight = spawningWeight;
-        this.code = code;
+        this.ID = ID;
         this.name = name;
         this.mutationChance = mutationChance;
         this.seedColor = seedColor;
@@ -103,7 +103,7 @@ public class BasicAttributes implements Attributes, Serializable {
      */
     public BasicAttributes(Attributes attributesA, Attributes attributesB) {
         this.mutationChance = attributesA.getMutationChance();
-        this.code =  attributesA.getCode();
+        this.ID =  attributesA.getID();
         this.name = attributesA.getName();
         this.spawningWeight = attributesA.getSpawningWeight();
         this.colorModel = attributesA.getColorModel();
@@ -165,7 +165,7 @@ public class BasicAttributes implements Attributes, Serializable {
         energyCapacity = size*10;
         energyLostPerTile = (int) Math.round(Math.pow(size, 0.70));
         eatAmount = (int) Math.round(Math.pow(size, 0.5)) * 2;
-        lifespan = 25 + (int) Math.round(Math.pow(size, 1.1));
+        lifespan = 15 * (int) Math.round(Math.pow(size, 0.75));
         creationAge = lifespan / 5;
         creationCost = (energyCapacity / 2) / creationSize;
         creationDelay = (int) Math.round(Math.pow(size, 0.5));
@@ -234,12 +234,12 @@ public class BasicAttributes implements Attributes, Serializable {
         this.name = name;
     }
     @Override
-    public Integer getCode() {
-        return code;
+    public Integer getID() {
+        return ID;
     }
     @Override
-    public void setCode(int code) {
-        this.code = code;
+    public void setID(int code) {
+        this.ID = code;
     }
     @Override
     public int getMutationChance() {
@@ -358,7 +358,7 @@ public class BasicAttributes implements Attributes, Serializable {
         return "BasicAttributes{" +
                 "spawningWeight=" + spawningWeight +
                 ", name='" + name + '\'' +
-                ", code=" + code +
+                ", code=" + ID +
                 ", mutationMagnitude=" + mutationChance +
                 ", seedColor=" + seedColor +
                 ", range=" + range +
@@ -380,7 +380,7 @@ public class BasicAttributes implements Attributes, Serializable {
         return new BasicAttributes(
                 getSpawningWeight(),
                 getName(),
-                getCode(),
+                getID(),
                 getSeedColor(),
                 getColorModel(),
                 getMutationChance(),

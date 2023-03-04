@@ -151,7 +151,6 @@ public class MainView extends JFrame {
 
         // Now we build the right panel and add it to the frame
         rightPanel = new JPanel(new GridLayout(1, 1));
-        rightPanel.setBackground(Color.green);
         rightPanel.setPreferredSize(new Dimension(400, 764));
         diagnosticsPanel = new DiagnosticsPanel();
         rightPanel.add(diagnosticsPanel);

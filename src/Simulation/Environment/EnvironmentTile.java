@@ -4,7 +4,7 @@ import Simulation.Agent.AgentInterfaces.Agent;
 
 import java.io.Serializable;
 
-/** This class represents an individual environment tile. It contains an energy level,
+/** Represents an individual environment tile. It contains an energy level,
  * a terrain flag and can store one occupant.
  * @author Sam Burchmore
  * @version 1.0a

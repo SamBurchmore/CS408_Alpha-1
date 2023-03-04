@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/** This class represents the environment. It contains an array of EnvironmentTile objects and allows them
+/** Represents the environment. It contains an array of EnvironmentTile objects and allows them
  * to be interacted with as if they were in a 2D array.
  * @author Sam Burchmore
  * @version 1.0a
@@ -118,8 +118,9 @@ public class Environment implements Serializable {
      * <p>
      * Free tiles are shuffled before being returned.
      * @param location the location to check
+     * @param ignoreSize the size of the agent, any occupants with a lower size will be ignored.
      */
-    public ArrayList<Location> freeSpace(Location location) {
+    public ArrayList<Location> freeSpace(Location location, int ignoreSize) {
         ArrayList<Location> empties = new ArrayList<>();
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
@@ -130,7 +131,7 @@ public class Environment implements Serializable {
                         && (coordinateY < this.getSize()))
                         && ((coordinateX >= 0) && (coordinateY >= 0))
                         && !(i == 0 && j == 0)) {
-                    if (!this.getTile(coordinateX, coordinateY).isOccupied()) {
+                    if (!this.getTile(coordinateX, coordinateY).isOccupied() || this.getTile(coordinateX, coordinateY).getOccupant().getAttributes().getSize() < ignoreSize) {
                         empties.add(new Location(coordinateX, coordinateY));
                     }
                 }
@@ -148,15 +149,15 @@ public class Environment implements Serializable {
      * @param energyLevelModifier how much the energy level should change, can be negative.
      */
     public int modifyTileEnergyLevel(Location location, int energyLevelModifier) {
-        int energyLevel = this.getTile(location).getEnergyLevel() + energyLevelModifier;
-        this.getTile(location).setEnergyLevel(energyLevel);
+        int oldEnergyLevel = this.getTile(location).getEnergyLevel() + energyLevelModifier;
+        this.getTile(location).setEnergyLevel(oldEnergyLevel);
         if (this.getTile(location).getEnergyLevel() < this.minEnergyLevel) {
             this.getTile(location).setEnergyLevel(this.minEnergyLevel);
-            return energyLevelModifier + (energyLevel - this.minEnergyLevel);
+            return energyLevelModifier - (oldEnergyLevel - this.minEnergyLevel);
         }
         else if (this.getTile(location).getEnergyLevel() > this.maxEnergyLevel) {
             this.getTile(location).setEnergyLevel(this.maxEnergyLevel);
-            return energyLevelModifier - (energyLevel - this.maxEnergyLevel);
+            return energyLevelModifier - (oldEnergyLevel - this.maxEnergyLevel);
         }
         return energyLevelModifier;
     }
@@ -164,11 +165,9 @@ public class Environment implements Serializable {
     /**
      * Returns an AgentVision object based of the input tile.
      * <p>
-     * @param x the x coordinate
-     * @param y the y coordinate
+     * @param location the location to get the AgentVision from
      */
-    public AgentVision getTileView(int x, int y) {
-        Location location = new Location(x, y);
+    public AgentVision getTileView(Location location) {
         if (this.getTile(location).isOccupied()) {
             return new AgentVision(
                     getTile(location).getEnergyLevel(),
@@ -184,25 +183,14 @@ public class Environment implements Serializable {
     }
 
     /**
-     * A wrapper method for getTileView(int x, int y).
-     * <p>
-     * @param location the location to get the AgentVision from
-     */
-    public AgentVision getTileView(Location location) {
-        return getTileView(location.getX(), location.getY());
-    }
-
-    /**
      * Returns the tiles current color.
      * <p>
      * If the tile is terrain, return the terrain color. If the tile is occupied,
      * then the color is the occupants color, otherwise the color is based of the
      * tiles current energy level.
-     * @param x the x coordinate
-     * @param y the y coordinate
+     * @param location the desired location to add energy to
      */
-    public Color getTileColor(int x, int y) {
-        Location location = new Location(x, y);
+    public Color getTileColor(Location location) {
         if (this.getTile(location).isTerrain()) {
             return terrainColor;
         }
@@ -238,7 +226,7 @@ public class Environment implements Serializable {
         BufferedImage environmentImage = new BufferedImage(this.size, this.size, BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x < this.size; x++) {
             for (int y = 0; y < this.size; y++) {
-                environmentImage.setRGB(x, y, this.getTileColor(x, y).getRGB());
+                environmentImage.setRGB(x, y, this.getTileColor(new Location(x, y)).getRGB());
             }
         }
         return environmentImage;
@@ -258,7 +246,7 @@ public class Environment implements Serializable {
                 for (int i = 0; i < scale; i++) {
                     for (int j = 0; j < scale; j++) {
                         if (((x + i < scale * this.getSize()) && (y + j < scale * this.getSize())) && ((x + i >= 0) && (y + j >= 0))) {
-                            environmentImage.setRGB(x + i, y + j, this.getTileColor(x / scale, y / scale).getRGB());
+                            environmentImage.setRGB(x + i, y + j, this.getTileColor(new Location(x / scale, y / scale)).getRGB());
                         }
                     }
                 }

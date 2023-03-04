@@ -1,12 +1,11 @@
 package Simulation;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.stream.IntStream;
 
 import Simulation.Agent.AgentConcreteComponents.BasicAgent;
 import Simulation.Agent.AgentInterfaces.Attributes;
+import Simulation.Agent.AgentInterfaces.Scores;
 import Simulation.Agent.AgentStructs.ColorModel;
 import Simulation.Agent.AgentUtility.AgentEditor;
 import Simulation.Agent.AgentInterfaces.Agent;
@@ -81,7 +80,13 @@ public class Simulation {
                         agent.setLocation(wt.getLocation());
                         wt.setOccupant(agent);
                         agentList.add(agent);
-                        diagnostics.addToAgentStats(j, 1, agent.getScores().getEnergy(), agent.getScores().getAge());
+                        diagnostics.addToAgentStats(
+                                j,
+                                1, agent.getScores().getEnergy(),
+                                agent.getScores().getAge(),
+                                agent.getAttributes().getSize(),
+                                agent.getAttributes().getCreationSize(),
+                                agent.getAttributes().getRange());
                     }
                 }
             }
@@ -98,10 +103,17 @@ public class Simulation {
     public void cycle() {
         diagnostics.clearAgentStats();
         for (Agent currentAgent : agentList) {
-            if (!currentAgent.isEaten()) {
+            if (!currentAgent.spaceTaken()) {
                 agentLogic.runAgent(currentAgent); // Iterate and run over all agents in the simulation
                 if (!currentAgent.isDead()) {
-                    diagnostics.addToAgentStats(currentAgent.getAttributes().getCode(), 1, currentAgent.getScores().getEnergy(), currentAgent.getScores().getAge());
+                    diagnostics.addToAgentStats(
+                            currentAgent.getAttributes().getID(),
+                            1, currentAgent.getScores().getEnergy(),
+                            currentAgent.getScores().getAge(),
+                            currentAgent.getAttributes().getSize(),
+                            currentAgent.getAttributes().getCreationSize(),
+                            currentAgent.getAttributes().getRange()
+                            );
                 }
             }
         }
@@ -189,7 +201,7 @@ public class Simulation {
          * @param agent the agent to be run
          */
         public void runAgent(Agent agent) {
-            if (agent.isEaten()) {
+            if (agent.spaceTaken()) {
                 return; // Agent has been eaten by another agent, therefor its already been removed from the environment, all we need to do is not add it to the aliveAgentList
             }
             agent.liveDay(); // Increments its age and decrements its creationCounter
@@ -211,10 +223,10 @@ public class Simulation {
             else if (agentDecision.agentAction().equals(AgentAction.CREATE)) { // Create children
                 ArrayList<Agent> childAgents;
                 if (agent.mutates()) { // If the agent is a mutating agent, then handle their mutations before adding them to the environment
-                    childAgents = mutateAndPlaceAgents(agent.create(agentDecision.location(), agent.getAttributes().getCreationCost(), environment), agent.getAttributes().getMutationChance());
+                    childAgents = mutateAndPlaceAgents(agent.create(agentDecision.location(), environment), agent.getAttributes().getMutationChance());
                 }
                 else { // Else we just add them
-                    childAgents = placeAgents(agent.create(agentDecision.location(), agent.getAttributes().getCreationCost(), environment));
+                    childAgents = placeAgents(agent.create(agentDecision.location(), environment));
                 }
                 aliveAgentList.addAll(childAgents); // Add new agents to the alive agents list
                 aliveAgentList.add(agent); // Agent is still alive
@@ -222,6 +234,7 @@ public class Simulation {
             else if (agentDecision.agentAction().equals(AgentAction.GRAZE)) { // Take energy from the environment
                 environment.setOccupant(agent.getLocation(), null); // Remove agent from old location
                 agent.move(agentDecision.location()); // Move to chosen location
+                clearSpace(agent);
                 environment.setOccupant(agent); // Set the agent to the new location
                 int grazeAmount = -agent.graze(environment.getTile(agent.getLocation())); // Take energy, grazeAmount equals how much was successfully taken
                 environment.modifyTileEnergyLevel(agent.getLocation(), grazeAmount); // Update environment with grazeAmount
@@ -229,7 +242,7 @@ public class Simulation {
                 diagnostics.modifyCurrentEnvironmentEnergy(grazeAmount); // Track the energy change in the diagnostics class
             }
             else if (agentDecision.agentAction().equals(AgentAction.PREDATE)) { // Take energy from another agent and take its place
-                environment.getTile(agentDecision.location()).getOccupant().setBeenEaten(); // We set the preys hasBeenEaten flag to true
+                environment.getTile(agentDecision.location()).getOccupant().setSpaceTaken(); // We set the preys hasBeenEaten flag to true
                 agent.predate(environment.getTile(agentDecision.location()).getOccupant().getScores()); // Predator gains energy from the prey
                 environment.setOccupant(agent.getLocation(), null); // Move to chosen location
                 agent.move(agentDecision.location()); // Predator now occupies preys location
@@ -254,13 +267,14 @@ public class Simulation {
          * Trys to mutate child agents before placing them on the environment.
          * <p>
          * Iterates through the input collection of child agents and trys to mutate them based on the mutationChance.
-         * Before placing an agent it will re-generate its mutating color. New agents are tracked here.
+         * Before placing an agent it will re-generate its mutating color. New agents are tracked here. Additionally,
+         * checks if the child agents new location is occupied, if so it sets that agents spaceTaken flag to true.
          * @param childAgents the collection of new agents
          * @param mutationChance the percent chance a child agent will mutate
          */
         private ArrayList<Agent> mutateAndPlaceAgents(ArrayList<Agent> childAgents, int mutationChance) {
             for (Agent child : childAgents) {
-                diagnostics.addToAgentsBornLastStep(child.getAttributes().getCode(), 1); // log that a new agents been born
+                diagnostics.addToAgentsBornLastStep(child.getAttributes().getID(), 1); // log that a new agents been born
                 double[] oldStats = new double[]{ // store stats before mutating, allows us to track the stat change.
                         child.getAttributes().getSize(),
                         child.getAttributes().getCreationSize(),
@@ -275,28 +289,58 @@ public class Simulation {
                         (child.getAttributes().getRange() / 5.0) - (oldStats[2] / 5),
                         125);
                 child.getAttributes().calculateAttributes(); // Calculate the agents calculated attributes
+                child.setScores(initScores(child));
+                agentLogic.clearSpace(child);
                 environment.setOccupant(child);
             }
             return childAgents;
+        }
+
+        /** Checks if the agents location is occupied, if so it sets the occupants spaceTaken to true.
+         * @param agent The agent moving to a new space.
+         */
+        private void clearSpace(Agent agent) {
+            if (environment.getTile(agent.getLocation()).isOccupied()) {
+                environment.getTile(agent.getLocation()).getOccupant().setSpaceTaken();
+                //System.out.println(agent.getAttributes().getName() + " moved to " + environment.getTile(agent.getLocation()).getOccupant().getAttributes().getName() + "'s space.");
+            }
         }
 
         /**
          * Places agents on the environment and possibly mutates their seed color.
          * <p>
          * Iterates through the input collection of child agents, checks if it uses the RANDOM color model. If so then
-         * mutate its seed color before adding it to the environment.
+         * mutate its seed color before adding it to the environment. Additionally, checks if the child agents new location is
+         * occupied, if so it sets that agents spaceTaken flag to true.
          * @param childAgents the collection of new agents
          */
         private ArrayList<Agent> placeAgents(ArrayList<Agent> childAgents) {
             for (Agent child : childAgents) {
-                diagnostics.addToAgentsBornLastStep(child.getAttributes().getCode(), 1); // log that a new agents been born
+                diagnostics.addToAgentsBornLastStep(child.getAttributes().getID(), 1); // log that a new agents been born
                 child.getAttributes().calculateAttributes();
+                child.setScores(agentLogic.initScores((child)));
+                agentLogic.clearSpace(child);
                 environment.setOccupant(child);
                 if (child.getAttributes().getColorModel().equals(ColorModel.RANDOM)) { // Check if the agent is using the random color model and handle accordingly
                     child.getAttributes().mutateSeedColor(5);
                 }
             }
             return childAgents;
+        }
+
+        /**
+         * Initialises the agents scores with its attributes.
+         * <p>
+         * As mutations are handled in this class, calculated attributes must be handled here too. As scores
+         * require some of the agents calculated attributes, their initialisation needs to be handled here to.
+         */
+        private Scores initScores(Agent agent) {
+            Scores scores = agent.getScores();
+            scores.setMaxEnergy(agent.getAttributes().getEnergyCapacity());
+            scores.setMaxAge(agent.getAttributes().getLifespan());
+            scores.setAge(0);
+            scores.setCreationCounter(agent.getAttributes().getCreationAge());
+            return scores;
         }
 
         /**
@@ -382,7 +426,7 @@ public class Simulation {
                             && !(i == 0 && j == 0)
                             && !environment.getTile(X, Y).isTerrain())
                     {
-                        AgentVision av = environment.getTileView(X, Y);
+                        AgentVision av = environment.getTileView(new Location(X, Y));
                         agentViews.add(av);
                     }
                 }

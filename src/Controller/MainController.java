@@ -101,7 +101,7 @@ public class MainController {
         simulation.getAgentEditor().setEditingAgentSettings(agentSettings);
 
         // Update the active agents panel
-        view.getActiveAgentsPanel().setAgentSelector(simulation.getAgentEditor().getEditingAgentIndex(), agentSettings.getColor(), agentSettings.getName());
+        view.getActiveAgentsPanel().setAgentSelector(simulation.getAgentEditor().getEditingAgentIndex(), agentSettings.getSeedColor(), agentSettings.getName());
 
         // Update the agent editor
         simulation.getAgentEditor().setEditingAgentIndex(index);

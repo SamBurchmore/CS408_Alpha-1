@@ -11,8 +11,25 @@ public class DiagnosticsPanel extends JPanel {
     final private JLabel currentStepLabel;
 
     // The components where the agent statistics are displayed---------------------</
-    private Object[][] agentStatistics = {{"Agent 1", 0, 0.0, 0.0, 0}, {"Agent 2", 0, 0.0, 0.0, 0}, {"Agent 3", 0, 0.0, 0.0, 0}, {"Agent 4", 0, 0.0, 0.0, 0}, {"Agent 5", 0, 0.0, 0.0, 0}, {"Agent 6", 0, 0.0, 0.0, 0}, {"Agent 7", 0, 0.0, 0.0, 0}, {"Agent 8", 0, 0.0, 0.0, 0}};
-    private String[] agentStatNames = {"<html>Agent<br></html>" , "<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>", "<html>Born Last<br>Step</html>"}; //{"<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>"};
+    private Object[][] agentStatistics = {
+            {"Agent 1", 0, 0.0, 0.0, 0, 0.0, 0.0, 0.0},
+            {"Agent 2", 0, 0.0, 0.0, 0, 0.0, 0.0, 0.0},
+            {"Agent 3", 0, 0.0, 0.0, 0, 0.0, 0.0, 0.0},
+            {"Agent 4", 0, 0.0, 0.0, 0, 0.0, 0.0, 0.0},
+            {"Agent 5", 0, 0.0, 0.0, 0, 0.0, 0.0, 0.0},
+            {"Agent 6", 0, 0.0, 0.0, 0, 0.0, 0.0, 0.0},
+            {"Agent 7", 0, 0.0, 0.0, 0, 0.0, 0.0, 0.0},
+            {"Agent 8", 0, 0.0, 0.0, 0, 0.0, 0.0, 0.0}
+    };
+    private String[] agentStatNames = {
+            "<html>Agent<br></html>",
+            "<html>Population<br></html>",
+            "<html>Average<br>Energy</html>",
+            "<html>Average<br>Age</html>",
+            "<html>Born Last<br>Step</html>",
+            "<html>Average<br>Size</html>",
+            "<html>Average<br>C-Size</html>",
+            "<html>Average<br>Range</html>",}; //{"<html>Population<br></html>", "<html>Average<br>Energy</html>", "<html>Average<br>Age</html>"};
     final private JTable agentStatsTable;
     private JScrollPane agentStatsTableScrollPane;
     //-----------------------------------------------------------------------------</
@@ -52,10 +69,15 @@ public class DiagnosticsPanel extends JPanel {
         //--------------------------------------------------------------------------Agent Stats Table Start
         TableModel tableModel = new DefaultTableModel(agentStatistics, agentStatNames);
         agentStatsTable = new JTable(tableModel);
-        agentStatsTableScrollPane = new JScrollPane(agentStatsTable);
-        agentStatsTableScrollPane.setBorder(null);
+        agentStatsTable.setPreferredSize(new Dimension(550, 160));
         agentStatsTable.setDefaultEditor(Object.class, null);
-        agentStatsTable.getTableHeader().setFont(new Font("Dialog", Font.BOLD, 12));
+        agentStatsTable.getTableHeader().setFont(new Font("Dialog", Font.BOLD, 11));
+        agentStatsTable.getTableHeader().setPreferredSize(new Dimension(550, 30));
+        agentStatsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        agentStatsTableScrollPane = new JScrollPane(agentStatsTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        //agentStatsTableScrollPane.setViewportView(agentStatsTable);
+        agentStatsTableScrollPane.setBorder(null);
+        agentStatsTable.setPreferredScrollableViewportSize(new Dimension(350, 175));
         //--------------------------------------------------------------------------Agent Stats Table End
 
         //--------------------------------------------------------------------------Environment Stats Panel Start
@@ -112,7 +134,7 @@ public class DiagnosticsPanel extends JPanel {
 
         // Now we add the second row components
         c.gridy = 1;
-        add(agentStatsTable, c);
+        add(agentStatsTableScrollPane, c);
 
         // Now we add the third row components
         c.gridy = 2;
@@ -144,6 +166,9 @@ public class DiagnosticsPanel extends JPanel {
             row[2] = agentStats[2][i];
             row[3] = agentStats[3][i];
             row[4] = agentStats[4][i];
+            row[5] = agentStats[5][i];
+            row[6] = agentStats[6][i];
+            row[7] = agentStats[7][i];
             model.removeRow(i);
             model.insertRow(i, row);
         }

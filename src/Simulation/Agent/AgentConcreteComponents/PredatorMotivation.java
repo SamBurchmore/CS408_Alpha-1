@@ -8,9 +8,13 @@ import Simulation.Agent.AgentStructs.AgentAction;
 import Simulation.Agent.AgentStructs.AgentDecision;
 import Simulation.Agent.AgentStructs.AgentVision;
 
+/**
+ * Motivates agents to find and eat smaller agents with a different ID.
+ * @author Sam Burchmore
+ * @version 1.0a
+ * @since 1.0a
+ */
 public class PredatorMotivation extends BaseMotivation {
-
-    int motivationCode = 2;
 
     public PredatorMotivation(int bias, int weight) {
         super(bias, weight);
@@ -19,10 +23,10 @@ public class PredatorMotivation extends BaseMotivation {
     @Override
     public AgentDecision run(AgentVision tile, Attributes attributes, Scores scores) {
         if (tile.isOccupied()) { // Predator motivation motivates agent to move to occupied tiles
-            if (tile.getOccupantAttributes().getSize() < attributes.getSize() && tile.getOccupantAttributes().getCode() != attributes.getCode()) {
+            if (tile.getOccupantAttributes().getSize() < attributes.getSize() && tile.getOccupantAttributes().getID() != attributes.getID()) {
                 // Tile is occupied, its occupant is smaller than the agent, and it's a different 'species' (code is different),
                 // set decision to PREDATE and its score to the occupants size multiplied by how much energy its missing
-                return new AgentDecision(tile.getLocation(), AgentAction.PREDATE, (super.getBias() + tile.getOccupantAttributes().getSize()) * super.getWeight());
+                return new AgentDecision(tile.getLocation(), AgentAction.PREDATE, super.getBias() + tile.getOccupantAttributes().getSize() * super.getWeight());
             }
             // Tile is occupied but its occupant is either larger or the same species, set decision to NONE and its score to -10
             return new AgentDecision(null, AgentAction.NONE, -1);
@@ -32,18 +36,13 @@ public class PredatorMotivation extends BaseMotivation {
     }
 
     @Override
+    public int getCode() {
+        return 2;
+    }
+
+    @Override
     public Motivation copy() {
         return new PredatorMotivation(super.getBias(), super.getWeight());
-    }
-
-    @Override
-    public boolean equals(Motivation motivation) {
-        return motivation.getCode() == this.getCode();
-    }
-
-    @Override
-    public int getCode() {
-        return motivationCode;
     }
 
 }

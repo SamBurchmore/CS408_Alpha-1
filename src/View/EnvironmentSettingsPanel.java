@@ -117,7 +117,11 @@ public class EnvironmentSettingsPanel extends JPanel implements ActionListener {
         terrainColorLabel = new JLabel("Terrain Color: ");
         terrainColorButton = new SquareButton();
         terrainColorButton.addActionListener(this);
-        terrainColorPanel = new JPanel();
+        terrainColorPanel = new JPanel(new GridLayout());
+        terrainColorPanel.add(new JPanel());
+        terrainColorPanel.add(new JPanel());
+        terrainColorPanel.add(new JPanel());
+        terrainColorPanel.add(new JPanel());
         terrainColorPanel.add(terrainColorLabel);
         terrainColorPanel.add(terrainColorButton);
 

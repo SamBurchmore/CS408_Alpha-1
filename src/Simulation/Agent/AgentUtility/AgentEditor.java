@@ -55,7 +55,7 @@ public class AgentEditor {
 //        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Pink", 6, Color.pink,                           1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 6);
 //        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Cyan", 7, Color.cyan,                           1, 1, 10, 2, 48, 8, 3, 9), (ArrayList<Motivation>) grazerMotivations.clone()), 7);
         for (int i = 0; i < 8; i++) {
-            activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, agentNames[i], i, agentColors[i], ColorModel.STATIC, 0,1, 3, 4), (ArrayList<Motivation>) omniMotivations.clone()), i);
+            activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(0, agentNames[i], i, agentColors[i], ColorModel.RANDOM, 0,1, 3, 4), (ArrayList<Motivation>) grazerMotivations.clone()), i);
         }
 //        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Agent 1", 0, agentColors[0], 1,1, 3, 8), (ArrayList<Motivation>) grazerMotivations.clone()), 0);
 //        activeAgents.addAgent(new BasicAgent(new Location(-1, -1),                      new BasicAttributes(1, "Agent 2", 1, agentColors[1], 1,1, 4, 4), (ArrayList<Motivation>) predMotivations.clone()), 1);

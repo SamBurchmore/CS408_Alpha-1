@@ -8,9 +8,15 @@ import Simulation.Agent.AgentStructs.AgentAction;
 import Simulation.Agent.AgentStructs.AgentDecision;
 import Simulation.Agent.AgentStructs.AgentVision;
 
-public class CreatorMotivation extends BaseMotivation {
+import java.util.Objects;
 
-    int motivationCode = 0;
+/**
+ * Motivates agents to find a mate and create new agents.
+ * @author Sam Burchmore
+ * @version 1.0a
+ * @since 1.0a
+ */
+public class CreatorMotivation extends BaseMotivation {
 
     public CreatorMotivation(int bias, int weight) {
         super(bias, weight);
@@ -20,14 +26,13 @@ public class CreatorMotivation extends BaseMotivation {
     public AgentDecision run(AgentVision tile, Attributes attributes, Scores scores) {
         if (tile.isOccupied()) {
             if (
-                    tile.getOccupantAttributes().getCode() == attributes.getCode()
+                    Objects.equals(tile.getOccupantAttributes().getID(), attributes.getID())
                     && scores.getAge() >= attributes.getCreationAge()
                     && scores.getCreationCounter() <= 0
                     && scores.getEnergy() > attributes.getEnergyCapacity() / 4
-                    && tile.getOccupantScores().getAge() > tile.getOccupantAttributes().getCreationAge()
+                    && tile.getOccupantScores().getAge() >= tile.getOccupantAttributes().getCreationAge()
                     && tile.getOccupantScores().getCreationCounter() <= 0
-                    && compareAttributes(attributes, tile.getOccupantAttributes()) )
-            {
+                    && compareAttributes(attributes, tile.getOccupantAttributes())) {
                 // Tile is occupied, and it's occupant is the same species, set the decision to CREATE and the score 10
                 return new AgentDecision(tile.getLocation(), AgentAction.CREATE, super.getBias() * super.getWeight());
             }
@@ -45,20 +50,17 @@ public class CreatorMotivation extends BaseMotivation {
 
     @Override
     public int getCode() {
-        return motivationCode;
+        return 0;
     }
 
-    private boolean compareAttributes(Attributes attributesA, Attributes attributesB) {
+    public static boolean compareAttributes(Attributes attributesA, Attributes attributesB) {
         if (Math.abs(attributesA.getSize() - attributesB.getSize()) > 10) {
             return false;
         }
         if (Math.abs(attributesA.getCreationSize() - attributesB.getCreationSize()) > 2) {
             return false;
         }
-        if (Math.abs(attributesA.getRange() - attributesB.getRange()) > 2) {
-            return false;
-        }
-        return true;
+        return Math.abs(attributesA.getRange() - attributesB.getRange()) < 2;
     }
 
 }

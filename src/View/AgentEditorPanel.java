@@ -127,7 +127,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         agentNameTextField = new JTextField("Agent Name");
 
         agentCodeValue = new JLabel("Agent Code: ");
-        agentCodeLabel = new JLabel("ID: ");
+        agentCodeLabel = new JLabel("Agent ID: ");
         agentCodePanel = new JPanel(new GridLayout(1, 2));
         agentCodePanel.add(agentCodeLabel);
         agentCodePanel.add(agentCodeValue);
