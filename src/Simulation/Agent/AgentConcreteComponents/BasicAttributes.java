@@ -163,7 +163,7 @@ public class BasicAttributes implements Attributes, Serializable {
     @Override
     public void calculateAttributes() {
         energyCapacity = size*10;
-        energyLostPerTile = (int) Math.round(Math.pow(size, 0.70));
+        energyLostPerTile = (int) Math.round(Math.pow(size, 0.50));
         eatAmount = (int) Math.round(Math.pow(size, 0.5)) * 2;
         lifespan = 15 * (int) Math.round(Math.pow(size, 0.75));
         creationAge = lifespan / 5;
