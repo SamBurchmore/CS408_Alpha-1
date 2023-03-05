@@ -323,6 +323,13 @@ public class Environment implements Serializable {
         }
     }
 
+    public boolean isLocationOnGrid(Location location) {
+        if (location.getX() > 0 && location.getX() < getSize()) {
+            return location.getY() > 0 && location.getY() < getSize();
+        }
+        return false;
+    }
+
     public EnvironmentTile[] getGrid() {
         return this.grid;
     }

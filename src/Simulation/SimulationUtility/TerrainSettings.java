@@ -12,19 +12,31 @@ public class TerrainSettings {
     // [7] - lineDensity(1,10000)
 
     private int rockSize;
-    private int clusterSize;
-    private int clusterDensity;
-    private int lineSize;
+    private int caveSize;
+    private int caveDensity;
+    private int bendDensity;
+    private int caveLength;
     private int lineDensity;
-    private int lineMagnitude;
+    private int cavernSize;
+    private int upperCaveSize;
+    private int lowerCaveSize;
+    private int caveWave;
+    private int terrainAmount;
+    private boolean terrain;
 
-    public TerrainSettings(int rockSize, int clusterSize, int clusterDensity, int lineSize, int lineDensity, int lineMagnitude) {
+    public TerrainSettings(int rockSize, int caveSize, int caveDensity, int bendDensity, int caveLength, int lineDensity, int cavernSize, int upperCaveSize, int lowerCaveSize, int caveWave, int terrainAmount, boolean terrain) {
         this.rockSize = rockSize;
-        this.clusterSize = clusterSize;
-        this.clusterDensity = clusterDensity;
-        this.lineSize = lineSize;
+        this.caveSize = caveSize;
+        this.caveDensity = caveDensity;
+        this.bendDensity = bendDensity;
+        this.caveLength = caveLength;
         this.lineDensity = lineDensity;
-        this.lineMagnitude = lineMagnitude;
+        this.cavernSize = cavernSize;
+        this.upperCaveSize = upperCaveSize;
+        this.lowerCaveSize = lowerCaveSize;
+        this.caveWave = caveWave;
+        this.terrainAmount = terrainAmount;
+        this.terrain = terrain;
     }
 
     public int getRockSize() {
@@ -35,28 +47,28 @@ public class TerrainSettings {
         this.rockSize = rockSize;
     }
 
-    public int getClusterSize() {
-        return clusterSize;
+    public int getCaveSize() {
+        return caveSize;
     }
 
-    public void setClusterSize(int clusterSize) {
-        this.clusterSize = clusterSize;
+    public void setCaveSize(int caveSize) {
+        this.caveSize = caveSize;
     }
 
-    public int getClusterDensity() {
-        return clusterDensity;
+    public int getCaveDensity() {
+        return caveDensity;
     }
 
-    public void setClusterDensity(int clusterDensity) {
-        this.clusterDensity = clusterDensity;
+    public void setCaveDensity(int caveDensity) {
+        this.caveDensity = caveDensity;
     }
 
-    public int getLineSize() {
-        return lineSize;
+    public int getCaveLength() {
+        return caveLength;
     }
 
-    public void setLineSize(int lineSize) {
-        this.lineSize = lineSize;
+    public void setCaveLength(int caveLength) {
+        this.caveLength = caveLength;
     }
 
     public int getLineDensity() {
@@ -67,21 +79,73 @@ public class TerrainSettings {
         this.lineDensity = lineDensity;
     }
 
-    public int getLineMagnitude() {
-        return lineMagnitude;
+    public int getTerrainAmount() {
+        return terrainAmount;
     }
 
-    public void setLineMagnitude(int lineMagnitude) {
-        this.lineMagnitude = lineMagnitude;
+    public void setTerrainAmount(int terrainAmount) {
+        this.terrainAmount = terrainAmount;
+    }
+
+    public int getUpperCaveSize() {
+        return upperCaveSize;
+    }
+
+    public void setUpperCaveSize(int upperCaveSize) {
+        this.upperCaveSize = upperCaveSize;
+    }
+
+    public int getLowerCaveSize() {
+        return lowerCaveSize;
+    }
+
+    public void setLowerCaveSize(int lowerCaveSize) {
+        this.lowerCaveSize = lowerCaveSize;
+    }
+
+    public int getBendDensity() {
+        return bendDensity;
+    }
+
+    public void setBendDensity(int bendDensity) {
+        this.bendDensity = bendDensity;
+    }
+
+    public int getCaveWave() {
+        return caveWave;
+    }
+
+    public void setCaveWave(int caveWave) {
+        this.caveWave = caveWave;
+    }
+
+    public boolean isTerrain() {
+        return terrain;
+    }
+
+    public void setTerrain(boolean terrain) {
+        this.terrain = terrain;
+    }
+
+    public int getCavernSize() {
+        return cavernSize;
+    }
+
+    public void setCavernSize(int cavernSize) {
+        this.cavernSize = cavernSize;
     }
 
     @Override
     public String toString() {
-        return "-Rock Size=" + rockSize +
-                ",\n-Cluster Size=" + clusterSize +
-                ",\n-Cluster Density=" + clusterDensity +
-                ",\n-Line Size=" + lineSize +
-                ",\n-Line Density=" + lineDensity +
-                ",\n-Line Magnitude=" + lineMagnitude;
+        return "-rockSize=" + rockSize +
+                ",\n-clusterSize=" + caveSize +
+                ",\n-upperCaveSize=" + upperCaveSize +
+                ",\n-lowerCaveSize=" + lowerCaveSize +
+                ",\n-clusterDensity=" + caveDensity +
+                ",\n-bendDensity=" + bendDensity +
+                ",\n-lineSize=" + caveLength +
+                ",\n-lineDensity=" + lineDensity +
+                ",\n-caveWave=" + caveWave +
+                ",\n-lineMagnitude=" + terrainAmount;
     }
 }

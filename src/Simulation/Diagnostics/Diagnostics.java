@@ -1,5 +1,7 @@
 package Simulation.Diagnostics;
 
+import Simulation.Environment.Location;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;

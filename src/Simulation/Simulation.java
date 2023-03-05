@@ -1,6 +1,8 @@
 package Simulation;
 
+import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
 import Simulation.Agent.AgentConcreteComponents.BasicAgent;
@@ -317,6 +319,7 @@ public class Simulation {
         private ArrayList<Agent> placeAgents(ArrayList<Agent> childAgents) {
             for (Agent child : childAgents) {
                 diagnostics.addToAgentsBornLastStep(child.getAttributes().getID(), 1); // log that a new agents been born
+                diagnostics.addToLogQueue("[AGENT]: " + child.getAttributes().getName() + " born.");
                 child.getAttributes().calculateAttributes();
                 child.setScores(agentLogic.initScores((child)));
                 agentLogic.clearSpace(child);
@@ -357,7 +360,7 @@ public class Simulation {
                 int oldSize = attributes.getSize();
                 attributes.setSize(Math.min(Math.max(attributes.getSize() + mutationMagnitude(), 2), 10));
                 if (diagnosticsVerbosity >= 1) {
-                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ": Size mutated by: " + (attributes.getSize() - oldSize) + ".");
+                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ":Born and size mutated by: " + (attributes.getSize() - oldSize) + ".");
                 }
             }
             else if (ran < 9) {
@@ -365,7 +368,7 @@ public class Simulation {
                 int oldRange = attributes.getRange();
                 attributes.setRange(Math.min(Math.max(attributes.getRange() + mutationMagnitude(), 0), 5));
                 if (diagnosticsVerbosity >= 1) {
-                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ": Range mutated by: " + (attributes.getRange() - oldRange) + ".");
+                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ":Born and range mutated by: " + (attributes.getRange() - oldRange) + ".");
                 }
             }
             else {
@@ -373,7 +376,7 @@ public class Simulation {
                 int oldCreationSize = attributes.getCreationSize();
                 attributes.setCreationSize(Math.min(Math.max(attributes.getCreationSize() + mutationMagnitude(), 1), 8));
                 if (diagnosticsVerbosity >= 1) {
-                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ": Litter Size mutated by: " + (attributes.getCreationSize() - oldCreationSize) + ".");
+                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ":Born and litter Size mutated by: " + (attributes.getCreationSize() - oldCreationSize) + ".");
                 }
             }
             return attributes;
@@ -498,10 +501,181 @@ public class Simulation {
      * @since 1.0a
      */
     public class TerrainGenerator {
+
         // The TerrainSettings object that stores the initial and current terrain settings
         private TerrainSettings terrainSettings;
+
         public TerrainGenerator() {
-            terrainSettings = new TerrainSettings(2, 5, 60, 300, 8500, 1);
+            terrainSettings = new TerrainSettings(2, 5, 5000, 500, 400, 10000, 15,2, 2, 4, 1, true);
+        }
+
+        /**
+         * Sets all tiles in the environment to terrain.
+         */
+        public void fillTerrain() {
+            for (EnvironmentTile environmentTile:
+                    environment.getGrid()) {
+                environmentTile.setTerrain(true);
+            }
+        }
+
+        /**
+         * Sets all tiles in the environment to not terrain.
+         */
+        public void clearTerrain() {
+            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+                environment.getGrid()[i].setTerrain(false);
+            });
+        }
+
+        public void placeCave() {
+            random.setSeed(Instant.now().toEpochMilli());
+            generateCave();
+        }
+
+        public void placeVariableCave() {
+            random.setSeed(Instant.now().toEpochMilli());
+            generateVariableCave();
+        }
+
+        public void generateCave() {
+            for (int j = 0; j < terrainSettings.getTerrainAmount(); j++) {
+                int dx = 0;
+                int dy = 0;
+                int dx2 = 0;
+                int dy2 = 0;
+                Location location = new Location(environment.getSize()/6 + random.nextInt(environment.getSize() - environment.getSize()/3), environment.getSize()/6 + random.nextInt(environment.getSize() - environment.getSize()/3));
+                for (int i = 0; i < terrainSettings.getCaveLength(); i++) {
+                    if (random.nextInt(10000) < terrainSettings.getBendDensity()) {
+                        dx2 = getPosNegRandom(terrainSettings.getCaveSize()+1);
+                        dy2 = getPosNegRandom(terrainSettings.getCaveSize()+1);
+                    }
+                    dx = dx + dx2;
+                    dy = dy + dy2;
+                    Location caveLocation = new Location(location.getX() + dx, location.getY() + dy);
+                    if (environment.isLocationOnGrid(caveLocation)) {
+                        if (random.nextInt(10000) < terrainSettings.getLineDensity()) {
+                            generateCircleRockCluster(terrainSettings.getRockSize(), terrainSettings.getCaveSize(), terrainSettings.getCaveDensity(), caveLocation);
+                        }
+                    } else {
+                        dx = dx - dx2;
+                        dy = dy - dy2;
+                    }
+                }
+            }
+        }
+
+        public void generateVariableCave() {
+            for (int j = 0; j < terrainSettings.getTerrainAmount(); j++) {
+                int dx = 0;
+                int dy = 0;
+                int dx2 = 0;
+                int dy2 = 0;
+                Location location = new Location(environment.getSize()/6 + random.nextInt(environment.getSize() - environment.getSize()/3), environment.getSize()/6 + random.nextInt(environment.getSize() - environment.getSize()/3));
+                int caveSize = terrainSettings.getLowerCaveSize();
+                for (int i = 0; i < terrainSettings.getCaveLength()/(terrainSettings.getCaveWave()*2); i++) {
+                    int cw = random.nextInt(terrainSettings.getCaveWave());
+                    for (int c = -cw; c < cw; c++) {
+                        if (c < 0) {
+                            caveSize += terrainSettings.getUpperCaveSize()/cw;
+                        }
+                        else {
+                            caveSize -= terrainSettings.getUpperCaveSize()/cw;
+                        }
+                        if (random.nextInt(10000) < terrainSettings.getBendDensity()) {
+                            dx2 = getPosNegRandom(terrainSettings.getLowerCaveSize() + 1);
+                            dy2 = getPosNegRandom(terrainSettings.getLowerCaveSize() + 1);
+                        }
+                        dx = dx + dx2;
+                        dy = dy + dy2;
+                        Location caveLocation = new Location(location.getX() + dx, location.getY() + dy);
+                        if (environment.isLocationOnGrid(caveLocation)) {
+                            if (random.nextInt(10000) < terrainSettings.getLineDensity()) {
+                                generateCircleRockCluster(terrainSettings.getRockSize(), caveSize, terrainSettings.getCaveDensity(), caveLocation);
+                            }
+                        } else {
+                            dx = dx - dx2;
+                            dy = dy - dy2;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void generateGraphBranchCave(Location seedLocation, int dx, int dy, int level, boolean firstLevel) {
+            if (!firstLevel) {
+                generateCircleRockCluster(terrainSettings.getUpperCaveSize(), terrainSettings.getUpperCaveSize() + random.nextInt(terrainSettings.getCavernSize() - terrainSettings.getUpperCaveSize()), terrainSettings.getCaveDensity(), seedLocation);
+            }
+            Location caveLocation = new Location(seedLocation.getX() + dx, seedLocation.getY() + dy);
+            for (int j = 0; j < terrainSettings.getTerrainAmount(); j++) {
+                int dx2 = 0;
+                int dy2 = 0;
+                int caveSize = terrainSettings.getLowerCaveSize();
+                int straightCounter = 0;
+                for (int i = 0; i < terrainSettings.getCaveLength()/(terrainSettings.getCaveWave()*2); i++) {
+                    int cw = random.nextInt(terrainSettings.getCaveWave());
+                    for (int c = -cw; c < cw; c++) {
+                        if (c < 0) {
+                            caveSize += terrainSettings.getUpperCaveSize()/cw;
+                        }
+                        else {
+                            caveSize -= terrainSettings.getUpperCaveSize()/cw;
+                        }
+                        if (straightCounter > terrainSettings.getCavernSize() && random.nextInt(10000) < terrainSettings.getBendDensity()) {
+                            if (random.nextInt(2) == 0) {
+                                dx2 = getPosNegRandom(terrainSettings.getRockSize());
+                                dx = dx2;
+
+                            }
+                            else {
+                                dy2 = getPosNegRandom(terrainSettings.getRockSize());
+                                dy = dy2;
+                            }
+                        }
+                        caveLocation.setX(caveLocation.getX() + dx);
+                        caveLocation.setY(caveLocation.getY() + dy);
+                        if (environment.isLocationOnGrid(caveLocation)) {
+                            if (random.nextInt(10000) < terrainSettings.getLineDensity()) {
+                                generateCircleRockCluster(terrainSettings.getRockSize(), caveSize, terrainSettings.getCaveDensity(), caveLocation);
+                            }
+                        } else {
+                            dx = dx - dx2;
+                            dy = dy - dy2;
+                        }
+                        straightCounter++;
+                    }
+                }
+            }
+            if (level > 0) {
+                //System.out.println("Generating subgraph at - " + caveLocation.getX() + "," + caveLocation.getY()+ " : " + level);
+                generateGraphBranchCave(caveLocation, getPosNegRandom(terrainSettings.getRockSize()), getPosNegRandom(terrainSettings.getRockSize()), level-1, false);
+                //System.out.println("Finished generating subgraph at - " + caveLocation.getX() + "," + caveLocation.getY()+ " : " + level);
+
+            }
+        }
+
+        public void generateGraphCave() {
+            Location seedLocation = new Location(environment.getSize()/2, environment.getSize()/2);
+            generateCircleRockCluster(terrainSettings.getRockSize(), terrainSettings.getCavernSize(), terrainSettings.getCaveDensity(), seedLocation);
+            int bx = 1;
+            int by = 1;
+            for (int i = -bx; i <= bx; i++) {
+                for (int j = -by; j <= by; j++) {
+                    if (random.nextInt(4) < 3 ) {
+                        generateGraphBranchCave(seedLocation, i, j, 5, true);
+                    }
+                }
+            }
+        }
+
+        private static int overflow(int a, int b, int overflowUpper, int overflowLower) {
+            if (a + b > overflowUpper) {
+                return a + b - overflowUpper;
+            }
+            else if (a + b < overflowLower) {
+                return overflowUpper - a + b;
+            }
+            return a + b;
         }
 
         /**
@@ -528,7 +702,7 @@ public class Simulation {
                             && ((x1 - seedX) * (x1 - seedX) + (y1 - seedY) * (y1 - seedY)) <= rockSize * rockSize
                     )
                     {
-                        environment.setTileTerrain(new Location(x1, y1), true);
+                        environment.setTileTerrain(new Location(x1, y1), terrainSettings.isTerrain());
                     }
                 }
             }
@@ -566,81 +740,18 @@ public class Simulation {
             }
         } // Places one cluster
 
-        /**
-         * Paints a line of clusters at the specified location and in the specified direction.
-         * <p>
-         * Trys to paint a cluster at the specified location before incrementing the location in the specified direction.
-         * @param rockSize the circles radius
-         * @param clusterSize the cluster radius
-         * @param clusterDensity the likelihood a circle will be placed at each tile.
-         * @param lineSize how many times the location will be incremented in the direction (how long the line is)
-         * @param lineDensity the likelihood of a cluster being painted at a location.
-         * @param location the location to paint at.
-         * @param dx the x direction
-         * @param dy the y direction
-         */
-        public void generateCircleLine(int rockSize, int clusterSize, int clusterDensity,  int lineSize, int lineDensity, Location location, int dx, int dy) {
-            for (int i = 0; i < lineSize; i++) {
-                if (random.nextInt(10000) < lineDensity) {
-                    generateCircleRockCluster(1 + rockSize, clusterSize, clusterDensity, location);
-                }
-                location.setX(location.getX() + dx);
-                location.setY(location.getY() + dy);
-            }
-        }
-
-        /**
-         * Trys to paint a lines at random locations and in random directions.
-         * <p>
-         * For each tile in the environment, a random location will be chosen, along with a random direction. The method will then
-         * try to paint the line at the location. The likelihood  of success is defined by the objectDensity parameter.
-         * @param rockSize the circles radius
-         * @param clusterSize the cluster radius
-         * @param clusterDensity the likelihood a circle will be placed at each tile.
-         * @param lineSize how many times the location will be incremented in the direction (how long the line is)
-         * @param lineDensity the likelihood of a cluster being painted at a location.
-         * @param objectDensity the likelihood of a line being painted at a tile.
-         */
-        public void generateCircleLines(int rockSize, int clusterSize, int clusterDensity,  int lineSize, int lineDensity, int objectDensity){
-            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-                if (random.nextInt(10000) < objectDensity) {
-                    Location location = new Location(random.nextInt(environment.getSize()), random.nextInt(environment.getSize()));
-                    int dx = random.nextInt(3) - 1;
-                    int dy = random.nextInt(3) - 1;
-                    generateCircleLine(rockSize, clusterSize, clusterDensity, lineSize, lineDensity, location, dx, dy);
-                }
-            });
-        }
-
-        /**
-         * Sets all tiles in the environment to not terrain.
-         */
-        public void clearTerrain() {
-            IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
-                environment.getGrid()[i].setTerrain(false);
-            });
-        }
-
-        /**
-         * Calls the generateCircleLines() method with the terrainSettings as parameters.
-         */
-        public void generateTerrain() {
-            generateCircleLines(
-                    terrainSettings.getRockSize(),
-                    terrainSettings.getClusterSize(),
-                    terrainSettings.getClusterDensity(),
-                    terrainSettings.getLineSize(),
-                    terrainSettings.getLineDensity(),
-                    terrainSettings.getLineMagnitude());
-        }
-
         public TerrainSettings getTerrainSettings() {
             return terrainSettings;
         }
         public void setTerrainSettings(TerrainSettings terrainSettings) {
             this.terrainSettings = terrainSettings;
         }
-    }
+        private int getPosNegRandom(int bound) {
+            if (random.nextInt(2) == 0) {
+                return -random.nextInt(bound);
+            }
+            return random.nextInt(bound);
+        }}
 
     public void setDiagnosticsVerbosity(int diagnosticsVerbosity) {
         this.diagnosticsVerbosity = diagnosticsVerbosity;

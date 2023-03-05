@@ -38,7 +38,11 @@ public class MainView extends JFrame {
 
     private JMenu terrainMenu;
     private JButton clearTerrain;
-    private JButton generateTerrain;
+    private JButton fillTerrain;
+    private JButton generateLine;
+    private JButton generateCave;
+    private JButton generateVariableCave;
+    private JButton generateGraphCave;
     private JButton terrainSettings;
 
     private EnvironmentSettingsPanel environmentSettingsPanel;
@@ -104,13 +108,25 @@ public class MainView extends JFrame {
         toolSettingsMenu.add(toggleControlsButton);
 
         // Build the terrain generator menu
-        generateTerrain = new JButton("Generate Terrain");
-        terrainMenu.add(generateTerrain);
+        generateCave = new JButton("Generate Cave");
+        terrainMenu.add(generateCave);
+
+        generateVariableCave = new JButton("Generate Variable Cave");
+        terrainMenu.add(generateVariableCave);
+
+        generateGraphCave = new JButton("Generate Graph Cave");
+        terrainMenu.add(generateGraphCave);
+
+        fillTerrain = new JButton("Fill Terrain");
+        fillTerrain.setBackground(new Color(230, 230 , 230));
+        terrainMenu.add(fillTerrain);
 
         clearTerrain = new JButton("Clear Terrain");
+        clearTerrain.setBackground(new Color(230, 230 , 230));
         terrainMenu.add(clearTerrain);
 
         terrainSettings = new JButton("Terrain Settings");
+        terrainSettings.setBackground(new Color(200, 200 , 200));
         terrainMenu.add(terrainSettings);
 
         menuBar.add(new JLabel("|"));
@@ -243,17 +259,31 @@ public class MainView extends JFrame {
     }
 
     public TerrainSettings openTerrainSettings(TerrainSettings terrainSettings) {;
-        TerrainDialog terrainDialog = new TerrainDialog(this, terrainSettings);
-        return terrainDialog.getTerrainSettings();
+        TerrainSettingsDialog terrainSettingsDialog = new TerrainSettingsDialog(this, terrainSettings);
+        return terrainSettingsDialog.getTerrainSettings();
     }
 
     public JButton getClearTerrain() {
         return clearTerrain;
     }
 
-    public JButton getGenerateTerrain() {
-        return generateTerrain;
+    public JButton getFillTerrain() {
+        return fillTerrain;
     }
 
+    public JButton getGenerateLine() {
+        return generateLine;
+    }
 
+    public JButton getGenerateCave() {
+        return generateCave;
+    }
+
+    public JButton getGenerateVariableCave() {
+        return generateVariableCave;
+    }
+
+    public JButton getGenerateGraphCave() {
+        return generateGraphCave;
+    }
 }

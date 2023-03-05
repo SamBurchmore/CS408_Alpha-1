@@ -4,7 +4,6 @@ import Simulation.Agent.AgentUtility.ActiveAgentsSettings;
 import Simulation.Environment.EnvironmentSettings;
 import Simulation.Simulation;
 import Simulation.SimulationUtility.SimulationSettings;
-import Simulation.SimulationUtility.TerrainSettings;
 import View.MainView;
 import org.apache.commons.io.FilenameUtils;
 
@@ -91,7 +90,12 @@ public class MainController {
         view.getToggleControlsButton().addActionListener(e -> viewController.toggleControls());
         view.getTerrainSettings().addActionListener(e -> viewController.openTerrainSettings());
         view.getClearTerrain().addActionListener(e -> simulationController.clearTerrain());
-        view.getGenerateTerrain().addActionListener(e -> simulationController.generateTerrain());
+        view.getClearTerrain().addActionListener(e -> simulationController.clearTerrain());
+        view.getFillTerrain().addActionListener(e -> simulationController.fillTerrain());
+        view.getClearTerrain().addActionListener(e -> simulationController.clearTerrain());
+        view.getGenerateCave().addActionListener(e -> simulationController.cave());
+        view.getGenerateVariableCave().addActionListener(e -> simulationController.variableCave());
+        view.getGenerateGraphCave().addActionListener(e -> simulationController.graphCave());
 
     }
 
@@ -285,10 +289,28 @@ public class MainController {
             viewController.logMsg("[TERRAIN]: Terrain cleared.");
         }
 
-        public void generateTerrain() {
-            simulation.getTerrainGenerator().generateTerrain();
+        public void fillTerrain() {
+            simulation.getTerrainGenerator().fillTerrain();
             viewController.updateSimulationView();
-            viewController.logMsg("[TERRAIN]: Terrain generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
+            viewController.logMsg("[TERRAIN]: Terrain filled.");
+        }
+
+        public void variableCave() {
+            simulation.getTerrainGenerator().placeVariableCave();
+            viewController.updateSimulationView();
+            viewController.logMsg("[TERRAIN]: Variable Cave generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
+        }
+
+        public void graphCave() {
+            simulation.getTerrainGenerator().generateGraphCave();
+            viewController.updateSimulationView();
+            viewController.logMsg("[TERRAIN]: Graph Cave generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
+        }
+
+        public void cave() {
+            simulation.getTerrainGenerator().placeCave();
+            viewController.updateSimulationView();
+            viewController.logMsg("[TERRAIN]: Cave generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
         }
 
     }
