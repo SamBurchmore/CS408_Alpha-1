@@ -26,13 +26,13 @@ class PredatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
 
         BasicAgent potentialPrey = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 1, Color.blue, ColorModel.STATIC, 0, 1, 2, 4),
+                new BasicAttributes(0, "BlueSize=3", 1, Color.blue, ColorModel.STATIC, 0, 0, 1, 2, 4),
                 (ArrayList<Motivation>) motivations.clone());
         potentialPrey.getAttributes().calculateAttributes();
 
@@ -52,13 +52,13 @@ class PredatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
 
         BasicAgent potentialPrey = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 2, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 2, 4),
                 (ArrayList<Motivation>) motivations.clone());
         potentialPrey.getAttributes().calculateAttributes();
 
@@ -78,13 +78,13 @@ class PredatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
 
         BasicAgent potentialPrey = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 4, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 4, 4),
                 (ArrayList<Motivation>) motivations.clone());
         potentialPrey.getAttributes().calculateAttributes();
 
@@ -104,7 +104,7 @@ class PredatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
 

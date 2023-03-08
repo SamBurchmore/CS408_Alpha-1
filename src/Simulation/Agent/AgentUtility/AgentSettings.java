@@ -14,15 +14,11 @@ public class AgentSettings implements Serializable {
     private Attributes attributes;
     private ArrayList<Motivation> motivations;
 
-    public AgentSettings(double spawningWeight, String name, int code, Color seedColor, ColorModel colorModel, int mutationMagnitude, int range, int size, int creationAmount, ArrayList<Motivation> motivations) {
-        this.attributes = new BasicAttributes(spawningWeight, name, code, seedColor, colorModel, mutationMagnitude, range, size, creationAmount);
+    public AgentSettings(Attributes attributes, ArrayList<Motivation> motivations) {
+        this.attributes = attributes.copy();
         this.motivations = (ArrayList<Motivation>) motivations.clone();
     }
 
-    public AgentSettings(Attributes attributes, ArrayList<Motivation> motivations) {
-        this.attributes = attributes;
-        this.motivations = (ArrayList<Motivation>) motivations.clone();
-    }
 
     public Attributes getAttributes() {
         return attributes;
@@ -116,7 +112,7 @@ public class AgentSettings implements Serializable {
         return attributes.getID();
     }
 
-    public double getSpawningWeight() {
+    public int getSpawningWeight() {
         return attributes.getSpawningWeight();
     }
 
@@ -146,6 +142,14 @@ public class AgentSettings implements Serializable {
 
     public void setColorModel(ColorModel colorModel) {
         attributes.setColorModel(colorModel);
+    }
+
+    public int getRandomColorModelMagnitude() {
+        return attributes.getRandomColorModelMagnitude();
+    }
+
+    public void setRandomColorModelMagnitude(int randomColorModelMagnitude) {
+        attributes.setRandomColorModelMagnitude(randomColorModelMagnitude);
     }
 
     public Color getSeedColor() {

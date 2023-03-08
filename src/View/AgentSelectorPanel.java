@@ -1,10 +1,9 @@
 package View;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class ActiveAgentsPanel extends JPanel {
+public class AgentSelectorPanel extends JPanel {
 
     final private JPanel agent0Panel;
     final private JPanel agent1Panel;
@@ -35,7 +34,7 @@ public class ActiveAgentsPanel extends JPanel {
     final private SquareButton agent6Button;
     final private SquareButton agent7Button;
 
-    public ActiveAgentsPanel() {
+    public AgentSelectorPanel() {
         super();
         setLayout(new GridLayout(1, 8));
         final String emptyName = "_";

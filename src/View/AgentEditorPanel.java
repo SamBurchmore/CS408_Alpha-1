@@ -1,10 +1,9 @@
 package View;
 
+import Simulation.Agent.AgentConcreteComponents.*;
+import Simulation.Agent.AgentInterfaces.Attributes;
 import Simulation.Agent.AgentStructs.ColorModel;
 import Simulation.Agent.AgentUtility.AgentSettings;
-import Simulation.Agent.AgentConcreteComponents.CreatorMotivation;
-import Simulation.Agent.AgentConcreteComponents.GrazerMotivation;
-import Simulation.Agent.AgentConcreteComponents.PredatorMotivation;
 import Simulation.Agent.AgentInterfaces.Motivation;
 
 import javax.swing.*;
@@ -97,6 +96,9 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
     final private JRadioButton staticModelButton;
     final private JRadioButton attributesModelButton;
     final private JRadioButton randomModelButton;
+    final private JPanel randomMagnitudePanel;
+    final private JLabel randomMagnitudeLabel;
+    final private JSpinner randomMagnitudeSpinner;
     //----------------------------------------------------------------------</
 
     // The components where the spawning weight and mutation chance are selected---------------------</
@@ -382,6 +384,14 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         colorModelPanel.add(attributesModelButton);
         colorModelPanel.add(randomModelButton);
 
+        randomMagnitudePanel = new JPanel();
+        randomMagnitudeSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 255, 1));
+        randomMagnitudeLabel = new JLabel("Random Magnitude: ");
+        randomMagnitudePanel.add(randomMagnitudeLabel);
+        randomMagnitudePanel.add(randomMagnitudeSpinner);
+
+        colorModelPanel.add(randomMagnitudePanel);
+
         //--------------------------------------------------------------------------Colour Model Panel End
 
         //--------------------------------------------------------------------------Main Pane Start
@@ -398,10 +408,11 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         spawningWeightLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
         spawningWeightLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        spawningWeightSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 1, 0.01));
+        spawningWeightSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 100, 1));
 
         spawningWeightPanel.add(spawningWeightLabel);
         spawningWeightPanel.add(spawningWeightSpinner);
+        spawningWeightPanel.add(new JLabel("%"));
 
         mutationChanceAndSpawningPanel.add(spawningWeightPanel);
 
@@ -496,6 +507,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         else {
             colorModelButtonGroup.setSelected(randomModelButton.getModel(), true);
         }
+        randomMagnitudeSpinner.setValue(agentSettings.getRandomColorModelMagnitude());
     }
 
     public AgentSettings getAgentSettings() {
@@ -514,16 +526,32 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         else if (colorModelButtonGroup.getSelection().equals(randomModelButton.getModel())) {
             colorModel = ColorModel.RANDOM;
         }
-        return new AgentSettings(
-                              (double) spawningWeightSpinner.getValue(),
-                                       agentNameTextField.getText(),
-                                 (int) Integer.parseInt(agentCodeValue.getText()),
-                                       seedColourChooserButton.getBackground(),
-                                 colorModel,
-                                 (int) mutationMagnitudeSpinner.getValue(),
-                                 (int) rangeSpinner.getValue(),
-                                 (int) sizeSpinner.getValue(),
-                                 (int) creationAmountSpinner.getValue(),
-                                       motivations);
+        Attributes attributes;
+        if  ((int) mutationMagnitudeSpinner.getValue() <= 0) {
+            attributes = new BasicAttributes(
+                    (int) spawningWeightSpinner.getValue(),
+                    agentNameTextField.getText(),
+                    Integer.parseInt(agentCodeValue.getText()),
+                    seedColourChooserButton.getBackground(),
+                    colorModel,
+                    (int) randomMagnitudeSpinner.getValue(),
+                    (int) mutationMagnitudeSpinner.getValue(),
+                    (int) rangeSpinner.getValue(),
+                    (int) sizeSpinner.getValue(),
+                    (int) creationAmountSpinner.getValue());
+        } else {
+            attributes = new MutatingAttributes(
+                    (int) spawningWeightSpinner.getValue(),
+                    agentNameTextField.getText(),
+                    Integer.parseInt(agentCodeValue.getText()),
+                    seedColourChooserButton.getBackground(),
+                    colorModel,
+                    (int) randomMagnitudeSpinner.getValue(),
+                    (int) mutationMagnitudeSpinner.getValue(),
+                    (int) rangeSpinner.getValue(),
+                    (int) sizeSpinner.getValue(),
+                    (int) creationAmountSpinner.getValue());
+        }
+        return new AgentSettings(attributes, motivations);
     }
 }

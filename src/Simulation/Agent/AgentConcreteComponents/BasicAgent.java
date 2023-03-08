@@ -55,7 +55,7 @@ public class BasicAgent implements Agent {
      */
     public BasicAgent(Location location, Agent parentA, Agent parentB) {
         this.location = location;
-        this.attributes = new BasicAttributes(parentA.getAttributes(), parentB.getAttributes());
+        this.attributes = parentA.getAttributes().combine(parentB.getAttributes());
         this.motivations = parentA.copyMotivations();
         this.scores = parentA.getScores().copy();
         spaceTaken = false;

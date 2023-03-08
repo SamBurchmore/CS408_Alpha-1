@@ -30,14 +30,14 @@ class CreatorMotivationTest {
         // This should ensure we are testing only that aspect.
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
         testAgent.getScores().setAge(6);
 
         BasicAgent potentialMate = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         potentialMate.getAttributes().calculateAttributes();
         potentialMate.getScores().setAge(6);
@@ -57,14 +57,14 @@ class CreatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
         testAgent.getScores().setAge(6);
 
         BasicAgent potentialMate = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         potentialMate.getAttributes().calculateAttributes();
         potentialMate.getScores().setAge(6);
@@ -85,7 +85,7 @@ class CreatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
         testAgent.getScores().setAge(6);
@@ -93,7 +93,7 @@ class CreatorMotivationTest {
 
         BasicAgent potentialMate = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         potentialMate.getAttributes().calculateAttributes();
         potentialMate.getScores().setAge(6);
@@ -113,14 +113,14 @@ class CreatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
         testAgent.getScores().setAge(5); // Agents should no longer be compatible
 
         BasicAgent potentialMate = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         potentialMate.getAttributes().calculateAttributes();
         potentialMate.getScores().setAge(6);
@@ -140,7 +140,7 @@ class CreatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
         testAgent.getScores().setAge(6);
@@ -148,7 +148,7 @@ class CreatorMotivationTest {
 
         BasicAgent potentialMate = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         potentialMate.getAttributes().calculateAttributes();
         potentialMate.getScores().setAge(6);
@@ -168,14 +168,14 @@ class CreatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
         testAgent.getScores().setAge(6);
 
         BasicAgent potentialMate = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         potentialMate.getAttributes().calculateAttributes();
         potentialMate.getScores().setAge(6);
@@ -196,14 +196,14 @@ class CreatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
         testAgent.getScores().setAge(6);
 
         BasicAgent potentialMate = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         potentialMate.getAttributes().calculateAttributes();
         potentialMate.getScores().setAge(5); // Agents should no longer be compatible
@@ -223,7 +223,7 @@ class CreatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
         testAgent.getScores().setAge(6);
@@ -231,7 +231,7 @@ class CreatorMotivationTest {
 
         BasicAgent potentialMate = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         potentialMate.getAttributes().calculateAttributes();
         potentialMate.getScores().setAge(6);
@@ -251,7 +251,7 @@ class CreatorMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
         testAgent.getScores().setAge(6);
@@ -266,36 +266,36 @@ class CreatorMotivationTest {
 
     @Test
     void compareAttributesSizeDifferenceAbove10() {
-        Attributes attributesA = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4);
-        Attributes attributesB = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 1, 14, 4);
+        Attributes attributesA = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4);
+        Attributes attributesB = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 14, 4);
         assertFalse(CreatorMotivation.compareAttributes(attributesA, attributesB));
     }
 
     @Test
     void compareAttributesCreateSizeDifferenceAbove2() {
-        Attributes attributesA = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4);
-        Attributes attributesB = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 7);
+        Attributes attributesA = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4);
+        Attributes attributesB = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 7);
         assertFalse(CreatorMotivation.compareAttributes(attributesA, attributesB));
     }
 
     @Test
     void compareAttributesRangeDifferenceAbove2() {
-        Attributes attributesA = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4);
-        Attributes attributesB = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 3, 3, 4);
+        Attributes attributesA = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4);
+        Attributes attributesB = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 0, 3, 3, 4);
         assertFalse(CreatorMotivation.compareAttributes(attributesA, attributesB));
     }
 
     @Test
     void compareAttributesSame() {
-        Attributes attributesA = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4);
-        Attributes attributesB = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4);
+        Attributes attributesA = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4);
+        Attributes attributesB = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4);
         assertTrue(CreatorMotivation.compareAttributes(attributesA, attributesB));
     }
 
     @Test
     void compareAttributesSimilar() {
-        Attributes attributesA = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4);
-        Attributes attributesB = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 2, 10, 6);
+        Attributes attributesA = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 0, 1, 3, 4);
+        Attributes attributesB = new BasicAttributes(0, "Blue", 0, Color.blue, ColorModel.STATIC, 0, 0, 2, 10, 6);
         assertTrue(CreatorMotivation.compareAttributes(attributesA, attributesB));
     }
 

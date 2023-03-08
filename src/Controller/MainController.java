@@ -26,30 +26,25 @@ public class MainController {
     private boolean simulationRunning;
     private boolean runningNSteps;
 
-    private int scale = 0;
+    private JDialog loadingDialog;
 
-    public MainController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount) throws IOException, InterruptedException {
-        JDialog loadingDialog = new JDialog();
-        JLabel loadingIcon = new JLabel();
-        loadingIcon.setIcon(new ImageIcon(this.getClass().getResource("../images/loading-image.png")));
-        loadingDialog.add(loadingIcon);
-        loadingDialog.setUndecorated(true);
-        loadingDialog.pack();
-        loadingDialog.setLocationRelativeTo(null);
-        loadingDialog.setVisible(true);
-        this.scale = 600 / size;
+    private int scale;
+
+
+    public MainController(int size, int starting_food_level, int minFoodLevel, int maxFoodLevel, double energyRegenChance, int energyRegenAmount) throws IOException {
+        this.viewController = new ViewController();
+        viewController.showLoadingDialog();
+        this.scale = 600/size;
         this.view = new MainView();
         this.simulation = new Simulation(size, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
         this.simulationController = new SimulationController();
-        this.viewController = new ViewController();
         simulationController.initDiagnostics();
         initController();
         viewController.initView();
-        loadingDialog.dispose();
+        viewController.deleteLoadingDialog();
         this.cycleFlag = false;
         this.simulationRunning = false;
         this.runningNSteps = false;
-        //this.scale = 1;
     }
 
     public void initController() {
@@ -93,7 +88,7 @@ public class MainController {
         view.getClearTerrain().addActionListener(e -> simulationController.clearTerrain());
         view.getFillTerrain().addActionListener(e -> simulationController.fillTerrain());
         view.getClearTerrain().addActionListener(e -> simulationController.clearTerrain());
-        view.getGenerateCave().addActionListener(e -> simulationController.cave());
+        view.getGenerateCave().addActionListener(e -> simulationController.standardCave());
         view.getGenerateVariableCave().addActionListener(e -> simulationController.variableCave());
         view.getGenerateGraphCave().addActionListener(e -> simulationController.graphCave());
 
@@ -141,8 +136,6 @@ public class MainController {
                     view.getSimulationControlPanel().getRunStepButton().setEnabled(true);
                     view.getSimulationControlPanel().getPopulateButton().setEnabled(true);
                     view.getSimulationControlPanel().getRunNStepsButton().setEnabled(true);
-
-
 
                 }
             }
@@ -193,7 +186,7 @@ public class MainController {
             simulation.getDiagnostics().iterateStep();
             viewController.updateDiagnosticsPanel();
             viewController.updateSimulationView();
-            if (simulation.getDiagnostics().logMsgsInQueue()) {
+            if (simulation.getDiagnostics().logMessagesInQueue()) {
                 viewController.logMsg(simulation.getDiagnostics().printLogQueue());
             }
         }
@@ -237,9 +230,7 @@ public class MainController {
             if (!simulationRunning) {
                 simulation.clearAgents();
                 viewController.updateSimulationView();
-                simulation.getDiagnostics().clearAgentStats();
-                simulation.getDiagnostics().setExtinctFlags(-1);
-                simulation.getDiagnostics().clearSteps();
+                simulation.getDiagnostics().clearDiagnostics();
                 view.getDiagnosticsPanel().setAgentStats(simulation.getDiagnostics().getAgentStats());
                 view.getDiagnosticsPanel().clearStepLabel();
                 viewController.logMsg("[ENVIRONMENT]: Agents cleared.");
@@ -279,8 +270,8 @@ public class MainController {
         // Initialises the diagnostics panel with the agent names and environment energy.
         public void initDiagnostics() {
             simulation.getDiagnostics().setAgentNames(simulation.getAgentEditor().getAgentNames());
-            simulation.getDiagnostics().setMaxEnvironmentEnergy(simulation.getEnvironment().getMaxEnergyLevel() * simulation.getEnvironment().getSize()* simulation.getEnvironment().getSize());
-            simulation.getDiagnostics().resetCurrentEnvironmentEnergy();
+            //simulation.getDiagnostics().setMaxEnvironmentEnergy(simulation.getEnvironment().getMaxEnergyLevel() * simulation.getEnvironment().getSize()* simulation.getEnvironment().getSize());
+            //simulation.getDiagnostics().resetCurrentEnvironmentEnergy();
         }
 
         public void clearTerrain() {
@@ -307,7 +298,7 @@ public class MainController {
             viewController.logMsg("[TERRAIN]: Graph Cave generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
         }
 
-        public void cave() {
+        public void standardCave() {
             simulation.getTerrainGenerator().placeCave();
             viewController.updateSimulationView();
             viewController.logMsg("[TERRAIN]: Cave generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
@@ -375,6 +366,21 @@ public class MainController {
             simulation.getTerrainGenerator().setTerrainSettings(view.openTerrainSettings(simulation.getTerrainGenerator().getTerrainSettings()));
             //System.out.println(simulation.getTerrainGenerator().getTerrainSettings().toString());
 
+        }
+
+        private void showLoadingDialog() {
+            loadingDialog = new JDialog();
+            JLabel loadingIcon = new JLabel();
+            loadingIcon.setIcon(new ImageIcon(this.getClass().getResource("../images/loading-image.png")));
+            loadingDialog.add(loadingIcon);
+            loadingDialog.setUndecorated(true);
+            loadingDialog.pack();
+            loadingDialog.setLocationRelativeTo(null);
+            loadingDialog.setVisible(true);
+        }
+
+        private void deleteLoadingDialog() {
+            loadingDialog.dispose();
         }
     }
 
@@ -546,5 +552,6 @@ public class MainController {
             }
         }
     }
+
 
 }

@@ -30,7 +30,8 @@ public class Main {
                 "Agent 1",
                 0,
                 new Color(100, 100, 100),
-                ColorModel.ATTRIBUTES,
+                ColorModel.RANDOM,
+                50,
                 1,
                 1,
                 1,
@@ -57,21 +58,6 @@ public class Main {
         frame.getContentPane().add(label,BorderLayout.CENTER);
         //frame.setLocationRelativeTo(null);
         frame.pack();
-    }
-
-    private static Attributes processAttributes(Attributes attributes, Random random) {
-        double[] oldStats = new double[]{attributes.getSize(), attributes.getCreationSize(), attributes.getRange()};
-            attributes = mutate(attributes, random);
-            double[] newStats = new double[]{attributes.getSize(), attributes.getCreationSize(), attributes.getRange()};
-            System.out.println("---\n" + attributes.getMutatingColor().toString());
-            attributes.mutateAttributesColor(
-                        (newStats[0] / 100) - (oldStats[0] / 100),
-                        (newStats[1] / 8) - (oldStats[1] / 8),
-                        (newStats[2] / 5) - (oldStats[2] / 5),
-                        125
-                );
-                System.out.println(attributes.getMutatingColor().toString());
-        return attributes;
     }
 
     private static Attributes mutate(Attributes attributes, Random random) {

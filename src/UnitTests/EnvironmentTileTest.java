@@ -22,7 +22,7 @@ class EnvironmentTileTest {
         EnvironmentTile environmentTile = new EnvironmentTile(5, 0, 0);
         environmentTile.setOccupant(new BasicAgent(
                 new Location(-1, -1),
-                new BasicAttributes(0, "agent", 0, Color.blue, ColorModel.STATIC, 0,1, 3, 4),
+                new BasicAttributes(0, "agent", 0, Color.blue, ColorModel.STATIC, 0, 0,1, 3, 4),
                 null));
         assertTrue(environmentTile.isOccupied());
     }

@@ -49,7 +49,7 @@ public class MainView extends JFrame {
     private SimulationControlPanel simulationControlPanel;
     private AgentEditorPanel agentEditorPanel;
     private SimulationPanel simulationPanel;
-    private ActiveAgentsPanel activeAgentsPanel;
+    private AgentSelectorPanel agentSelectorPanel;
     private DiagnosticsPanel diagnosticsPanel;
 
     private JPanel leftPanel;
@@ -157,10 +157,10 @@ public class MainView extends JFrame {
         centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.PAGE_AXIS));
         centerPanel.setPreferredSize(new Dimension(600, 764));
-        activeAgentsPanel = new ActiveAgentsPanel();
+        agentSelectorPanel = new AgentSelectorPanel();
         simulationPanel = new SimulationPanel();
         simulationControlPanel = new SimulationControlPanel();
-        centerPanel.add(activeAgentsPanel);
+        centerPanel.add(agentSelectorPanel);
         centerPanel.add(simulationPanel);
         centerPanel.add(simulationControlPanel);
         this.add(centerPanel);
@@ -186,8 +186,8 @@ public class MainView extends JFrame {
         return agentEditorPanel;
     }
 
-    public ActiveAgentsPanel getActiveAgentsPanel() {
-        return activeAgentsPanel;
+    public AgentSelectorPanel getActiveAgentsPanel() {
+        return agentSelectorPanel;
     }
 
     public DiagnosticsPanel getDiagnosticsPanel() {
@@ -241,7 +241,7 @@ public class MainView extends JFrame {
         }
         rightPanel.setVisible(!rightPanel.isVisible());
         leftPanel.setVisible(!leftPanel.isVisible());
-        activeAgentsPanel.setVisible(!activeAgentsPanel.isVisible());
+        agentSelectorPanel.setVisible(!agentSelectorPanel.isVisible());
         simulationControlPanel.setVisible(!simulationControlPanel.isVisible());
         pack();
     }

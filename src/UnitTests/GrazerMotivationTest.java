@@ -29,7 +29,7 @@ class GrazerMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0, 1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC,0, 0, 1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
 
@@ -70,13 +70,13 @@ class GrazerMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0,1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC,0, 0,1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
 
         BasicAgent smallerAgent = new BasicAgent(
                 new Location(1, 1),
-                new BasicAttributes(0, "BlueSize=2", 0, Color.blue, ColorModel.STATIC, 0,1, 2, 4),
+                new BasicAttributes(0, "BlueSize=2", 0, Color.blue, ColorModel.STATIC, 0,0,1, 2, 4),
                 (ArrayList<Motivation>) motivations.clone());
         smallerAgent.getAttributes().calculateAttributes();
 
@@ -98,13 +98,13 @@ class GrazerMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0,1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0,0,1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
 
         BasicAgent sameSizeAgent = new BasicAgent(
                 new Location(1, 1),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0,1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0,0,1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         sameSizeAgent.getAttributes().calculateAttributes();
 
@@ -127,13 +127,13 @@ class GrazerMotivationTest {
 
         BasicAgent testAgent = new BasicAgent(
                 new Location(0, 0),
-                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0,1, 3, 4),
+                new BasicAttributes(0, "BlueSize=3", 0, Color.blue, ColorModel.STATIC, 0,0,1, 3, 4),
                 (ArrayList<Motivation>) motivations.clone());
         testAgent.getAttributes().calculateAttributes();
 
         BasicAgent largerAgent = new BasicAgent(
                 new Location(1, 1),
-                new BasicAttributes(0, "BlueSize=4", 0, Color.blue, ColorModel.STATIC, 0,1, 4, 4),
+                new BasicAttributes(0, "BlueSize=4", 0, Color.blue, ColorModel.STATIC, 0,0,1, 4, 4),
                 (ArrayList<Motivation>) motivations.clone());
         largerAgent.getAttributes().calculateAttributes();
 

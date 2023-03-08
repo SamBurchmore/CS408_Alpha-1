@@ -54,7 +54,7 @@ public class Simulation {
         this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel, energyRegenChance, energyRegenAmount);
         this.agentList = new ArrayList<>();
         this.aliveAgentList = new ArrayList<>();
-        this.diagnostics = new Diagnostics(maxEnergyLevel * size);
+        this.diagnostics = new Diagnostics(maxEnergyLevel * (size * size), minEnergyLevel * (size * size));
         this.agentEditor = new AgentEditor();
         this.agentLogic = new AgentLogic();
         this.terrainGenerator = new TerrainGenerator();
@@ -76,7 +76,7 @@ public class Simulation {
                 int agentIndex = random.nextInt(activeAgents.size());
                 BasicAgent agent;
                 for (int j = 0; j < activeAgents.size(); j++) {
-                    if (j == agentIndex && agentEditor.getAgent(j).getAttributes().getSpawningWeight() * 100 > random.nextInt(100)) {
+                    if (j == agentIndex && agentEditor.getAgent(j).getAttributes().getSpawningWeight() > random.nextInt(100)) {
                         agent = agentLogic.getAgentFromEditor(j);
                         EnvironmentTile wt = environment.getGrid()[i];
                         agent.setLocation(wt.getLocation());
@@ -167,15 +167,20 @@ public class Simulation {
             clearAgents();
             environment.setEnvironmentSettings(environmentSettings);
             diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * environment.getSize()*environment.getSize());
+            diagnostics.setMinEnvironmentEnergy(environmentSettings.getMinEnergyLevel() * environment.getSize()*environment.getSize());
             diagnostics.resetCurrentEnvironmentEnergy();
         }
         else if (environmentSettings.getMaxEnergyLevel() < environment.getMaxEnergyLevel()) {
             environment.setEnvironmentSettings(environmentSettings);
             diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * environment.getSize()*environment.getSize());
+            diagnostics.setMinEnvironmentEnergy(environmentSettings.getMinEnergyLevel() * environment.getSize()*environment.getSize());
+
             diagnostics.resetCurrentEnvironmentEnergy();
         }
         environment.setEnvironmentSettings(environmentSettings);
         diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * environment.getSize()*environment.getSize());
+        diagnostics.setMinEnvironmentEnergy(environmentSettings.getMinEnergyLevel() * environment.getSize()*environment.getSize());
+
     }
 
     /**
@@ -224,12 +229,7 @@ public class Simulation {
             }
             else if (agentDecision.agentAction().equals(AgentAction.CREATE)) { // Create children
                 ArrayList<Agent> childAgents;
-                if (agent.mutates()) { // If the agent is a mutating agent, then handle their mutations before adding them to the environment
-                    childAgents = mutateAndPlaceAgents(agent.create(agentDecision.location(), environment), agent.getAttributes().getMutationChance());
-                }
-                else { // Else we just add them
-                    childAgents = placeAgents(agent.create(agentDecision.location(), environment));
-                }
+                childAgents = placeAgents(agent.create(agentDecision.location(), environment));
                 aliveAgentList.addAll(childAgents); // Add new agents to the alive agents list
                 aliveAgentList.add(agent); // Agent is still alive
             }
@@ -265,39 +265,6 @@ public class Simulation {
             return (BasicAgent) agentEditor.getAgent(index).copy();
         }
 
-        /**
-         * Trys to mutate child agents before placing them on the environment.
-         * <p>
-         * Iterates through the input collection of child agents and trys to mutate them based on the mutationChance.
-         * Before placing an agent it will re-generate its mutating color. New agents are tracked here. Additionally,
-         * checks if the child agents new location is occupied, if so it sets that agents spaceTaken flag to true.
-         * @param childAgents the collection of new agents
-         * @param mutationChance the percent chance a child agent will mutate
-         */
-        private ArrayList<Agent> mutateAndPlaceAgents(ArrayList<Agent> childAgents, int mutationChance) {
-            for (Agent child : childAgents) {
-                diagnostics.addToAgentsBornLastStep(child.getAttributes().getID(), 1); // log that a new agents been born
-                double[] oldStats = new double[]{ // store stats before mutating, allows us to track the stat change.
-                        child.getAttributes().getSize(),
-                        child.getAttributes().getCreationSize(),
-                        child.getAttributes().getRange()
-                };
-                if (random.nextInt(100) < mutationChance) {
-                    child.setAttributes(agentLogic.mutate(child.getAttributes()));
-                }
-                child.getAttributes().mutateAttributesColor(
-                        (child.getAttributes().getSize() / 100.0) - (oldStats[0] / 100),
-                        (child.getAttributes().getCreationSize() / 8.0) - (oldStats[1] / 8),
-                        (child.getAttributes().getRange() / 5.0) - (oldStats[2] / 5),
-                        125);
-                child.getAttributes().calculateAttributes(); // Calculate the agents calculated attributes
-                child.setScores(initScores(child));
-                agentLogic.clearSpace(child);
-                environment.setOccupant(child);
-            }
-            return childAgents;
-        }
-
         /** Checks if the agents location is occupied, if so it sets the occupants spaceTaken to true.
          * @param agent The agent moving to a new space.
          */
@@ -319,14 +286,13 @@ public class Simulation {
         private ArrayList<Agent> placeAgents(ArrayList<Agent> childAgents) {
             for (Agent child : childAgents) {
                 diagnostics.addToAgentsBornLastStep(child.getAttributes().getID(), 1); // log that a new agents been born
-                diagnostics.addToLogQueue("[AGENT]: " + child.getAttributes().getName() + " born.");
-                child.getAttributes().calculateAttributes();
+                if (diagnosticsVerbosity >= 1) {
+                    diagnostics.addToLogQueue("[AGENT]: " + child.getAttributes().getName() + " born.");
+                }
                 child.setScores(agentLogic.initScores((child)));
                 agentLogic.clearSpace(child);
                 environment.setOccupant(child);
-                if (child.getAttributes().getColorModel().equals(ColorModel.RANDOM)) { // Check if the agent is using the random color model and handle accordingly
-                    child.getAttributes().mutateSeedColor(5);
-                }
+
             }
             return childAgents;
         }
@@ -346,65 +312,17 @@ public class Simulation {
             return scores;
         }
 
-        /**
-         * Mutates the input attributes object.
-         * <p>
-         * Has an 80% chance of mutating size, and a 10% chance for range or creationSize. If the diagnostics verbosity is
-         * set to high, then a message with the agents name, mutated attribute and how much it mutated by is added to the log queue.
-         * @param attributes the attributes object to be mutated.
-         */
-        private Attributes mutate(Attributes attributes) {
-            int ran = random.nextInt(10);
-            if (ran < 8) {
-                // Mutate size
-                int oldSize = attributes.getSize();
-                attributes.setSize(Math.min(Math.max(attributes.getSize() + mutationMagnitude(), 2), 10));
-                if (diagnosticsVerbosity >= 1) {
-                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ":Born and size mutated by: " + (attributes.getSize() - oldSize) + ".");
-                }
-            }
-            else if (ran < 9) {
-                // Mutate range
-                int oldRange = attributes.getRange();
-                attributes.setRange(Math.min(Math.max(attributes.getRange() + mutationMagnitude(), 0), 5));
-                if (diagnosticsVerbosity >= 1) {
-                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ":Born and range mutated by: " + (attributes.getRange() - oldRange) + ".");
-                }
-            }
-            else {
-                // Mutate creationAmount
-                int oldCreationSize = attributes.getCreationSize();
-                attributes.setCreationSize(Math.min(Math.max(attributes.getCreationSize() + mutationMagnitude(), 1), 8));
-                if (diagnosticsVerbosity >= 1) {
-                    diagnostics.addToLogQueue("[AGENT]: " + attributes.getName() + ":Born and litter Size mutated by: " + (attributes.getCreationSize() - oldCreationSize) + ".");
-                }
-            }
-            return attributes;
-        }
 
         /**
-         * Returns an integer between -3 and 3, weighted towards 1.
+         * Returns 1 or -1, with a 50/50 chance of it being either.
          * <p>
-         * 3 = 1%
-         * 2 = 11.5%
-         * 1 = 37.5%
-         * 1 = 37.5%
-         * 2 = 11.5%
-         * 3 = 1%
          */
         private int mutationMagnitude() {
-            int r = random.nextInt(100);
             int modifier = random.nextInt(2);
             if (modifier == 0) {
                 modifier -= 1;
             }
-            if (r < 75) {
-                return modifier;
-            }
-            if (r < 98) {
-                return 2*modifier;
-            }
-            return 3*modifier;
+            return modifier;
         }
 
         /**
@@ -756,6 +674,7 @@ public class Simulation {
     public void setDiagnosticsVerbosity(int diagnosticsVerbosity) {
         this.diagnosticsVerbosity = diagnosticsVerbosity;
     }
+
     public void updateAgentNames() {
         diagnostics.setAgentNames(agentEditor.getAgentNames());
     }

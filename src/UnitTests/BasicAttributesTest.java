@@ -14,7 +14,7 @@ public class BasicAttributesTest {
     @Test
     public void testMutateAttributesColor() {
         Color oldColor = Color.blue;
-        Attributes attributes = new BasicAttributes(0, "0", 0, oldColor, ColorModel.STATIC, 1,1, 3, 4);
+        Attributes attributes = new BasicAttributes(0, "0", 0, oldColor, ColorModel.STATIC, 0, 1, 1, 3, 4);
 
         attributes.mutateAttributesColor(0, 0, 0, 125);
         assertEquals(attributes.getMutatingColor().getRed(), oldColor.getRed());
@@ -37,7 +37,7 @@ public class BasicAttributesTest {
 
     @Test
     public void testCalculateAttributes() {
-        Attributes attributes = new BasicAttributes(0, "0", 0, Color.blue, ColorModel.STATIC, 1,1, 3, 4);
+        Attributes attributes = new BasicAttributes(0, "0", 0, Color.blue, ColorModel.STATIC, 0, 1,1, 3, 4);
         int expectedEnergyCapacity = 30;
         int expectedEnergyLostPerTile = 2;
         int expectedEatAmount = 4;
