@@ -25,16 +25,16 @@ public class CreatorMotivation extends BaseMotivation {
     @Override
     public AgentDecision run(AgentVision tile, Attributes attributes, Scores scores) {
         if (tile.isOccupied()) {
-            if (
-                    Objects.equals(tile.getOccupantAttributes().getID(), attributes.getID())
-                    && scores.getAge() >= attributes.getCreationAge()
-                    && scores.getCreationCounter() <= 0
-                    && scores.getEnergy() > attributes.getEnergyCapacity() / 4
+            if (Objects.equals(tile.getOccupantAttributes().getID(), attributes.getID())
                     && tile.getOccupantScores().getAge() >= tile.getOccupantAttributes().getCreationAge()
                     && tile.getOccupantScores().getCreationCounter() <= 0
                     && compareAttributes(attributes, tile.getOccupantAttributes())) {
-                // Tile is occupied, and it's occupant is the same species, set the decision to CREATE and the score 10
-                return new AgentDecision(tile.getLocation(), AgentAction.CREATE, super.getBias() * super.getWeight());
+                if (scores.getAge() >= attributes.getCreationAge()
+                        && scores.getCreationCounter() <= 0
+                        && scores.getEnergy() > attributes.getEnergyCapacity() / 4) {
+                    // Tile is occupied, and it's occupant is the same species, set the decision to CREATE and the score 10
+                    return new AgentDecision(tile.getLocation(), AgentAction.CREATE, super.getBias() * super.getWeight());
+                }
             }
             // Tile is occupied but its occupant is a different species, set decision to NONE and score to -10
             return new AgentDecision(null, AgentAction.NONE, -1);

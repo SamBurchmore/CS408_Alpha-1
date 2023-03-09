@@ -5,9 +5,65 @@ import Simulation.Agent.AgentStructs.ColorModel;
 import java.awt.*;
 import java.util.Random;
 
+/**
+ * Provides an interface for agent attributes.
+ * @author Sam Burchmore
+ * @version 1.0a
+ * @since 1.0a
+ */
 public interface Attributes {
 
+    /**
+     * A template method for initialising a new set of Attributes with two input sets.
+     * <p>
+     * The default implementation can be found in AgentBaseComponents.BaseAttributes.generateAttributes.
+     * This method should be called from the constructor in a concrete implementation of this interface.
+     * @param attributesA the first set of Attributes
+     * @param attributesB the second set of Attributes
+     */
     void generateAttributes(Attributes attributesA, Attributes attributesB);
+
+    /**
+     * Provides an interface for producing an exact copy.
+     */
+    Attributes copy();
+
+    /**
+     * Provides an interface for producing a new set of attributes from two initial sets.
+     */
+    Attributes combine(Attributes attributes);
+
+    /**
+     * Provides an interface for changing this classes mutating color based on three double percent values and one integer constant.
+     * <p>
+     * The intention is that the three double values represent some change in the agents attributes after mutating.
+     * The default implementation can be found in AgentBaseComponents.BaseAttributes.mutateAttributesColor().
+     */
+    void mutateAttributesColor(double a, double b, double c, int constant);
+
+    /**
+     * Provides an interface for changing this classes seed color.
+     * <p>
+     * The default implementation can be found in AgentBaseComponents.BaseAttributes.mutateSeedColor().
+     */
+    void mutateSeedColor();
+
+    /**
+     * A template method intended to be called at the end of the Attributes creation process.
+     * <p>
+     * It should initialise the remaining attributes using those which have been assigned values.
+     * The default implementation can be found in AgentBaseComponents.BaseAttributes.calculateAttributes().
+     */
+    void calculateAttributes();
+
+    /**
+     * A template method which returns the intended display color.
+     * <p>
+     * Implementations of this method should return the correct display color, i.e. the color that should be displayed
+     * to represent this agent on the simulation view. The default implementation can be found in
+     * AgentBaseComponents.BaseAttributes.getColor().
+     */
+    Color getColor();
 
     int getRange();
 
@@ -61,19 +117,7 @@ public interface Attributes {
 
     void setMutationChance(int mutationChance);
 
-    Attributes copy();
-
-    Attributes combine(Attributes attributes);
-
-    void mutateAttributesColor(double a, double b, double c, int constant);
-
-    void mutateSeedColor(int magnitude);
-
     Color getMutatingColor();
-
-    Color getColor();
-
-    void calculateAttributes();
 
     void setEnergyCapacity(int energyCapacity);
 

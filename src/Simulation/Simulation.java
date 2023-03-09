@@ -220,6 +220,7 @@ public class Simulation {
             AgentDecision agentDecision = reactToView(agent, agentView);
             if (agentDecision.agentAction().equals(AgentAction.NONE)) { // Do nothing
                 aliveAgentList.add(agent); // Agent is still alive
+                return;
             }
             else if (agentDecision.agentAction().equals(AgentAction.MOVE)) { //Just Move
                 environment.setOccupant(agent.getLocation(), null); // Remove agent from old location
@@ -256,30 +257,19 @@ public class Simulation {
             }
         }
 
-        /**
-         * Returns a copy of the agent from the agentEditor at the specified index
-         * <p>
-         * @param index the index of the agent to copy
-         */
-        public BasicAgent getAgentFromEditor(int index) {
-            return (BasicAgent) agentEditor.getAgent(index).copy();
-        }
-
         /** Checks if the agents location is occupied, if so it sets the occupants spaceTaken to true.
          * @param agent The agent moving to a new space.
          */
         private void clearSpace(Agent agent) {
             if (environment.getTile(agent.getLocation()).isOccupied()) {
                 environment.getTile(agent.getLocation()).getOccupant().setSpaceTaken();
-                //System.out.println(agent.getAttributes().getName() + " moved to " + environment.getTile(agent.getLocation()).getOccupant().getAttributes().getName() + "'s space.");
             }
         }
 
         /**
-         * Places agents on the environment and possibly mutates their seed color.
+         * Places agents on the environment.
          * <p>
-         * Iterates through the input collection of child agents, checks if it uses the RANDOM color model. If so then
-         * mutate its seed color before adding it to the environment. Additionally, checks if the child agents new location is
+         * Additionally, checks if the child agents new location is
          * occupied, if so it sets that agents spaceTaken flag to true.
          * @param childAgents the collection of new agents
          */
@@ -289,40 +279,10 @@ public class Simulation {
                 if (diagnosticsVerbosity >= 1) {
                     diagnostics.addToLogQueue("[AGENT]: " + child.getAttributes().getName() + " born.");
                 }
-                child.setScores(agentLogic.initScores((child)));
                 agentLogic.clearSpace(child);
                 environment.setOccupant(child);
-
             }
             return childAgents;
-        }
-
-        /**
-         * Initialises the agents scores with its attributes.
-         * <p>
-         * As mutations are handled in this class, calculated attributes must be handled here too. As scores
-         * require some of the agents calculated attributes, their initialisation needs to be handled here to.
-         */
-        private Scores initScores(Agent agent) {
-            Scores scores = agent.getScores();
-            scores.setMaxEnergy(agent.getAttributes().getEnergyCapacity());
-            scores.setMaxAge(agent.getAttributes().getLifespan());
-            scores.setAge(0);
-            scores.setCreationCounter(agent.getAttributes().getCreationAge());
-            return scores;
-        }
-
-
-        /**
-         * Returns 1 or -1, with a 50/50 chance of it being either.
-         * <p>
-         */
-        private int mutationMagnitude() {
-            int modifier = random.nextInt(2);
-            if (modifier == 0) {
-                modifier -= 1;
-            }
-            return modifier;
         }
 
         /**
@@ -403,6 +363,15 @@ public class Simulation {
             }
             return finalDecision;
         }
+
+        /**
+         * Returns a copy of the agent from the agentEditor at the specified index
+         * <p>
+         * @param index the index of the agent to copy
+         */
+        public BasicAgent getAgentFromEditor(int index) {
+            return (BasicAgent) agentEditor.getAgent(index).copy();
+        }
     }
 
     /**
@@ -444,16 +413,6 @@ public class Simulation {
             IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
                 environment.getGrid()[i].setTerrain(false);
             });
-        }
-
-        public void placeCave() {
-            random.setSeed(Instant.now().toEpochMilli());
-            generateCave();
-        }
-
-        public void placeVariableCave() {
-            random.setSeed(Instant.now().toEpochMilli());
-            generateVariableCave();
         }
 
         public void generateCave() {

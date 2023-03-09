@@ -59,6 +59,7 @@ public class BasicAgent implements Agent {
         this.motivations = parentA.copyMotivations();
         this.scores = parentA.getScores().copy();
         spaceTaken = false;
+        initScores();
     }
 
     /**
@@ -197,6 +198,20 @@ public class BasicAgent implements Agent {
         Agent newAgent = new BasicAgent(childLocation, this, parentB);
         newAgent.getScores().setEnergy(getAttributes().getCreationCost());
         return newAgent;
+    }
+
+    /**
+     * Initialises the agents scores with its attributes.
+     * <p>
+     * As mutations are handled in this class, calculated attributes must be handled here too. As scores
+     * require some of the agents calculated attributes, their initialisation needs to be handled here to.
+     */
+    @Override
+    public void initScores() {
+        getScores().setMaxEnergy(getAttributes().getEnergyCapacity());
+        getScores().setMaxAge(getAttributes().getLifespan());
+        getScores().setAge(0);
+        getScores().setCreationCounter(getAttributes().getCreationAge());
     }
 
     @Override

@@ -37,31 +37,28 @@ public class BasicAttributes extends BaseAttributes {
     }
 
     /**
-     * Constructs a BasicAttributes object using two BasicAttributes objects.
+     * Constructs a BasicAttributes object using two Attributes objects.
      * <p>
-     * The constructor takes two BasicAttributes objects and uses their fields to\
-     * construct a new instance. mutationMagnitude, name, code, seedColor and spawningWeight
-     * are all taken from the first input. seedColor, mutatingColor, size, creationSize, and range
-     * are randomly taken from either input with an equal chance for either to be taken.
+     * The constructor takes two Attributes objects and passes them to the
+     * generateAttributes() method.
      */
     public BasicAttributes(Attributes attributesA, Attributes attributesB) {
         super(attributesA, attributesB);
         calculateAttributes();
     }
 
+    /**
+     * Returns a new instance of MutatingAttributes fields initialised using this instances fields
+     * combined with the fields from attributesB.
+     */
     @Override
     public Attributes combine(Attributes attributesB) {
         return new BasicAttributes(this, attributesB);
     }
 
     @Override
-    public void mutateAttributesColor(double a, double b, double c, int constant) {
-
-    }
-
-    @Override
     public String toString() {
-        return "null";
+        return "Standard: \n" + super.toString();
     }
     @Override
     public Attributes copy() {

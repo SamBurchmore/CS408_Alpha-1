@@ -287,7 +287,7 @@ public class MainController {
         }
 
         public void variableCave() {
-            simulation.getTerrainGenerator().placeVariableCave();
+            simulation.getTerrainGenerator().generateVariableCave();
             viewController.updateSimulationView();
             viewController.logMsg("[TERRAIN]: Variable Cave generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
         }
@@ -299,7 +299,7 @@ public class MainController {
         }
 
         public void standardCave() {
-            simulation.getTerrainGenerator().placeCave();
+            simulation.getTerrainGenerator().generateCave();
             viewController.updateSimulationView();
             viewController.logMsg("[TERRAIN]: Cave generated with - \n" + simulation.getTerrainGenerator().getTerrainSettings().toString());
         }

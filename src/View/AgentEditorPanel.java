@@ -361,6 +361,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
 
         mutationMagnitudePanel.add(mutationMagnitudeLabel);
         mutationMagnitudePanel.add(mutationMagnitudeSpinner);
+        mutationMagnitudePanel.add(new JLabel("%"));
 
         mutationChanceAndSpawningPanel.add(mutationMagnitudePanel);
         //--------------------------------------------------------------------------Mutations and Inheritance Panel End
