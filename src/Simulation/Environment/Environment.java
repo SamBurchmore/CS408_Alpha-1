@@ -2,12 +2,15 @@ package Simulation.Environment;
 
 import Simulation.Agent.AgentInterfaces.Agent;
 import Simulation.Agent.AgentStructs.AgentVision;
+import Simulation.SimulationUtility.TerrainSettings;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 /** Represents the environment. It contains an array of EnvironmentTile objects and allows them
  * to be interacted with as if they were in a 2D array.
@@ -330,6 +333,14 @@ public class Environment implements Serializable {
         return false;
     }
 
+    public Boolean[] getTerrainMask() {
+        Boolean[] terrainMask = new Boolean[size*size];
+        for (int i = 0; i < size*size; i++) {
+            terrainMask[i] = grid[i].isTerrain();
+        }
+        return terrainMask;
+    }
+
     public EnvironmentTile[] getGrid() {
         return this.grid;
     }
@@ -381,6 +392,7 @@ public class Environment implements Serializable {
         maxColor = color[5];
         terrainColor = color[6];
     }
+
     @Override
     public String toString() {
         return  "-Max Energy Level=" + maxEnergyLevel +
@@ -390,4 +402,5 @@ public class Environment implements Serializable {
                 ",\n-Environment Size=" + size +
                 ".";
     }
+
 }

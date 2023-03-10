@@ -50,7 +50,7 @@ public class Simulation {
     // How much info is logged by the diagnostics class = (0=low, 1=high)
     private int diagnosticsVerbosity = 1;
 
-    public Simulation(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount){
+    public Simulation(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
         this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel, energyRegenChance, energyRegenAmount);
         this.agentList = new ArrayList<>();
         this.aliveAgentList = new ArrayList<>();
@@ -391,9 +391,17 @@ public class Simulation {
 
         // The TerrainSettings object that stores the initial and current terrain settings
         private TerrainSettings terrainSettings;
+        private final Random random;
 
         public TerrainGenerator() {
             terrainSettings = new TerrainSettings(2, 5, 5000, 500, 400, 10000, 15,2, 2, 4, 1, true);
+            random = new Random();
+        }
+
+        public void paintTerrainMask(Boolean[] terrainMask) {
+            for (int i = 0; i < terrainMask.length; i++) {
+                environment.getGrid()[i].setTerrain(terrainMask[i]);
+            }
         }
 
         /**
@@ -641,11 +649,13 @@ public class Simulation {
         return new SimulationSettings(
                 name,
                 agentEditor.getActiveAgentsSettings(),
-                environment.getEnvironmentSettings());
+                environment.getEnvironmentSettings(),
+                environment.getTerrainMask());
     }
     public void setSimulationSettings(SimulationSettings simulationSettings) {
         environment.setEnvironmentSettings(simulationSettings.getEnvironmentSettings());
         agentEditor.setActiveAgentsSettings(simulationSettings.getAgentSettings());
+        terrainGenerator.paintTerrainMask(simulationSettings.getTerrainMask());
     }
     public Environment getEnvironment() {
         return environment;
@@ -659,5 +669,6 @@ public class Simulation {
     public TerrainGenerator getTerrainGenerator() {
         return terrainGenerator;
     }
+
 }
 

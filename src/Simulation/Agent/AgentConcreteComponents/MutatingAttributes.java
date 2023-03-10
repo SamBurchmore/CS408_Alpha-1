@@ -89,19 +89,21 @@ public class MutatingAttributes extends BaseAttributes {
      */
     private void mutate() {
         if (getRandom().nextInt(100) < getMutationChance()) {
-            int ran = getRandom().nextInt(10);
+            int ran = getRandom().nextInt(113);
             int oldSize = getSize();
             int oldCreationSize = getCreationSize();
             int oldRange = getRange();
-            if (ran < 8) {
+            if (ran < 100) {
                 // Mutate size
-                setSize(Math.min(Math.max(getSize() + 1, 2), 100));
-            } else if (ran < 9) {
-                // Mutate range
-                setRange(Math.min(Math.max(getRange() + 1, 0), 5));
-            } else {
+                setSize(Math.min(Math.max(getSize() + getNegOneOrPosOne(), 0), 100));
+            } else if (ran < 108) {
                 // Mutate creationAmount
-                setCreationSize(Math.min(Math.max(getCreationSize() + 1, 1), 8));
+                setCreationSize(Math.min(Math.max(getCreationSize() + getNegOneOrPosOne(), 1), 8));
+
+            } else {
+                // Mutate range
+                setRange(Math.min(Math.max(getRange() + getNegOneOrPosOne(), 0), 5));
+
             }
             if (getColorModel().equals(ColorModel.ATTRIBUTES)) {
                 mutateAttributesColor(
@@ -111,6 +113,13 @@ public class MutatingAttributes extends BaseAttributes {
                         125);
             }
         }
+    }
+
+    private  int getNegOneOrPosOne() {
+        if (getRandom().nextBoolean()) {
+            return 1;
+        }
+        return -1;
     }
 
     @Override

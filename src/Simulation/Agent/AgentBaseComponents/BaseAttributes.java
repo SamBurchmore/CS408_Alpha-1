@@ -4,9 +4,10 @@ import Simulation.Agent.AgentInterfaces.Attributes;
 import Simulation.Agent.AgentStructs.ColorModel;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Random;
 
-public abstract class BaseAttributes implements Attributes {
+public abstract class BaseAttributes implements Attributes, Serializable {
 
     // The weight used by the Simulation class when it populates the environment
     private int spawningWeight;
@@ -174,8 +175,8 @@ public abstract class BaseAttributes implements Attributes {
      */
     @Override
     public void calculateAttributes() {
-        energyCapacity = size*10;
-        energyLostPerTile = (int) Math.round(Math.pow(size, 0.50));
+        energyCapacity = size*5;
+        energyLostPerTile = (int) Math.round(Math.pow(size, 0.65));
         eatAmount = (int) Math.round(Math.pow(size, 0.5)) * 2;
         lifespan = 15 * (int) Math.round(Math.pow(size, 0.75));
         creationAge = lifespan / 5;

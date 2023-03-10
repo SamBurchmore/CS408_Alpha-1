@@ -34,12 +34,10 @@ public class AgentEditor {
         ArrayList<ArrayList<Motivation>> predOrPrey = new ArrayList<>();
         predOrPrey.add(omniMotivations);
         predOrPrey.add(grazerMotivations);
-        Color[] agentColors = new Color[]{new Color(30, 30, 200), new Color(200, 30, 30), new Color(30, 200, 30), new Color(180, 0, 190), new Color(255, 102, 0), Color.cyan, Color.pink, Color.yellow};
-        String[] agentNames = new String[]{"Blue", "Red", "Green", "Purple", "Orange", "Cyan", "Pink", "Yellow"};
         for (int i = 0; i < 8; i++) {
             activeAgents.add(i, new BasicAgent(
                     new Location(-1, -1),
-                    new BasicAttributes(0, agentNames[i], i, agentColors[i], ColorModel.RANDOM, 5, 0,1, 3, 4),
+                    new MutatingAttributes(100, "Agent " + (i+1), i, Color.blue, ColorModel.STATIC, 5, 0,1, 3, 4),
                     (ArrayList<Motivation>) grazerMotivations.clone()));
         }
         editingAgentIndex = 0;

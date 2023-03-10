@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +32,9 @@ public class MainView extends JFrame {
     private JButton preset1Button;
     private JButton preset2Button;
     private JButton preset3Button;
+    private JButton preset4Button;
+    private JButton preset5Button;
+    private JButton preset6Button;
 
 
     private JMenu toolSettingsMenu;
@@ -61,7 +66,7 @@ public class MainView extends JFrame {
         getContentPane().setLayout(new FlowLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setIconImage(ImageIO.read(this.getClass().getResource("../images/tool-icon-v1.png")));
+        setIconImage(ImageIO.read(new File("images\\tool-icon-v1.png").toURL()));
 
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -96,12 +101,18 @@ public class MainView extends JFrame {
         loadMenu.add(loadEnvironmentSettingsMenuButton);
 
         // Build the presets menu
-        preset1Button = new JButton("Preset 1");
-        preset2Button = new JButton("Preset 3");
-        preset3Button = new JButton("Preset 2");
+        preset1Button = new JButton("Rainbow");
+        preset2Button = new JButton("Predator Prey");
+        preset3Button = new JButton("Mutating Rainbow");
+        preset4Button = new JButton("Colour Cavern");
+        preset5Button = new JButton("Evolving Colours");
+        preset6Button = new JButton("Predator Prey Evolution");
         presetsMenu.add(preset1Button);
         presetsMenu.add(preset2Button);
         presetsMenu.add(preset3Button);
+        presetsMenu.add(preset4Button);
+        presetsMenu.add(preset5Button);
+        presetsMenu.add(preset6Button);
 
         // Build the tool settings menu
         toggleControlsButton = new JButton("Toggle Controls");
@@ -285,5 +296,29 @@ public class MainView extends JFrame {
 
     public JButton getGenerateGraphCave() {
         return generateGraphCave;
+    }
+
+    public JButton getPreset1Button() {
+        return preset1Button;
+    }
+
+    public JButton getPreset2Button() {
+        return preset2Button;
+    }
+
+    public JButton getPreset3Button() {
+        return preset3Button;
+    }
+
+    public JButton getPreset4Button() {
+        return preset4Button;
+    }
+
+    public JButton getPreset5Button() {
+        return preset5Button;
+    }
+
+    public JButton getPreset6Button() {
+        return preset6Button;
     }
 }
