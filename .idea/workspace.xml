@@ -4,20 +4,22 @@
     <option name="GROUP_BY_SEVERITY" value="true" />
     <option name="ANALYZE_INJECTED_CODE" value="false" />
   </component>
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="sam-burchmore-CS408-prototype-1:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5c119b8-cf77-44b8-a83a-26bb30553e3a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sam-burchmore-CS408-prototype-1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/sam-burchmore-CS408-prototype-1.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/PredatorMotivation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/PredatorMotivation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Simulation/Diagnostics/Diagnostics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Diagnostics/Diagnostics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Environment/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Environment/Environment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/SimulationUtility/TerrainSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/SimulationUtility/TerrainSettings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MainView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/TerrainDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/TerrainSettingsDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/AgentSelectorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/AgentSelectorPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,18 +57,23 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "create.test.in.the.same.root": "true",
+    "extract.method.default.visibility": "private",
     "last_opened_file_path": "E:/beans",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
+    "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "run.code.analysis.last.selected.profile": "pProject Default",
@@ -320,7 +327,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Simulation/Diagnostics/Diagnostics.java</url>
-          <line>159</line>
+          <line>167</line>
           <option name="timeStamp" value="28" />
         </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">

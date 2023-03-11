@@ -40,9 +40,9 @@ public class MainController {
         this.view = new MainView();
         this.simulation = new Simulation(size, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
         this.simulationController = new SimulationController();
-        simulationController.initDiagnostics();
         initController();
         loadOnOpen();
+        simulationController.initDiagnostics();
         viewController.initView();
         viewController.deleteLoadingDialog();
         this.cycleFlag = false;
@@ -113,9 +113,12 @@ public class MainController {
     public void setEditingAgent(int index) {
         // Store the old agent settings
         AgentSettings agentSettings = view.getAgentEditorPanel().getAgentSettings();
+        if (agentSettings.getName().isEmpty()) {
+            agentSettings.setName(simulation.getAgentEditor().getAgentSettings(index).getName());
+        }
         simulation.getAgentEditor().setEditingAgentSettings(agentSettings);
 
-        // Update the active agents panel
+        // Update the agent selector panel
         view.getActiveAgentsPanel().setAgentSelector(simulation.getAgentEditor().getEditingAgentIndex(), agentSettings.getSeedColor(), agentSettings.getName());
 
         // Update the agent editor
@@ -265,8 +268,14 @@ public class MainController {
 
         // Updates the environments settings to reflect those in the environment settings panel
         public void updateEnvironmentSettings() {
-            simulation.setEnvironmentSettings(view.getEnvironmentSettingsPanel().getEnvironmentSettings());
-            scale = 600 / (int) view.getEnvironmentSettingsPanel().getEnvironmentSizeSpinner().getValue();
+            EnvironmentSettings environmentSettings = view.getEnvironmentSettingsPanel().getEnvironmentSettings();
+            if (environmentSettings.getSize() != simulation.getEnvironment().getSize() && cycleFlag) {
+                environmentSettings.setSize(simulation.getEnvironment().getSize());
+                viewController.logMsg("[ENVIRONMENT]: Environment size cannot be changed while the simulation is running.");
+                view.getEnvironmentSettingsPanel().getEnvironmentSizeSpinner().setValue(environmentSettings.getSize());
+            }
+            simulation.setEnvironmentSettings(environmentSettings);
+            scale = 600 / environmentSettings.getSize();
             viewController.updateSimulationView();
             viewController.logMsg("[ENVIRONMENT]: Settings updated to- \n" + simulation.getEnvironment().toString());
             viewController.updateDiagnosticsPanel();
@@ -410,23 +419,7 @@ public class MainController {
     public void loadOnOpen() {
         try {
             File file = new File("data\\settings.dat");
-            if (file.exists()) {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
-                ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
-
-                SimulationSettings simulationSettings = (SimulationSettings) objectInputStream.readObject();
-                scale = 600 / simulationSettings.getEnvironmentSettings().getSize();
-                simulationController.setSimulationSettings(simulationSettings);
-                viewController.updateView();
-
-                objectInputStream.close();
-
-                viewController.logMsg("[SYSTEM]: Settings Loaded.");
-            }
-            else {
-                viewController.logMsg("[SYSTEM]: No settings found.");
-            }
+            loadFile(file);
 
         } catch (IOException | ClassNotFoundException | ClassCastException e) {
             viewController.logMsg("[SYSTEM]: Something went wrong and the file could not be read.");
@@ -445,7 +438,6 @@ public class MainController {
 
             objectOutputStream.writeObject(simulationSettings);
             objectOutputStream.close();
-
 
         } catch (IOException e) {
             System.out.println("eh");
@@ -484,18 +476,7 @@ public class MainController {
             File file = view.getFileChooser().getSelectedFile();
             if (FilenameUtils.getExtension(file.getPath()).equals("dat")) {
                 try {
-                    FileInputStream fileInputStream = new FileInputStream(file);
-                    BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
-                    ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
-
-                    SimulationSettings simulationSettings = (SimulationSettings) objectInputStream.readObject();
-                    scale = 600 / simulationSettings.getEnvironmentSettings().getSize();
-                    simulationController.setSimulationSettings(simulationSettings);
-                    viewController.updateView();
-
-                    objectInputStream.close();
-
-                    viewController.logMsg("[SYSTEM]: Settings Loaded.");
+                    processFile(file);
                 } catch (IOException | ClassNotFoundException | ClassCastException e) {
                     viewController.logMsg("[SYSTEM]: Something went wrong and the file could not be read.");
                 }
@@ -617,27 +598,35 @@ public class MainController {
     public void loadPreset(int index) {
         try {
             File file = new File("data\\presets\\" + index + ".dat");
-            if (file.exists()) {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
-                ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
-
-                SimulationSettings simulationSettings = (SimulationSettings) objectInputStream.readObject();
-                scale = 600 / simulationSettings.getEnvironmentSettings().getSize();
-                simulationController.setSimulationSettings(simulationSettings);
-                viewController.updateView();
-
-                objectInputStream.close();
-
-                viewController.logMsg("[SYSTEM]: Settings Loaded.");
-            }
-            else {
-                viewController.logMsg("[SYSTEM]: No settings found.");
-            }
-
+            loadFile(file);
         } catch (IOException | ClassNotFoundException | ClassCastException e) {
             viewController.logMsg("[SYSTEM]: Something went wrong and the file could not be read.");
             System.out.println(e);
         }
+    }
+
+    private void loadFile(File file) throws IOException, ClassNotFoundException {
+        if (file.exists()) {
+            processFile(file);
+        }
+        else {
+            viewController.logMsg("[SYSTEM]: No settings found.");
+        }
+    }
+
+    private void processFile(File file) throws IOException, ClassNotFoundException {
+        FileInputStream fileInputStream = new FileInputStream(file);
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+        ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
+
+        SimulationSettings simulationSettings = (SimulationSettings) objectInputStream.readObject();
+        scale = 600 / simulationSettings.getEnvironmentSettings().getSize();
+        simulationController.setSimulationSettings(simulationSettings);
+        simulationController.initDiagnostics();
+        viewController.updateView();
+
+        objectInputStream.close();
+
+        viewController.logMsg("[SYSTEM]: Settings Loaded.");
     }
 }

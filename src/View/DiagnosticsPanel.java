@@ -100,7 +100,7 @@ public class DiagnosticsPanel extends JPanel {
         //--------------------------------------------------------------------------Environment Stats Panel End
 
         //--------------------------------------------------------------------------Info Log Start
-        logTextArea = new JTextArea(18, 32);
+        logTextArea = new JTextArea(18, 36);
         logScrollPane = new JScrollPane(logTextArea);
         logTextAreaLabel = new JLabel("Info Log:");
         logTextAreaLabel.setFont(new Font("Dialog", Font.BOLD, 12));
@@ -124,7 +124,6 @@ public class DiagnosticsPanel extends JPanel {
 
         // The GridBag constraints we'll be using to build this panel
         GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(10, 1, 10, 1);
         c.weightx = 1;
         c.weighty = 1;
 
