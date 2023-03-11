@@ -14,12 +14,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5c119b8-cf77-44b8-a83a-26bb30553e3a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/PlayerAgent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Simulation/PlayerInput.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/View/StatGraph.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sam-burchmore-CS408-prototype-1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/sam-burchmore-CS408-prototype-1.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Diagnostics/Diagnostics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Diagnostics/Diagnostics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/AgentSelectorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/AgentSelectorPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Agent/AgentBaseComponents/BaseAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentBaseComponents/BaseAttributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/BasicAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/BasicAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/AgentEditorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/AgentEditorPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MainView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/SimulationControlPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/SimulationControlPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +68,7 @@
     "Repository.Attach.JavaDocs": "false",
     "Repository.Attach.Sources": "false",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
@@ -101,6 +108,7 @@
       <recent name="WorldStructs" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="Simulation.Agent.AgentConcreteComponents" />
       <recent name="View" />
       <recent name="Model.Agents" />
       <recent name="Model.Agents.AgentConcreteComponents" />

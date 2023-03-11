@@ -1,11 +1,14 @@
 package Simulation;
 
+import java.awt.*;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
 import Simulation.Agent.AgentConcreteComponents.BasicAgent;
+import Simulation.Agent.AgentConcreteComponents.MutatingAttributes;
+import Simulation.Agent.AgentConcreteComponents.PlayerAgent;
 import Simulation.Agent.AgentInterfaces.Attributes;
 import Simulation.Agent.AgentInterfaces.Scores;
 import Simulation.Agent.AgentStructs.ColorModel;
@@ -50,6 +53,8 @@ public class Simulation {
     // How much info is logged by the diagnostics class = (0=low, 1=high)
     private int diagnosticsVerbosity = 1;
 
+    private PlayerAgent playerAgent;
+
     public Simulation(int size, int startingEnergyLevel, int minEnergyLevel, int maxEnergyLevel, double energyRegenChance, int energyRegenAmount) {
         this.environment = new Environment(size, startingEnergyLevel, maxEnergyLevel, minEnergyLevel, energyRegenChance, energyRegenAmount);
         this.agentList = new ArrayList<>();
@@ -58,6 +63,10 @@ public class Simulation {
         this.agentEditor = new AgentEditor();
         this.agentLogic = new AgentLogic();
         this.terrainGenerator = new TerrainGenerator();
+        this.playerAgent = new PlayerAgent(
+                new Location(size/2, size/2),
+                new MutatingAttributes(100, "Player", 99, Color.WHITE, ColorModel.STATIC, 5, 0,1, 3, 4));
+        this.environment.setOccupant(playerAgent);
     }
 
     /**
@@ -102,7 +111,8 @@ public class Simulation {
      * iterated over every agent, it then overwrites agentList with aliveAgentList. Then it iterates over each environment
      * tile and possible regenerates its energy, depending on the environments settings.
      */
-    public void cycle() {
+    public void cycle(PlayerInput playerInput) {
+        agentLogic.runPlayer(playerInput);
         diagnostics.clearAgentStats();
         for (Agent currentAgent : agentList) {
             if (!currentAgent.spaceTaken()) {
@@ -131,6 +141,41 @@ public class Simulation {
     }
 
     /**
+     * Cycles the environment for one step.
+     * <p>
+     * Iterates over the agentList. If an agent hasn't been eaten earlier in the cycle, it runs the agent. After it's
+     * iterated over every agent, it then overwrites agentList with aliveAgentList. Then it iterates over each environment
+     * tile and possible regenerates its energy, depending on the environments settings.
+     */
+    public void cycle() {
+        diagnostics.clearAgentStats();
+        for (Agent currentAgent : agentList) {
+            if (!currentAgent.spaceTaken()) {
+                agentLogic.runAgent(currentAgent); // Iterate and run over all agents in the simulation
+                if (!currentAgent.isDead()) {
+                    diagnostics.addToAgentStats(
+                            currentAgent.getAttributes().getID(),
+                            1, currentAgent.getScores().getEnergy(),
+                            currentAgent.getScores().getAge(),
+                            currentAgent.getAttributes().getSize(),
+                            currentAgent.getAttributes().getCreationSize(),
+                            currentAgent.getAttributes().getRange()
+                    );
+                }
+            }
+        }
+        agentList = aliveAgentList;
+        Collections.shuffle(agentList);
+        aliveAgentList = new ArrayList<>();
+        IntStream.range(0, environment.getSize() * environment.getSize()).sequential().forEach(i->{
+            if (random.nextInt(10000) / 100.0 < environment.getEnergyRegenChance() && !environment.getGrid()[i].isTerrain()) {
+                int modifyAmount = environment.modifyTileEnergyLevel(environment.getGrid()[i].getLocation(), environment.getEnergyRegenAmount());
+                diagnostics.modifyCurrentEnvironmentEnergy(modifyAmount);
+            }
+        });
+    }
+
+    /**
      * Removes all agents from the environment.
      * <p>
      * Iterates over the environment and sets every tile occupant to null.
@@ -141,6 +186,8 @@ public class Simulation {
             current_wt.setOccupant(null);
         });
         agentList = new ArrayList<>();
+        playerAgent.setLocation(new Location(environment.getSize()/2, environment.getSize()/2));
+        environment.setOccupant(playerAgent);
     }
 
     /**
@@ -169,6 +216,8 @@ public class Simulation {
             diagnostics.setMaxEnvironmentEnergy(environmentSettings.getMaxEnergyLevel() * environment.getSize()*environment.getSize());
             diagnostics.setMinEnvironmentEnergy(environmentSettings.getMinEnergyLevel() * environment.getSize()*environment.getSize());
             diagnostics.resetCurrentEnvironmentEnergy();
+            playerAgent.setLocation(new Location(environment.getSize()/2, environment.getSize()/2));
+            environment.setOccupant(playerAgent);
         }
         else if (environmentSettings.getMaxEnergyLevel() < environment.getMaxEnergyLevel()) {
             environment.setEnvironmentSettings(environmentSettings);
@@ -194,6 +243,15 @@ public class Simulation {
      * @since 1.0a
      */
     private class AgentLogic {
+
+        public void runPlayer(PlayerInput playerInput) {
+            if (playerInput.getClickType() == 0) {
+                environment.setOccupant(playerAgent.getLocation(), null); // Remove agent from old location
+                playerAgent.move(playerInput.getClickLocation());
+                environment.setOccupant(playerAgent); // Set the agent to the new location
+                diagnostics.addToLogQueue("[PLAYER]: Energy: " + playerAgent.getScores().getEnergy() + ", Age: " + playerAgent.getScores().getAge() + ".");
+            }
+        }
 
         /**
          * Runs the input agent for one day.

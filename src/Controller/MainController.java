@@ -2,20 +2,24 @@ package Controller;
 import Simulation.Agent.AgentUtility.AgentSettings;
 import Simulation.Agent.AgentUtility.ActiveAgentsSettings;
 import Simulation.Environment.EnvironmentSettings;
+import Simulation.Environment.Location;
 import Simulation.Simulation;
 import Simulation.SimulationUtility.SimulationSettings;
+import Simulation.*;
 import View.MainView;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
 
-public class MainController {
+public class MainController implements MouseListener {
 
     // The class where the GUI and all its elements are stored
     final private MainView view;
@@ -108,6 +112,7 @@ public class MainController {
             }
         });
 
+        view.getSimulationPanel().addMouseListener(this);
     }
 
     public void setEditingAgent(int index) {
@@ -128,6 +133,33 @@ public class MainController {
         view.getAgentEditorPanel().setAgentSettings(simulation.getAgentEditor().getEditingAgentSettings());
         simulation.updateAgentNames();
         view.getDiagnosticsPanel().setAgentStats(simulation.getDiagnostics().getAgentStats());
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (SwingUtilities.isRightMouseButton(e)) {
+            simulationController.runStep(new PlayerInput(new Location(e.getX() / scale, e.getY() / scale), 0));
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 
     public class SimulationController {
@@ -202,6 +234,17 @@ public class MainController {
         public void runStep() {
             simulation.setDiagnosticsVerbosity(view.getDiagnosticsPanel().getDiagnosticsVerbosity());
             simulation.cycle();
+            simulation.getDiagnostics().iterateStep();
+            viewController.updateDiagnosticsPanel();
+            viewController.updateSimulationView();
+            if (simulation.getDiagnostics().logMessagesInQueue()) {
+                viewController.logMsg(simulation.getDiagnostics().printLogQueue());
+            }
+        }
+
+        public void runStep(PlayerInput playerInput) {
+            simulation.setDiagnosticsVerbosity(view.getDiagnosticsPanel().getDiagnosticsVerbosity());
+            simulation.cycle(playerInput);
             simulation.getDiagnostics().iterateStep();
             viewController.updateDiagnosticsPanel();
             viewController.updateSimulationView();
@@ -597,7 +640,7 @@ public class MainController {
 
     public void loadPreset(int index) {
         try {
-            File file = new File("data\\presets\\" + index + ".dat");
+            File file = new File("src\\data\\presets\\" + index + ".dat");
             loadFile(file);
         } catch (IOException | ClassNotFoundException | ClassCastException e) {
             viewController.logMsg("[SYSTEM]: Something went wrong and the file could not be read.");

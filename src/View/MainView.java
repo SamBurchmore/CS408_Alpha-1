@@ -7,8 +7,6 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +64,7 @@ public class MainView extends JFrame {
         getContentPane().setLayout(new FlowLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setIconImage(ImageIO.read(new File("images\\tool-icon-v1.png").toURL()));
+        setIconImage(ImageIO.read(new File("src\\images\\tool-icon-v1.png").toURL()));
 
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -231,7 +229,7 @@ public class MainView extends JFrame {
         return fileChooser;
     }
 
-    public SimulationPanel getWorldPanel() {
+    public SimulationPanel getSimulationPanel() {
         return simulationPanel;
     }
 

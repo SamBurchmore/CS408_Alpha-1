@@ -176,7 +176,7 @@ public abstract class BaseAttributes implements Attributes, Serializable {
     @Override
     public void calculateAttributes() {
         energyCapacity = size*5;
-        energyLostPerTile = (int) Math.round(Math.pow(size, 0.65));
+        energyLostPerTile = (int) Math.round(Math.pow(size, 0.65) - 1);
         eatAmount = (int) Math.round(Math.pow(size, 0.5)) * 2;
         lifespan = 15 * (int) Math.round(Math.pow(size, 0.75));
         creationAge = lifespan / 5;
@@ -282,7 +282,7 @@ public abstract class BaseAttributes implements Attributes, Serializable {
     }
     @Override
     public void setRange(int range) {
-        this.range = Math.min(Math.max(size, 1), 6);
+        this.range = Math.min(Math.max(range, 1), 6);
     }
     @Override
     public int getSize() {

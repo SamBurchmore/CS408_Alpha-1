@@ -103,4 +103,5 @@ public class SimulationControlPanel extends JPanel {
     public JButton getStopStartButton() {
         return stopStartButton;
     }
+
 }
