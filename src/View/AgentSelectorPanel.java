@@ -45,7 +45,7 @@ public class AgentSelectorPanel extends JPanel {
         agent0Button = new SquareButton();
         agent0Button.setBackground(emptyColour);
         agent0Button.setOpaque(true);
-        //agent0Button.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        //agent0Button.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         agent0Button.setPreferredSize(new Dimension((int) agent0Button.getPreferredSize().getWidth()-20, (int) agent0Button.getPreferredSize().getHeight()-20));
         agent0Panel = new JPanel();
         agent0Panel.add(agent0NameLabel);
@@ -171,6 +171,9 @@ public class AgentSelectorPanel extends JPanel {
     }
 
     public void setAgentSelector(int index, Color color, String name) {
+        if (name.length() < 3) {
+            name = name.concat("  ");
+        }
         switch (index) {
             case 0 -> {
                 this.agent0Button.setBackground(color);

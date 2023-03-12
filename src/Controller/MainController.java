@@ -4,7 +4,7 @@ import Simulation.Agent.AgentUtility.ActiveAgentsSettings;
 import Simulation.Environment.EnvironmentSettings;
 import Simulation.Simulation;
 import Simulation.SimulationUtility.SimulationSettings;
-import View.MainView;
+import View.UserInterface;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
@@ -15,18 +15,28 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
 
+/**
+ * Controls the {@code Simulation} and {@code UserInterface} classes. Listens for user input from the {@code UserInterface} class and controls
+ * the {@code Simulation} class using it.
+ * @author Sam Burchmore
+ * @version 1.0a
+ * @since 1.0a
+ */
 public class MainController {
 
-    // The class where the GUI and all its elements are stored
-    final private MainView view;
-    // The simulation
+    // The controllers instance of the UserInterface
+    final private UserInterface view;
+    // The controllers instance of the simulation
     final private Simulation simulation;
 
     final private SimulationController simulationController;
     final private ViewController viewController;
 
+    // If the simulation is in the process of being cycled, this flag is true, otherwise it is false.
+    private boolean runFlag;
+    // If the simulation is currently in a cycle, this flag is true, otherwise it is false.
     private boolean cycleFlag;
-    private boolean simulationRunning;
+    // If
     private boolean runningNSteps;
 
     private JDialog loadingDialog;
@@ -37,7 +47,7 @@ public class MainController {
         this.viewController = new ViewController();
         viewController.showLoadingDialog();
         this.scale = 600/size;
-        this.view = new MainView();
+        this.view = new UserInterface();
         this.simulation = new Simulation(size, starting_food_level, minFoodLevel, maxFoodLevel, energyRegenChance, energyRegenAmount);
         this.simulationController = new SimulationController();
         simulationController.initDiagnostics();
@@ -45,8 +55,8 @@ public class MainController {
         loadOnOpen();
         viewController.initView();
         viewController.deleteLoadingDialog();
+        this.runFlag = false;
         this.cycleFlag = false;
-        this.simulationRunning = false;
         this.runningNSteps = false;
     }
 
@@ -127,31 +137,21 @@ public class MainController {
         view.getDiagnosticsPanel().setAgentStats(simulation.getDiagnostics().getAgentStats());
     }
 
+
     public class SimulationController {
         // Starts the simulation if it's not running, stops it if it is
         public void toggleSimulation() {
             if (runningNSteps) {
                 runningNSteps = false;
-                cycleFlag = false;
+                runFlag = false;
             } else {
-                cycleFlag = !cycleFlag;
-                if (cycleFlag) {
-                    view.getSimulationControlPanel().getStopStartButton().setBackground(new Color(200, 50, 20));
-                    view.getSimulationControlPanel().getStopStartButton().setText("Stop");
-                    view.getSimulationControlPanel().getClearButton().setEnabled(false);
-                    view.getSimulationControlPanel().getRunStepButton().setEnabled(false);
-                    view.getSimulationControlPanel().getPopulateButton().setEnabled(false);
-                    view.getSimulationControlPanel().getRunNStepsButton().setEnabled(false);
-
+                runFlag = !runFlag;
+                if (runFlag) {
+                    viewController.toggleSimulationControls(true);
                     runSimulation();
                 }
                 else {
-                    view.getSimulationControlPanel().getStopStartButton().setBackground(new Color(100, 220, 100));
-                    view.getSimulationControlPanel().getStopStartButton().setText("Start");
-                    view.getSimulationControlPanel().getClearButton().setEnabled(true);
-                    view.getSimulationControlPanel().getRunStepButton().setEnabled(true);
-                    view.getSimulationControlPanel().getPopulateButton().setEnabled(true);
-                    view.getSimulationControlPanel().getRunNStepsButton().setEnabled(true);
+                    viewController.toggleSimulationControls(false);
 
                 }
             }
@@ -162,10 +162,10 @@ public class MainController {
             SwingWorker<Void, BufferedImage> swingWorker = new SwingWorker<Void, BufferedImage>() {
                 @Override
                 protected Void doInBackground() throws Exception {
-                    while (cycleFlag) {
-                        simulationRunning = true;
+                    while (runFlag) {
+                        cycleFlag = true;
                         runStep();
-                        simulationRunning = false;
+                        cycleFlag = false;
                     }
                     return null;
                 }
@@ -179,15 +179,18 @@ public class MainController {
                 @Override
                 protected Void doInBackground() throws Exception {
                     runningNSteps = true;
+                    viewController.toggleSimulationControls(true);
                     for (int i = 0; i < stepsToRun; i++) {
                         if (!runningNSteps) {
+                            viewController.toggleSimulationControls(false);
                             viewController.logMsg("[SIMULATION]: Simulation ran for " + i + " steps.");
                             break;
                         }
-                        simulationRunning = true;
+                        cycleFlag = true;
                         runStep();
-                        simulationRunning = false;
+                        cycleFlag = false;
                     }
+                    viewController.toggleSimulationControls(false);
                     runningNSteps = false;
                     return null;
                 }
@@ -209,7 +212,7 @@ public class MainController {
 
         // Calls the runStep method once if the simulation is not currently running
         public void runOneStep() {
-            if (!simulationRunning) {
+            if (!cycleFlag) {
                 runStep();
             } else {
                 viewController.logMsg("[SIMULATION]: Simulation is already running.");
@@ -218,7 +221,7 @@ public class MainController {
 
         // If the simulation is not currently running, runs the simulation for a set number of steps
         public void runNSteps() {
-            if (!simulationRunning) {
+            if (!cycleFlag) {
                 int n = (int) view.getSimulationControlPanel().getRunNStepsSpinner().getValue();
                 runSimulation(n);
                 viewController.logMsg("[SIMULATION]: Simulation ran for " + n + " steps.");
@@ -230,7 +233,7 @@ public class MainController {
 
         // Populates the environment with agents if the simulation is not currently running
         public void populateEnvironment() {
-            if (!simulationRunning) {
+            if (!cycleFlag) {
                 simulation.populate((double) view.getSimulationControlPanel().getPopulationDensitySpinner().getValue());
                 viewController.updateSimulationView();
                 viewController.updateDiagnosticsPanel();
@@ -243,7 +246,7 @@ public class MainController {
 
         // Removes all agents from the environment and clears the agents stats from the diagnostics panel
         public void clearAgents() {
-            if (!simulationRunning) {
+            if (!cycleFlag) {
                 simulation.clearAgents();
                 viewController.updateSimulationView();
                 simulation.getDiagnostics().clearDiagnostics();
@@ -394,7 +397,7 @@ public class MainController {
         private void showLoadingDialog() throws MalformedURLException {
             loadingDialog = new JDialog();
             JLabel loadingIcon = new JLabel();
-            loadingIcon.setIcon(new ImageIcon(new File("images\\loading-image.png").toURL()));
+            loadingIcon.setIcon(new ImageIcon(new File("src\\images\\loading-image.png").toURL()));
             loadingDialog.add(loadingIcon);
             loadingDialog.setUndecorated(true);
             loadingDialog.pack();
@@ -404,6 +407,21 @@ public class MainController {
 
         private void deleteLoadingDialog() {
             loadingDialog.dispose();
+        }
+
+        public void toggleSimulationControls(boolean toggle) {
+            if (toggle) {
+                view.getSimulationControlPanel().getStopStartButton().setBackground(new Color(200, 50, 20));
+                view.getSimulationControlPanel().getStopStartButton().setText("Stop");
+            }
+            else {
+                view.getSimulationControlPanel().getStopStartButton().setBackground(new Color(100, 220, 10));
+                view.getSimulationControlPanel().getStopStartButton().setText("Start");
+            }
+            view.getSimulationControlPanel().getClearButton().setEnabled(!toggle);
+            view.getSimulationControlPanel().getRunStepButton().setEnabled(!toggle);
+            view.getSimulationControlPanel().getPopulateButton().setEnabled(!toggle);
+            view.getSimulationControlPanel().getRunNStepsButton().setEnabled(!toggle);
         }
     }
 
@@ -436,7 +454,7 @@ public class MainController {
 
     public void saveOnClose() {
         try {
-            File file = new File("data\\settings.dat");
+            File file = new File("src\\data\\settings.dat");
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(bufferedOutputStream);
@@ -616,7 +634,7 @@ public class MainController {
 
     public void loadPreset(int index) {
         try {
-            File file = new File("data\\presets\\" + index + ".dat");
+            File file = new File("src\\data\\presets\\" + index + ".dat");
             if (file.exists()) {
                 FileInputStream fileInputStream = new FileInputStream(file);
                 BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);

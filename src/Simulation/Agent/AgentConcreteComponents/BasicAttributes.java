@@ -8,7 +8,8 @@ import java.awt.*;
 import java.io.Serializable;
 import java.util.Random;
 
-/** Makes up the agents attributes. Attributes are set values that don't change during the agent's life, except if
+/**
+ * Makes up the agents attributes. Attributes are set values that don't change during the agent's life, except if
  * the agent mutates. Attributes define the agents qualities and behavior as well as their color and name.
  * @author Sam Burchmore
  * @version 1.0a

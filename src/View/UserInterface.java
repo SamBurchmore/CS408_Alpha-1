@@ -7,13 +7,11 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class MainView extends JFrame {
+public class UserInterface extends JFrame {
 
     JFileChooser fileChooser;
     private JMenuBar menuBar;
@@ -61,12 +59,12 @@ public class MainView extends JFrame {
     private JPanel centerPanel;
     private JPanel rightPanel;
 
-    public MainView() throws IOException {
+    public UserInterface() throws IOException {
 
         getContentPane().setLayout(new FlowLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setIconImage(ImageIO.read(new File("images\\tool-icon-v1.png").toURL()));
+        setIconImage(ImageIO.read(new File("src\\images\\tool-icon-v1.png").toURL()));
 
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);

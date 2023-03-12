@@ -151,7 +151,7 @@ public class AgentEditorPanel extends JPanel implements ActionListener {
         sizePanel = new JPanel();
         sizeLabel = new JLabel("Size: ");
         sizeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-        sizeSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+        sizeSpinner = new JSpinner(new SpinnerNumberModel(2, 2, 100, 1));
 
         creationAmountPanel = new JPanel();
         creationAmountLabel = new JLabel("Creation Size: ");

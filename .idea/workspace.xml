@@ -11,13 +11,18 @@
     <list default="true" id="b5c119b8-cf77-44b8-a83a-26bb30553e3a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/PredatorMotivation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/PredatorMotivation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Diagnostics/Diagnostics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Diagnostics/Diagnostics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Environment/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Environment/Environment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/SimulationUtility/TerrainSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/SimulationUtility/TerrainSettings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MainView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/TerrainDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/TerrainSettingsDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/BasicAttributes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Agent/AgentConcreteComponents/BasicAttributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UnitTests/BasicAttributesTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UnitTests/CreatorMotivationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UnitTests/EnvironmentTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UnitTests/EnvironmentTileTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UnitTests/GrazerMotivationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UnitTests/LocationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UnitTests/PredatorMotivationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/AgentEditorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/AgentEditorPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/AgentSelectorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/AgentSelectorPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/DiagnosticsPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/UserInterface.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +65,7 @@
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "create.test.in.the.same.root": "true",
-    "last_opened_file_path": "E:/beans",
+    "last_opened_file_path": "C:/Users/sambu/Downloads/CS409TestSystem2022/foxes-and-rabbits-graph",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -292,6 +297,7 @@
       <workItem from="1677937129717" duration="600000" />
       <workItem from="1677937811883" duration="388000" />
       <workItem from="1678026381286" duration="22521000" />
+      <workItem from="1678628078095" duration="2550000" />
     </task>
     <task id="LOCAL-00001" summary="added some methods">
       <created>1668354392375</created>
