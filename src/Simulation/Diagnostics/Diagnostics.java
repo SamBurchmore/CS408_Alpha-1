@@ -120,6 +120,14 @@ public class Diagnostics {
      * Iterates the step field by 1, checks if an agents have gone extinct and produces log messages for those who have.
      */
     public void iterateStep() {
+        if (step == 0) {
+            for (int i = 0; i < 8; i++) {
+                if (agentPopulations[i] == 0) {
+                    extinctFlags[i] = 2;
+                }
+
+            }
+        }
         step = step + 1;
         boolean extinctionOccured = false;
         for (int i = 0; i < 8; i++) {
